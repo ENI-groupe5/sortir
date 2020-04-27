@@ -20,7 +20,7 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Sortie[] Returns an array of Sortie objects
+    //  * @return SortieFixtures[] Returns an array of SortieFixtures objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class SortieRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Sortie
+    public function findOneBySomeField($value): ?SortieFixtures
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')
