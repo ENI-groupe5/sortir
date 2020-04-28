@@ -33,7 +33,7 @@ class ParticipantController extends AbstractController
      * @Route("/{id}", name="afficher_profil", methods={"GET"})
      */
     public function affichageProfil(Participant $participant) {
-        return $this->render('participant/affichageProfil.html.twig', ['participant' => $participant]);
+        return $this->render('participant/affichageProfil.html.twig', ['participant' => $participant,]);
     }
 
     /**
