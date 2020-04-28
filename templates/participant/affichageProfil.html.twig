@@ -5,9 +5,9 @@
 {% block body %}
 
     {% if app.user.id == participant.id %}
-        <h1 class="text-primary">Votre profil</h1>
+        <h1>Votre profil</h1>
     {% else %}
-        <h1 class="text-secondary">Profil de {{ participant.username }}</h1>
+        <h1>Profil de {{ participant.username }}</h1>
     {% endif %}
 
     <div id="profil">
@@ -17,9 +17,9 @@
             <img id="avatar" alt="avatar"  src="{#}TODO{#}">
         {% endif %}
 
-        <div class="infosProfil">
-            <div class="row">
-                <div class="col-6 gauche">
+        <div>
+            <div>
+                <div>
                     <p>&nbsp</p>
                     <p>Prénom :</p>
                     <p>Nom :</p>
@@ -27,7 +27,7 @@
                     <p>Email :</p>
                     <p>Site de rattachement :</p>
                 </div>
-                <div class="col-6 droit">
+                <div>
                     <p>{{ participant.username }}</p>
                     <p>{{ participant.prenom }}</p>
                     <p>{{ participant.nom }}</p>
@@ -42,9 +42,9 @@
             </div>
         </div>
         {% if app.user.id == participant.id %}
-            <a href="{{ path('modifier_profil', {'id': participant.id}) }}" ><button class="bouton">Modifier</button></a>
+            <a href="{{ path('modifier_profil', {'id': participant.id}) }}" ><button>Modifier</button></a>
         {% endif %}
-        <a href="{{ path('index_participant', {'id': participant.id}) }}" ><button class="bouton">Retour</button></a>
+        <a href="{{ path('index_participant', {'id': participant.id}) }}" ><button>Retour</button></a>
     </div>
 
 {% endblock %}
