@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
@@ -63,6 +65,13 @@ class Participant implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Sortie",mappedBy="organisateur")
      */
     private $sortiesOrganisees;
+
+    /**
+     * @Assert\File(mimeTypes={"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Veuillez insérer une image au format valide (PNG, JPG ou JPEG)")
+     * @ORM\Column(type="string", name="avatar", nullable=true)
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
@@ -276,7 +285,20 @@ class Participant implements UserInterface
         $this->sorties [] = $sorties;
     }
 
+    /**
+     * @return string
+     */
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
 
-
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar): void
+    {
+        $this->avatar = $avatar;
+    }
 
 }
