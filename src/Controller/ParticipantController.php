@@ -40,8 +40,8 @@ class ParticipantController extends AbstractController
      * @param Participant $participant
      * @return Response
      */
-    public function affichageProfil(Participant $participant) {
-        return $this->render('participant/affichageProfil.html.twig', ['participant' => $participant]);
+    public function affichageProfil() {
+        return $this->render('participant/affichageProfil.html.twig');
     }
 
     /**
