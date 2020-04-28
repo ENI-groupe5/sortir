@@ -1,3 +1,37 @@
+/*
+styles template
+ */
 body {
-    background-color: lightgray;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
 }
+.footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 10px;
+}
+h1{
+    color: #52291d;
+    font-weight: 500;
+    font-size: 2rem;
+}
+p{
+    color: black;
+    font-weight: 200;
+    font-size: 1rem;
+}
+
+/*
+Styles formulaires
+ */
+.bouton{
+    background-color: #F56565;
+    padding: 10px 15px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
