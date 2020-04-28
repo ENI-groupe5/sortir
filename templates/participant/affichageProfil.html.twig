@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+    {% if app.user.id == participant.id %}
+        <h1 class="text-primary">Votre profil</h1>
+    {% else %}
+        <h1 class="text-secondary">Profil de {{ participant.username }}</h1>
+    {% endif %}
+
+    <div id="profil">
+        {% if app.user.avatar is empty %}
+            <img id="avatar" alt="defaultAvatar" src="{#}TODO{#}">
+        {% else %}
+            <img id="avatar" alt="avatar"  src="{#}TODO{#}">
+        {% endif %}
+
+        <div class="infosProfil">
+            <div class="row">
+                <div class="col-6 gauche">
+                    <p>&nbsp</p>
+                    <p>Prénom :</p>
+                    <p>Nom :</p>
+                    <p>Téléphone :</p>
+                    <p>Email :</p>
+                    <p>Site de rattachement :</p>
+                </div>
+                <div class="col-6 droit">
+                    <p>{{ participant.username }}</p>
+                    <p>{{ participant.prenom }}</p>
+                    <p>{{ participant.nom }}</p>
+                    {% if participant.telephone is empty %}
+                        <p><i>Pas de numéro de téléphone de renseigné.</i></p>
+                    {% else %}
+                        <p>{{ participant.telephone }}</p>
+                    {% endif %}
+                    <p>{{ participant.email }}</p>
+                    <p>{{ participant.site }}</p>
+                </div>
+            </div>
+        </div>
+        {% if app.user.id == participant.id %}
+            <a href="{{ path('modifier_profil', {'id': participant.id}) }}" ><button class="bouton">Modifier</button></a>
+        {% endif %}
+        <a href="{{ path('index_participant', {'id': participant.id}) }}" ><button class="bouton">Retour</button></a>
+    </div>
+
+{% endblock %}
