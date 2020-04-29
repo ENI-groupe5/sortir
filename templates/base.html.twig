@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport"
@@ -9,65 +8,67 @@
         <title>{% block title %}Sortir.com{% endblock %}</title>
 
         {% block stylesheets %}
-            <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
             {{ encore_entry_link_tags('css') }}
             <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
         {% endblock %}
 
     </head>
     <!-- navbar personnalisée -->
-    <nav class="flex items-center justify-between flex-wrap bg-red-500 p-6">
-            <div class="flex items-center flex-shrink-0 text-white mr-6">
-                <a href="#"><img class="fill-current h-15 w-25 mr-2" height="80" width="174" alt="sortir.com" src="{{ asset('build/logo.png') }}"></a>
-                <!--<span class="font-semibold text-xl tracking-tight">sortir.com</span>-->
-            </div>
-            <div class="block lg:hidden">
-                <button class="flex items-center px-3 py-2 border rounded text-red-200 border-red-400 hover:text-white hover:border-white">
-                    <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-                </button>
-            </div>
-            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-                <div class="text-md lg:flex-grow">
-                    <a href="{{ path('app_login') }}" class="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
+    <nav class="navbar navbar-expand-lg">
+        <a href="#"><img class="navbar-brand" height="85" width="174" alt="sortir.com" src="{{ asset('build/logo.png') }}"></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('home')}}">Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('app_login') }}" class="nav-link">
                         Se connecter
                     </a>
-                    <a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-                        Villes
-                    </a>
-                    <a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-                        Sites
-                    </a>
-                    <a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-                        Accueil
-                    </a>
-                    <a href="#" class="block mt-4 lg:inline-block lg:mt-0 text-red-200 hover:text-white mr-4">
-                        Mon profil
-                    </a>
-                </div>
-                <!-- infos utilisateur si existantes -->
-                <div>
-                    {% if app.user %}
-                        <div class="inline-block text-sm px-4 py-2 leading-none text-red-200 mt-4 lg:mt-0">
-                            Bonjour {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                        </div>
-                    {% endif %}
-                </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Villes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Sites</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('/modifier_profil')}}">Mon Profil</a>
+                </li>
+            </ul>
+            <div class="navbar-text">
+                {% if app.user %}
+                    <div>
+                        Bonjour {{ app.user.username }} | <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                    </div>
+                {% endif %}
             </div>
-
+        </div>
     </nav>
+
+
     <!-- contenu de l'écran -->
     <body>
-        <div class="container leading-normal my-12 mx-auto p-4">
+        <div class="container">
             {% block main %}
             {% endblock %}
         </div>
 
         <!-- footer personnalisée -->
-        <footer class="flex w-full items-center justify-between flex-wrap bg-red-500 footer">
-            <div class="text-md text-red-200 hover:text-white">&copy;ENI-Ecole Groupe 5</div>
+        <footer class="footer">
+            <div class="">&copy;ENI-Ecole Groupe 5</div>
         </footer>
         {% block javascripts %}
             {{ encore_entry_script_tags('js') }}
+            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
         {% endblock %}
 </body>
 </html>
