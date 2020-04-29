@@ -10,7 +10,7 @@
     {% endif %}
     <div id="profil">
         {% if app.user.avatar is empty %}
-            <img id="avatar" alt="defaultAvatar" src="{{ asset('build/defaultAvatar.png') }}">
+            <img id="avatar" alt="defaultAvatar" src="{{ asset('build/images/defaultAvatar.png') }}">
         {% else %}
             <img id="avatar" alt="avatar"  src="{{ asset('uploads/avatars/') }}{{ app.user.avatar }}">
         {% endif %}
@@ -34,7 +34,7 @@
                         <p>{{ participant.telephone }}</p>
                     {% endif %}
                         <p>{{ participant.email }}</p>
-                        <p>{{ participant.site }}</p>
+                        <p>{{ participant.site.nom }}</p>
                 </div>
             </div>
         </div>
