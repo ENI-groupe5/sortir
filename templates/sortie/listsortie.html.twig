@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste &middot; {{ parent() }}{% endblock %}
+
+{% block main %}
+<div class="jumbotron">
+    <div>
+        Date du jour : {{ "now"|date("d/m/Y") }}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED')  %}
+        Participant : {{ app.user.username }}
+        {% endif %}
+    </div>
+    <div>
+
+        Filtrer les sorties
+        {{ form_start(search) }}
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        {{ form_widget(search.sites) }}
+        {{ form_widget(search.libelle) }}
+        {{ form_widget(search.dateDebut) }} {{ form_widget(search.dateFin)}}
+
+        {{ form_widget(search.organisateur) }}
+                <label class="custom-control-label" for="customControlAutosizing">Sortie dont je suis l'organisateur(trice)</label>
+
+        {{ form_widget(search.inscrit) }}
+                <label class="custom-control-label" for="customControlAutosizing">Sorties auxquelles je suis inscrit(e)</label>
+
+        {{ form_widget(search.noinscrit) }}
+                <label class="custom-control-label" for="customControlAutosizing">Sorties auxquelles je ne suis pas inscrit(e)</label>
+
+        {{ form_widget(search.past) }}
+                <label class="custom-control-label" for="customControlAutosizing">Sorties passées</label>
+            <button type="submit" value="ok" class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+        {{ form_end(search) }}
+    </div>
+</div>
+<div class="count">
+    {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+    {{ dump(search) }}
+</div>
+    <table>
+        <thead>
+        <tr>
+            <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            {{  dump(sortie) }}
+            <tr>
+
+
+        <td>
+            {{ sortie.nom }}
+        </td>
+        <td>
+            {{ sortie.datHeureDebut|date('d/m/Y') }}
+        </td>
+        <td>
+            {{ sortie.dateLimiteInscription|date('d/m/Y') }}
+        </td>
+        <td>
+            {{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}
+        </td>
+        <td>
+            {% if sortie.sortieetat.libelle == 'Ouverte' %}
+                {% if sortie.datHeureDebut|date('d/m/Y') == ("now"|date("d/m/Y")) %}
+                En cours
+                {% elseif sortie.datHeureDebut|date('d/m/Y') < ("now"|date("d/m/Y")) and sortie.dateLimiteInscription|date('d/m/Y') < ("now"|date("d/m/Y"))  %}
+                Fermé
+                {% else %}
+                Ouvert
+                {% endif %}
+            {% endif %}
+            {% if sortie.sortieetat.libelle == 'Créée' %}
+                En création
+            {% endif %}
+            {% if sortie.sortieetat.libelle == 'Annulée' %}
+                Annulée
+            {% endif %}
+            </td>
+        <td>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% for sortieuser in app.user.sorties %}
+            {% if sortieuser.id==sortie.id %}
+                  x
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+        </td>
+        <td>
+            {{ sortie.organisateur.username }}
+        </td>
+                <td>
+            {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
+        {% if sortie.organisateur == app.user %}
+        <a href="#">Modifier</a>
+        {% else %}
+                <a href="#"> Afficher </a>
+        {% endif %}
+        {% for sortieuser in app.user.sorties %}
+        {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y"))  %}
+        <a href="#">Se désister</a>
+        {% endif %}
+            {% endfor %}
+        {% if sortie.organisateur == app.user and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y")) %}
+        <a href="#">Annuler</a>
+        {% endif %}
+            {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <div class="pagination">
+        {{ knp_pagination_render(sorties) }}
+    </div>
+    <div>
+    <a href="{{ path('sortie_creer') }}"><button type="button" class="btn btn-primary">Créer une sortie</button> </a>
+    </div>
+{% endblock %}
