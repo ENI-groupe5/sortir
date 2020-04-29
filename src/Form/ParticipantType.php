@@ -26,7 +26,7 @@ class ParticipantType extends AbstractType
             'required' => false ,
             'constraints' => [
                 new File ([
-                    'maxSize' => '200k' ,
+                    'maxSize' => '1024k' ,
                     'mimeTypesMessage' => 'Veuillez upload un format d\'image valide.' ,
                 ])
             ],
@@ -79,7 +79,7 @@ class ParticipantType extends AbstractType
             'required' => true,
             'class'=>Site::class,
             'choice_label'=>'nom',
-            'label'=>'Organisme',
+            'label'=>'Campus',
             'trim'=>true,
             'attr'=> array('class'=>'form-control')
         ]);

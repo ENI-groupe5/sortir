@@ -23,17 +23,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class ParticipantController extends AbstractController
 {
-    /**
-     * @Route("/index", name="index_participant", methods={"GET"})
-     * @param ParticipantRepository $participantRepository
-     * @return Response
-     */
-    public function index(ParticipantRepository $participantRepository)
-    {
-        return $this->render('participant/index.html.twig', [
-            'participant' => $participantRepository -> findAll(),
-        ]);
-    }
 
     /**
      * @Route("/user/{id}", name="afficher_profil", methods={"GET"})
@@ -91,7 +80,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('participant/formulaireProfil.html.twig', [
             'participant' => $participant,
-            'formulaire' => $formulaire->createView(),
+            'formulaire' => $formulaire->createView()
         ]);
     }
 

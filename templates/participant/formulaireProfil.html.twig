@@ -3,46 +3,44 @@
 {% block title %}Modifier Profil{% endblock %}
 
 {% block main %}
-
+    {% form_theme formulaire 'bootstrap_4_horizontal_layout.html.twig' %}
     {% if app.user.id == participant.id %}
-        <h1>Modifier votre profil</h1>
+        <h1 class="text-primary">Modifier votre profil</h1>
         <div id="profil">
             {{ form_start(formulaire) }}
             <div id="avatarUpload">
                 {% if app.user.avatar is empty %}
                     {{ form_row(formulaire.avatar) }}
                 {% else %}
-                    <img id="avatar" alt="avatar"  src="{{ asset('uploads/avatars/') }}{{ participant.avatar }}">
+                    <img id="avatar" alt="avatar"  src="{{ asset('uploads/avatars/') }}{{ app.user.avatar }}">
                     {{ form_row(formulaire.avatar) }}
                 {% endif %}
             </div>
-            <div>
-                <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     {{ form_row(formulaire.username) }}
                     {{ form_row(formulaire.prenom) }}
                     {{ form_row(formulaire.nom) }}
                     {{ form_row(formulaire.telephone) }}
                 </div>
-                <div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
                     {{ form_row(formulaire.email) }}
                     {{ form_row(formulaire.password) }}
                     {{ form_row(formulaire.site) }}
                 </div>
             </div>
-            <div>
-                <div>
-                    <button>{{ button_label|default('Enregistrer') }}</button>
+            <div class="row">
+                <div class="col-6">
+                    <button class="bouton">{{ button_label|default('Enregistrer') }}</button>
                     {{ form_end(formulaire) }}
                 </div>
-                <div>
-                    <button><a href="{{ path('afficher_profil', { 'id' : app.user.id}) }}">Annuler</a></button>
+                <div class="col-6">
+                    <button class="bouton"><a href="{{ path('afficher_profil', { 'id' : app.user.id}) }}">Annuler</a></button>
                 </div>
             </div>
         </div>
     {% else %}
-        <h1>Vous ne pouvez pas modifier ce profil !</h1>
-        <br>
-        <img src="TODO" alt="non_modifiable"/>
+        <h1 class="text-alert">Vous ne pouvez pas modifier ce profil !</h1>
     {% endif %}
 
 {% endblock %}
