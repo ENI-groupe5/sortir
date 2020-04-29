@@ -37,6 +37,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     }
 
     /**
+     * @param $participantId
      * @return Participant[] Returns an array of Participant objects
      */
     public function rechercherParticipant($participantId)
