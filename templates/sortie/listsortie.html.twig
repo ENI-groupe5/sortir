@@ -51,17 +51,11 @@
             </div>
             <br>
             <div class="form-group col-1">
-                <button type="submit" value="ok" class="btn btn-danger btn-lg">Rechercher</button>
+                <button type="submit" value="ok" class="bouton btn-lg">Rechercher</button>
             </div>
         </div>
             {{ form_end(search) }}
-
-
-
-
-
-
-
+        </div>
 </div>
 <div class="count">
     {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
@@ -141,12 +135,13 @@
         </tbody>
     </table>
 
-    <br>
     <div class="pagination">
         {{ knp_pagination_render(sorties) }}
     </div>
+    <br>
     <div>
-    <a href="#"><button type="button" class="btn btn-danger">Créer une sortie</button> </a>
+    <a href="#"><button type="button" class="bouton">Créer une sortie</button> </a>
     </div>
-</div>
+    <br><br><br>
+
 {% endblock %}
