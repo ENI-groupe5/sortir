@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,9 +48,8 @@ class SortieType extends AbstractType
             ])
             ->add('enregistrer', SubmitType::class)
             ->add('publier', SubmitType::class)
-            ->add('annuler', ButtonType::class, [
-                
-            ])
+            ->add('annuler1', ButtonType::class)
+            ->add('annuler2', ResetType::class)
         ;
     }
 

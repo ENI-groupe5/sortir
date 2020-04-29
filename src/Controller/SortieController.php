@@ -75,7 +75,7 @@ class SortieController extends AbstractController
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
             //rediriger selon enregistrer / publier
-            if($sortieForm->get('creer')->isClicked()) {
+            if($sortieForm->get('enregistrer')->isClicked()) {
 
                 //sauvegarder données
                 $em ->persist($sortie);
