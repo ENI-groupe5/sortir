@@ -57,6 +57,18 @@
             {{ form_end(search) }}
         </div>
 </div>
+    <table>
+        <tr>
+            {# sorting of properties based on query components #}
+            <th>Trier par : {{ knp_pagination_sortable(sorties, 'Date Limite d\'inscription', 's.dateLimiteInscription') }}</th>
+            <th{% if sorties.isSorted('s.datHeureDebut') %} class="sorted"{% endif %}>
+                &nbsp {{ knp_pagination_sortable(sorties, 'Date de sortie', 's.datHeureDebut') }}
+            </th>
+            <th{% if sorties.isSorted('o.username') %} class="sorted"{% endif %}>
+                &nbsp {{ knp_pagination_sortable(sorties,'Organisateur','o.username') }}
+            </th>
+        </tr>
+    </table>
 <div class="count">
     {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
 </div>
@@ -84,21 +96,25 @@
             {{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}
         </td>
         <td>
-            {% if sortie.sortieetat.libelle == 'Ouverte' %}
-                {% if sortie.datHeureDebut|date('d/m/Y') == ("now"|date("d/m/Y")) %}
+            {% if sortie.nbInscriptionsMax <= sortie.participants|length %}
+                Cloturée
+            {% else %}
+            {% if sortie.sortieetat.id == 2 %}
+                {% if sortie.datHeureDebut|date('U') == ("now"|date("U")) %}
                 En cours
-                {% elseif sortie.datHeureDebut|date('d/m/Y') < ("now"|date("d/m/Y")) and sortie.dateLimiteInscription|date('d/m/Y') < ("now"|date("d/m/Y"))  %}
+                {% elseif sortie.datHeureDebut|date('U') < ("now"|date("U")) and sortie.dateLimiteInscription|date('U') < ("now"|date("U"))  %}
                 Fermé
                 {% else %}
                 Ouvert
                 {% endif %}
             {% endif %}
-            {% if sortie.sortieetat.libelle == 'Créée' %}
+            {% if sortie.sortieetat.id == 1 %}
                 En création
             {% endif %}
-            {% if sortie.sortieetat.libelle == 'Annulée' %}
+            {% if sortie.sortieetat.id == 3 %}
                 Annulée
             {% endif %}
+        {% endif %}
             </td>
         <td>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -120,12 +136,28 @@
         {% else %}
                 <a href="#"> Afficher </a>
         {% endif %}
+                {% set inscrire = 'true' %}
         {% for sortieuser in app.user.sorties %}
-        {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y"))  %}
+        {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('U') > ("now"|date("U"))  %}
         <br><a href="#">Se&nbspdésister</a>
         {% endif %}
+            {% if (sortie.dateLimiteInscription|date('U')) > ("now"|date("U")) and sortie.sortieetat.id == 2%}
+                {% if sortie.nbInscriptionsMax > sortie.participants|length %}
+        {% if sortieuser.id==sortie.id %}
+            {% set inscrire = 'false' %}
+            {% endif %}
+                    {% endif %}
+            {% else %}
+            {% set inscrire = 'false' %}
+            {% endif %}
             {% endfor %}
-        {% if sortie.organisateur == app.user and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y")) %}
+                {% if sortie.organisateur==app.user %}
+                    {% set inscrire = 'false' %}
+                    {% endif %}
+                {% if inscrire == 'true' %}
+                    <br><a href="#">S'inscrire</a>
+                {% endif %}
+        {% if sortie.organisateur == app.user and sortie.dateLimiteInscription|date('U')> ("now"|date("U"))and sortie.sortieetat.id == 2 %}
         <br><a href="#">Annuler</a>
         {% endif %}
             {% endif %}
