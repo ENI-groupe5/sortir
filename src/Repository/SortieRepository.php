@@ -40,18 +40,14 @@ class SortieRepository extends ServiceEntityRepository
                 ->join('s.site','si','WITH','si =:i')
                 ->setParameter('i',$search->getSites());
         }
-        if(($search->getDateDebut())!=null)
+        if((($search->getDateDebut())!=null)&&(($search->getDateFin())!=null))
         {
             $query = $query
-                ->andWhere('s.datHeureDebut <= :dd')
-                ->setParameter('dd',$search->getDateDebut());
-        }
-        if(($search->getDateFin())!=null)
-        {
-            $query = $query
-                ->andWhere('s.datHeureDebut >= :df')
+                ->andWhere('s.datHeureDebut BETWEEN :dd AND :df' )
+                ->setParameter('dd',$search->getDateDebut())
                 ->setParameter('df',$search->getDateFin());
         }
+
 
 
         {
@@ -62,22 +58,24 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('u',$user);
         }
 
-        if (($search->getInscrit())!=null)
+
+        if ((($search->getInscrit())!=null)&&(($search->getNoinscrit())==null))
         {
             $query = $query
                 ->join('s.participants','p','WITH','p.id=:u')
                 ->setParameter('u',$user->getId());
         }
-        if (($search->getNoinscrit())!=null)
+        if ((($search->getNoinscrit())!=null)&&(($search->getInscrit())==null))
         {
             $query = $query
-                ->andWhere('s.participants_id != :u')
-                ->setParameter('u',$user->getId());
+                ->andWhere(':u NOT MEMBER OF s.participants')
+                ->setParameter('u',$user);
         }
         if (($search->getPast())!=null)
         {
             $query = $query
-                ->andWhere('s.datHeureDebut <= CURRENT_DATE');
+                ->andWhere('s.datHeureDebut <= :d')
+                ->setParameter('d',new \DateTime());
         }
         }
 

@@ -4,44 +4,69 @@
 
 {% block main %}
 <div class="jumbotron">
-    <div>
+
+    <div align="right">
         Date du jour : {{ "now"|date("d/m/Y") }}
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED')  %}
-        Participant : {{ app.user.username }}
-        {% endif %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED')  %}
+        <br>Participant : {{ app.user.username }}
+    {% endif %}
     </div>
-    <div>
 
-        Filtrer les sorties
+        <div>Filtrer les sorties</dvi>
         {{ form_start(search) }}
-        <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-        {{ form_widget(search.sites) }}
-        {{ form_widget(search.libelle) }}
-        {{ form_widget(search.dateDebut) }} {{ form_widget(search.dateFin)}}
-
-        {{ form_widget(search.organisateur) }}
-                <label class="custom-control-label" for="customControlAutosizing">Sortie dont je suis l'organisateur(trice)</label>
-
-        {{ form_widget(search.inscrit) }}
-                <label class="custom-control-label" for="customControlAutosizing">Sorties auxquelles je suis inscrit(e)</label>
-
-        {{ form_widget(search.noinscrit) }}
-                <label class="custom-control-label" for="customControlAutosizing">Sorties auxquelles je ne suis pas inscrit(e)</label>
-
-        {{ form_widget(search.past) }}
-                <label class="custom-control-label" for="customControlAutosizing">Sorties passées</label>
-            <button type="submit" value="ok" class="btn btn-primary">Rechercher</button>
+        <div class="form-row">
+            <div class="form-group col-6">
+                       Site : {{ form_widget(search.sites) }}
+                       Le nom de la sortie contient : {{ form_widget(search.libelle) }}
+                 <div class="form-row">
+                     <div class="form-group col-md-4">
+                    Entre : {{ form_widget(search.dateDebut) }} </div><div class="form-group col-md-4">et {{ form_widget(search.dateFin)}}
+                     </div>
+                 </div>
+            </div>
+            <div class="form-group col-4">
+                <div class="form-check">
+                    <br>
+                     {{ form_widget(search.organisateur) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sorties dont je suis l'organisateur(trice)
+                    </label>
+<br>
+            {{ form_widget(search.inscrit) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sortie auxquelles je suis inscrit(e)
+                    </label>
+                    <br>
+            {{ form_widget(search.noinscrit) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                       Sorties auxquelles je ne suis pas inscrit(e)
+                    </label>
+                    <br>
+            {{ form_widget(search.past) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sorties passées
+                    </label>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="form-group col-1">
+                <button type="submit" value="ok" class="btn btn-danger btn-lg">Rechercher</button>
             </div>
         </div>
-        {{ form_end(search) }}
-    </div>
+            {{ form_end(search) }}
+
+
+
+
+
+
+
 </div>
 <div class="count">
     {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
-    {{ dump(search) }}
 </div>
-    <table>
+    <table class="table table-bordered table-hover">
         <thead>
         <tr>
             <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
@@ -49,8 +74,7 @@
         </thead>
         <tbody>
         {% for sortie in sorties %}
-            {{  dump(sortie) }}
-            <tr>
+            <tr scope="row">
 
 
         <td>
@@ -104,11 +128,11 @@
         {% endif %}
         {% for sortieuser in app.user.sorties %}
         {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y"))  %}
-        <a href="#">Se désister</a>
+        <br><a href="#">Se&nbspdésister</a>
         {% endif %}
             {% endfor %}
         {% if sortie.organisateur == app.user and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y")) %}
-        <a href="#">Annuler</a>
+        <br><a href="#">Annuler</a>
         {% endif %}
             {% endif %}
                 </td>
@@ -122,6 +146,7 @@
         {{ knp_pagination_render(sorties) }}
     </div>
     <div>
-    <a href="{{ path('sortie_creer') }}"><button type="button" class="btn btn-primary">Créer une sortie</button> </a>
+    <a href="#"><button type="button" class="btn btn-danger">Créer une sortie</button> </a>
     </div>
+</div>
 {% endblock %}
