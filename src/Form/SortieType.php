@@ -6,6 +6,7 @@ use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -32,7 +33,7 @@ class SortieType extends AbstractType
                 'label'=>'Nombre de places'
             ])
             ->add('duree', IntegerType::class, [
-                'label' => 'Durée'
+                'label' => 'Durée en minutes'
             ])
             ->add('infosSortie', TextareaType::class, [
                 'label'=>'Description et infos'
@@ -45,6 +46,10 @@ class SortieType extends AbstractType
                 'label'=> 'lieu'
             ])
             ->add('enregistrer', SubmitType::class)
+            ->add('publier', SubmitType::class)
+            ->add('annuler', ButtonType::class, [
+                
+            ])
         ;
     }
 
