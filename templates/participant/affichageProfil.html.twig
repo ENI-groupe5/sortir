@@ -37,14 +37,14 @@
                         <p>{{ participant.telephone }}</p>
                     {% endif %}
                     <p>{{ participant.email }}</p>
-                    <p>{{ participant.site }}</p>
+                    {# <p>{{ participant.site }}</p> #}
                 </div>
             </div>
         </div>
         {% if app.user.id == participant.id %}
             <a href="{{ path('modifier_profil', {'id': participant.id}) }}" ><button>Modifier</button></a>
         {% endif %}
-        <a href="{{ path('index_participant', {'id': participant.id}) }}" ><button>Retour</button></a>
+        <a href="#" ><button>Retour</button></a>
     </div>
 
 {% endblock %}
