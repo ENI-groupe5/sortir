@@ -36,16 +36,24 @@ class ParticipantController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="afficher_profil", methods={"GET"})
-     * @param Participant $participant
+     * @Route("/user/{id}", name="afficher_profil", methods={"GET"})
+     * @param $id
+     * @param EntityManagerInterface $em
      * @return Response
      */
-    public function affichageProfil() {
-        return $this->render('participant/affichageProfil.html.twig');
+    public function affichageProfil($id, EntityManagerInterface $em)
+    {
+
+        $participantrepo = $em->getRepository(Participant::class);
+        $participant = $participantrepo->find($id);
+
+        return $this->render('participant/affichageProfil.html.twig',[
+            'participant'=>$participant
+        ]);
     }
 
     /**
-     * @Route("/{id}/modifier_profil", name="modifier_profil", methods={"GET", "POST"})
+     * @Route("/user/modifier_profil/{id}", name="modifier_profil", methods={"GET", "POST"})
      * @param Request $request
      * @param Participant $participant
      * @param EntityManagerInterface $em
