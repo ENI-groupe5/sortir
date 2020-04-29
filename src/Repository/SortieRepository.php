@@ -56,6 +56,9 @@ class SortieRepository extends ServiceEntityRepository
             $query = $query
                 ->join('s.organisateur','o','WITH','o.id=:u')
                 ->setParameter('u',$user);
+        } else {
+            $query = $query
+            ->join('s.organisateur','o');
         }
 
 
