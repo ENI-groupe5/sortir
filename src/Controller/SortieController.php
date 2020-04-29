@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortie", name="sortie")
+     * @Route("/", name="home")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @param PaginatorInterface $paginator
