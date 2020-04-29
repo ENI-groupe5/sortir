@@ -3,48 +3,45 @@
 {% block title %}Profil{% endblock %}
 
 {% block main %}
-
     {% if app.user.id == participant.id %}
-        <h1>Votre profil</h1>
+        <h1 class="text-primary">Votre profil</h1>
     {% else %}
-        <h1>Profil de {{ participant.username }}</h1>
+        <h1 class="text-secondary">Profil de {{ participant.username }}</h1>
     {% endif %}
-
     <div id="profil">
         {% if app.user.avatar is empty %}
-            <img id="avatar" alt="defaultAvatar" src="{#}TODO{#}">
+            <img id="avatar" alt="defaultAvatar" src="{{ asset('build/defaultAvatar.png') }}">
         {% else %}
-            <img id="avatar" alt="avatar"  src="{#}TODO{#}">
+            <img id="avatar" alt="avatar"  src="{{ asset('uploads/avatars/') }}{{ app.user.avatar }}">
         {% endif %}
-
-        <div>
-            <div>
-                <div>
-                    <p>&nbsp</p>
+        <div class="infosProfil">
+            <div class="row">
+                <div class="col-6 gauche">
+                    <p>Pseudo :</p>
                     <p>Prénom :</p>
                     <p>Nom :</p>
                     <p>Téléphone :</p>
                     <p>Email :</p>
                     <p>Site de rattachement :</p>
                 </div>
-                <div>
-                    <p>{{ participant.username }}</p>
-                    <p>{{ participant.prenom }}</p>
-                    <p>{{ participant.nom }}</p>
+                <div class="col-6 droit">
+                        <p>{{ participant.username }}</p>
+                        <p>{{ participant.prenom }}</p>
+                        <p>{{ participant.nom }}</p>
                     {% if participant.telephone is empty %}
-                        <p><i>Pas de numéro de téléphone de renseigné.</i></p>
+                        <p><i>Numéro de téléphone non renseigné.</i></p>
                     {% else %}
                         <p>{{ participant.telephone }}</p>
                     {% endif %}
-                    <p>{{ participant.email }}</p>
-                    {# <p>{{ participant.site }}</p> #}
+                        <p>{{ participant.email }}</p>
+                        <p>{{ participant.site }}</p>
                 </div>
             </div>
         </div>
         {% if app.user.id == participant.id %}
-            <a href="{{ path('modifier_profil', {'id': participant.id}) }}" ><button>Modifier</button></a>
+            <a href="{{ path('modifier_profil', {'id': app.user.id}) }}" ><button class="bouton">Modifier</button></a>
         {% endif %}
-        <a href="#" ><button>Retour</button></a>
+        <a href="#" ><button class="bouton">Retour</button></a>
     </div>
 
 {% endblock %}
