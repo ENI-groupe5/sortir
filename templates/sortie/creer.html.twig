@@ -1,0 +1,23 @@
+{% extends ......%}
+
+{% block title %}  Créer une sortie &middot {{parent()}} {% endblock %}
+
+{% block main %}
+    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+    <h1>Créer une sortie</h1>
+
+    <div class="addSortie">
+        {{ form_start(sortieForm) }}
+        {{ form_widget(sortieForm) }}
+        {{ form_errors(sortieForm) }}
+        <div>
+            <button type="submit" name="submitAction" value="creer"> Enregistrer </button>
+            <button type="submit" name="submitAction" value="publier"> Publier </button>
+            {# annuler : lien vers accueil #}
+            {# todo insérer un pop-up de confirmation d'annulation #}
+            <a href="{{ path('#') }}"><button type="button"> Annuler </button></a>
+        </div>
+        {{ form_end(sortieForm) }}
+    </div>
+{% endblock %}
