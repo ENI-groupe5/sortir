@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste &middot; {{ parent() }}{% endblock %}
+
+{% block main %}
+<div class="jumbotron">
+
+    <div align="right">
+        Date du jour : {{ "now"|date("d/m/Y") }}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED')  %}
+        <br>Participant : {{ app.user.username }}
+    {% endif %}
+    </div>
+
+        <div>Filtrer les sorties</dvi>
+        {{ form_start(search) }}
+        <div class="form-row">
+            <div class="form-group col-6">
+                       Site : {{ form_widget(search.sites) }}
+                       Le nom de la sortie contient : {{ form_widget(search.libelle) }}
+                 <div class="form-row">
+                     <div class="form-group col-md-4">
+                    Entre : {{ form_widget(search.dateDebut) }} </div><div class="form-group col-md-4">et {{ form_widget(search.dateFin)}}
+                     </div>
+                 </div>
+            </div>
+            <div class="form-group col-4">
+                <div class="form-check">
+                    <br>
+                     {{ form_widget(search.organisateur) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sorties dont je suis l'organisateur(trice)
+                    </label>
+<br>
+            {{ form_widget(search.inscrit) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sortie auxquelles je suis inscrit(e)
+                    </label>
+                    <br>
+            {{ form_widget(search.noinscrit) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                       Sorties auxquelles je ne suis pas inscrit(e)
+                    </label>
+                    <br>
+            {{ form_widget(search.past) }}
+                    <label class="form-check-label" for="defaultCheck1">
+                        Sorties passées
+                    </label>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <div class="form-group col-1">
+                <button type="submit" value="ok" class="btn btn-danger btn-lg">Rechercher</button>
+            </div>
+        </div>
+            {{ form_end(search) }}
+
+
+
+
+
+
+
+</div>
+<div class="count">
+    {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+</div>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            <tr scope="row">
+
+
+        <td>
+            {{ sortie.nom }}
+        </td>
+        <td>
+            {{ sortie.datHeureDebut|date('d/m/Y') }}
+        </td>
+        <td>
+            {{ sortie.dateLimiteInscription|date('d/m/Y') }}
+        </td>
+        <td>
+            {{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}
+        </td>
+        <td>
+            {% if sortie.sortieetat.libelle == 'Ouverte' %}
+                {% if sortie.datHeureDebut|date('d/m/Y') == ("now"|date("d/m/Y")) %}
+                En cours
+                {% elseif sortie.datHeureDebut|date('d/m/Y') < ("now"|date("d/m/Y")) and sortie.dateLimiteInscription|date('d/m/Y') < ("now"|date("d/m/Y"))  %}
+                Fermé
+                {% else %}
+                Ouvert
+                {% endif %}
+            {% endif %}
+            {% if sortie.sortieetat.libelle == 'Créée' %}
+                En création
+            {% endif %}
+            {% if sortie.sortieetat.libelle == 'Annulée' %}
+                Annulée
+            {% endif %}
+            </td>
+        <td>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% for sortieuser in app.user.sorties %}
+            {% if sortieuser.id==sortie.id %}
+                  x
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+        </td>
+        <td>
+            {{ sortie.organisateur.username }}
+        </td>
+                <td>
+            {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
+        {% if sortie.organisateur == app.user %}
+        <a href="#">Modifier</a>
+        {% else %}
+                <a href="#"> Afficher </a>
+        {% endif %}
+        {% for sortieuser in app.user.sorties %}
+        {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y"))  %}
+        <br><a href="#">Se&nbspdésister</a>
+        {% endif %}
+            {% endfor %}
+        {% if sortie.organisateur == app.user and sortie.datHeureDebut|date('d/m/Y')< ("now"|date("d/m/Y")) %}
+        <br><a href="#">Annuler</a>
+        {% endif %}
+            {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <div class="pagination">
+        {{ knp_pagination_render(sorties) }}
+    </div>
+    <div>
+    <a href="#"><button type="button" class="btn btn-danger">Créer une sortie</button> </a>
+    </div>
+</div>
+{% endblock %}
