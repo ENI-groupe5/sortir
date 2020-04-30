@@ -96,8 +96,7 @@ class SortieController extends AbstractController
             fwrite($fp, json_encode($response));
             fclose($fp);
         }   catch (\Exception $e){
-            $this->addFlash("danger","erreur! veuillez vous rapprocher du service informatique");
-            return $this->redirectToRoute('home');
+            throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
         }
 
         //tester les données
