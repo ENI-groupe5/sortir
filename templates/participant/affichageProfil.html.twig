@@ -39,9 +39,9 @@
             </div>
         </div>
         {% if app.user.id == participant.id %}
-            <a href="{{ path('modifier_profil', {'id': app.user.id}) }}" ><button class="bouton">Modifier</button></a>
+            <a href="{{ path('modifier_profil', {'id': app.user.id}) }}"><button class="bouton">Modifier</button></a>
         {% endif %}
-        <a href="#" ><button class="bouton">Retour</button></a>
+        <a href="{{ path('home') }}" ><button class="bouton">Retour</button></a>
     </div>
 
 {% endblock %}

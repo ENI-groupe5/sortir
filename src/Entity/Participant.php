@@ -296,7 +296,7 @@ class Participant implements UserInterface
     /**
      * @param mixed $avatar
      */
-    public function setAvatar($avatar): void
+    public function setAvatar(string $avatar): void
     {
         $this->avatar = $avatar;
     }
