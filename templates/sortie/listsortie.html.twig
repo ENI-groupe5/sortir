@@ -79,6 +79,7 @@
         </tr>
         </thead>
         <tbody>
+
         {% for sortie in sorties %}
             <tr scope="row">
 
@@ -100,7 +101,7 @@
                 Cloturée
             {% else %}
             {% if sortie.sortieetat.id == 2 %}
-                {% if sortie.datHeureDebut|date('U') == ("now"|date("U")) %}
+                {% if (sortie.datHeureDebut|date('U')+sortie.duree|date('U')) == ("now"|date("U")) %}
                 En cours
                 {% elseif sortie.datHeureDebut|date('U') < ("now"|date("U")) and sortie.dateLimiteInscription|date('U') < ("now"|date("U"))  %}
                 Fermé
