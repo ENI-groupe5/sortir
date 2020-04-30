@@ -7,9 +7,9 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
+use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
-use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class SortieController
  * @package App\Controller
+ * @Route("/sortie", name="sortie_")
  */
 class SortieController extends AbstractController
 {
@@ -49,10 +50,11 @@ class SortieController extends AbstractController
 
     /**
      * Créer ou publier une sortie
-     * @Route("/sortie/creer", name="sortie_creer")
+     * @Route("/creer", name="creer")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
+     * @throws \Exception
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
@@ -151,7 +153,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/inscrire/{id}", name="sortie_inscrire")
+     * @Route("/inscrire/{id}", name="inscrire")
      * requirements={"id": "\d+"})
      * @param $id
      * @param EntityManagerInterface $em
@@ -175,10 +177,11 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/desinscrire/{id}",name="sortie_desinscrire")
+     * @Route("/desinscrire/{id}",name="desinscrire")
      * requirements={"id": "\d+"})
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function desinscrire ($id,EntityManagerInterface $em)
     {
@@ -208,4 +211,53 @@ class SortieController extends AbstractController
 
         return $this->redirectToRoute('home');
     }
+
+    /**
+     * @Route("/annuler", name="annuler")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function annuler($id, EntityManagerInterface $em, Request $request)
+    {
+        //récupérer la sortie rattachée à l'id
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        //si sortie n'est pas commencée : si now < dateDébut
+        $now = new \DateTime('now');
+        if($now < $sortie->getDatHeureDebut() {
+
+            //créer instance formulaire + l'associer à $sortie
+            $annulerForm = $this->createForm(AnnulerSortieType::class, $sortie);
+
+            //récupérer les données : motif
+            $annulerForm->handleRequest($request);
+
+            if ($annulerForm->isSubmitted() && $annulerForm->isValid()) {
+
+                //modifier l'état > annulée
+                $etatrepo = $em->getRepository(Etat::class);
+                $etat = $etatrepo->find(3);
+                $sortie->setSortieEtat($etat);
+
+                //mettre à jour en BDD
+                $em->persist($sortie);
+                $em->flush();
+
+                //rediriger
+            }
+        } else {
+            $this->addFlash('error','Annulation échouée : la date de début de la sortie doit être supérieure à maintenant !');
+        }
+        //envoyer le formulaire
+        return $this->render('sortie/annuler.html.twig', [
+            'annulerForm'=> $annulerForm ->createView()
+        ]);
+    }
+}
+
+
 }
