@@ -71,7 +71,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Utilisateur inconnu!');
+            throw new CustomUserMessageAuthenticationException('Identifiants inconnus! Veuillez réessayer');
         }
 
         return $user;
