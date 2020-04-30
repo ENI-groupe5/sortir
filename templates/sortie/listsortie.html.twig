@@ -127,7 +127,7 @@
 
         </td>
         <td>
-            {{ sortie.organisateur.username }}
+            <a href="{{ path('afficher_profil', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.username }}</a>
         </td>
                 <td>
             {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}

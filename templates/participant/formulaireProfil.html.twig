@@ -12,7 +12,7 @@
                 {% if app.user.avatar is empty %}
                     {{ form_row(formulaire.avatar) }}
                 {% else %}
-                    <img id="avatar" alt="avatar"  src="{{ asset('uploads/avatars/') }}{{ app.user.avatar }}">
+                    <img id="avatar" alt="avatar"  src="{{ asset('build/img/uploads/') }}{{ app.user.avatar }}">
                     {{ form_row(formulaire.avatar) }}
                 {% endif %}
             </div>
