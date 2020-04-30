@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme sortieForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}  Annuler une sortie &middot {{parent()}} {% endblock %}
+
+{% block main %}
+    {{ form_start(sortieForm) }}
+
+    <h1>Annuler une sortie</h1>
+    <hr>
+
+    {{ form_errors(sortieForm) }}
+
+{% endblock %}
