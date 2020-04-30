@@ -2,15 +2,13 @@
 
 namespace App\Form;
 
+
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,11 +42,12 @@ class SortieType extends AbstractType
                 'choice_label'=> 'nom',
                 'multiple'=>false,
                 'expanded'=>false,
-                'label'=> 'lieu'
+                'label'=> 'lieu',
+                'placeholder' => 'Veuillez choisir un lieu'
             ])
-            ->add('enregistrer', SubmitType::class)
+            /*->add('enregistrer', SubmitType::class)
             ->add('publier', SubmitType::class)
-            //->add('annuler2', ResetType::class)
+            //->add('annuler2', ResetType::class)*/
         ;
     }
 

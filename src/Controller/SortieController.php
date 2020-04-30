@@ -3,11 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
-use App\Repository\EtatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -73,11 +73,34 @@ class SortieController extends AbstractController
         //hydrater le champ organisateur
         $sortie->setOrganisateur($user);
 
+        //récupérer les lieux et leurs propriétés, les mettre dans un tableau
+        // et les écrire dans un nouveau fichier json
+        $repoLieux = $this->getDoctrine()->getRepository(Lieu::class);
+        $lieux = $repoLieux->findAll();
+        $response = array();
+        $posts = array();
+        for ($i = 0;$i<count($lieux);$i++){
+            $id= $lieux[$i]->getId();
+            $nom = $lieux[$i]->getNom();
+            $rue = $lieux[$i]->getRue();
+            $latitude = $lieux[$i]->getLatitude();
+            $longitude = $lieux[$i]->getLongitude();
+            $nomVille = $lieux[$i]->getLieuVille()->getNom();
+            $cp = $lieux[$i]->getLieuVille()->getCodePostal();
+            $posts[] = array('id'=> $id, 'nom'=> $nom, 'rue'=>$rue,'latitude'=>$latitude,'longitude'=>$longitude,'nomVille'=>$nomVille,'cp'=>$cp);
+        }
+
+        $response['posts'] = $posts;
+        $fp = fopen('results.json', 'w');
+        fwrite($fp, json_encode($response));
+        fclose($fp);
+
         //tester les données
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
             //rediriger selon enregistrer / publier
-            if($sortieForm->get('enregistrer')->isClicked()) {
+            //if($sortieForm->get('enregistrer')->isClicked()) {
+            if($request->request->get('creer')){
 
                 //recupérer l'état "Créée"
                 $etatrepo = $em->getRepository(Etat::class);
@@ -94,8 +117,8 @@ class SortieController extends AbstractController
                 //redirection accueil
                 return $this->redirectToRoute('home');
 
-            } elseif($sortieForm->get('publier')->isClicked()) {
-
+            } //elseif($sortieForm->get('publier')->isClicked()) {
+            elseif($request->request->get('publier')){
                 //récupérer etat "Publiée"
                 $etatrepo = $em->getRepository(Etat::class);
                 $etat = $etatrepo->find(2);
