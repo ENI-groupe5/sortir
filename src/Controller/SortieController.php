@@ -145,8 +145,6 @@ class SortieController extends AbstractController
                 throw new \Exception("problème lors de la soumission du formulaire",404);
             }
 
-        } else {
-            $this->addFlash('warning','opération interrompue, un problème est survenu');
         }
         //afficher le formulaire
         return $this->render('sortie/creer.html.twig', [
