@@ -100,6 +100,7 @@ class SortieController extends AbstractController
             fclose($fp);
         }   catch (Exception $e){
             $this->addFlash("danger","erreur! veuillez vous rapprocher du service informatique");
+            return $this->redirectToRoute('home');
         }
 
         //tester les données
