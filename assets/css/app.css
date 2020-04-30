@@ -57,8 +57,15 @@ nav a{
 form{
     padding-bottom: 50px;
 }
-form label{
+label{
     color: #3D7FA8;
+}
+legend{
+    color: #3D7FA8;
+}
+dl dt{
+    color: #3D7FA8;
+    font-weight: 400;
 }
 /*
 Styles formulaires
