@@ -58,6 +58,7 @@ class SortieController extends AbstractController
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
         //récupérer le user
         $user = $this->getUser();
 
@@ -73,67 +74,77 @@ class SortieController extends AbstractController
         //hydrater le champ organisateur
         $sortie->setOrganisateur($user);
 
-        //récupérer les lieux et leurs propriétés, les mettre dans un tableau
-        // et les écrire dans un nouveau fichier json
-        $repoLieux = $this->getDoctrine()->getRepository(Lieu::class);
-        $lieux = $repoLieux->findAll();
-        $response = array();
-        $posts = array();
-        for ($i = 0;$i<count($lieux);$i++){
-            $id= $lieux[$i]->getId();
-            $nom = $lieux[$i]->getNom();
-            $rue = $lieux[$i]->getRue();
-            $latitude = $lieux[$i]->getLatitude();
-            $longitude = $lieux[$i]->getLongitude();
-            $nomVille = $lieux[$i]->getLieuVille()->getNom();
-            $cp = $lieux[$i]->getLieuVille()->getCodePostal();
-            $posts[] = array('id'=> $id, 'nom'=> $nom, 'rue'=>$rue,'latitude'=>$latitude,'longitude'=>$longitude,'nomVille'=>$nomVille,'cp'=>$cp);
+        try {
+            //récupérer les lieux et leurs propriétés, les mettre dans un tableau
+            // et les écrire dans un nouveau fichier json
+            $repoLieux = $this->getDoctrine()->getRepository(Lieu::class);
+            $lieux = $repoLieux->findAll();
+            $response = array();
+            $posts = array();
+                for ($i = 0; $i < count($lieux); $i++) {
+                    $id = $lieux[$i]->getId();
+                    $nom = $lieux[$i]->getNom();
+                    $rue = $lieux[$i]->getRue();
+                    $latitude = $lieux[$i]->getLatitude();
+                    $longitude = $lieux[$i]->getLongitude();
+                    $nomVille = $lieux[$i]->getLieuVille()->getNom();
+                    $cp = $lieux[$i]->getLieuVille()->getCodePostal();
+                    $posts[] = array('id' => $id, 'nom' => $nom, 'rue' => $rue, 'latitude' => $latitude, 'longitude' => $longitude, 'nomVille' => $nomVille, 'cp' => $cp);
+                }
+            $response['posts'] = $posts;
+            $fp = fopen('results.json', 'w');
+            fwrite($fp, json_encode($response));
+            fclose($fp);
+        }   catch (Exception $e){
+            $this->addFlash("danger","erreur! veuillez vous rapprocher du service informatique");
         }
-
-        $response['posts'] = $posts;
-        $fp = fopen('results.json', 'w');
-        fwrite($fp, json_encode($response));
-        fclose($fp);
 
         //tester les données
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
             //rediriger selon enregistrer / publier
-            //if($sortieForm->get('enregistrer')->isClicked()) {
             if($request->request->get('creer')){
 
                 //recupérer l'état "Créée"
                 $etatrepo = $em->getRepository(Etat::class);
+                try {
                 $etat = $etatrepo -> find(1);
                 //pour hydrater $sortie
                 $sortie->setSortieEtat($etat);
 
-                //sauvegarder données
-                $em ->persist($sortie);
-                $em->flush();
-
+                    //sauvegarder données
+                    $em->persist($sortie);
+                    $em->flush();
+                } catch (Exception $e){
+                    $this->addFlash("danger","erreur! un problème est survenu lors de la création");
+                }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été créée');
                 //redirection accueil
                 return $this->redirectToRoute('home');
 
-            } //elseif($sortieForm->get('publier')->isClicked()) {
-            elseif($request->request->get('publier')){
+            } elseif($request->request->get('publier')){
                 //récupérer etat "Publiée"
                 $etatrepo = $em->getRepository(Etat::class);
-                $etat = $etatrepo->find(2);
-                //hydrater l'etat
-                $sortie->setSortieEtat($etat);
+                try {
+                    $etat = $etatrepo->find(2);
+                    //hydrater l'etat
+                    $sortie->setSortieEtat($etat);
 
-                //sauvegarder données
-                $em ->persist($sortie);
-                $em->flush();
-
+                    //sauvegarder données
+                    $em->persist($sortie);
+                    $em->flush();
+                }catch (\Exception $e){
+                    $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
+                }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été publiée');
                 //redirection accueil
                 return $this->redirectToRoute('home');
+            } else {
+                throw new \Exception("problème lors de la soumission du formulaire",404);
             }
+
         }
         //afficher le formulaire
         return $this->render('sortie/creer.html.twig', [
