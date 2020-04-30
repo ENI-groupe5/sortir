@@ -64,6 +64,9 @@ class SortieController extends AbstractController
 
         //créer instance sortie
         $sortie = new Sortie();
+        $sortie->setDatHeureDebut(new \DateTime("+7 days"));
+        $sortie->setDateLimiteInscription(new \DateTime());
+        $sortie->setDuree(90);
 
         //créer instance formulaire
         $sortieForm = $this->createForm(SortieType::class, $sortie);
