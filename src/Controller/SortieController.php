@@ -163,15 +163,21 @@ class SortieController extends AbstractController
     {
 
         $partirepo = $em->getRepository(Participant::class);
-        $user  = $partirepo->find($this->getUser()->getId());
+        $user = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
-        $sortie=$sortieRepo->find($id);
-        if (!$sortie->getParticipants()->contains($user)){
-        $sortie->getParticipants()[]= $user;
-        $user->setSorties($sortie);
-        }
+        $sortie = $sortieRepo->find($id);
+        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user)
+        {
+            if (!$sortie->getParticipants()->contains($user)) {
+                $sortie->getParticipants()[] = $user;
+                $user->setSorties($sortie);
+            }
         $em->flush();
-        $this->addFlash('success','Vous êtes maintenant inscrit à cette sortie');
+        $this->addFlash('success', 'Vous êtes maintenant inscrit à cette sortie');
+          } else {
+            $this->addFlash('error','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+        }
+        
         return $this->redirectToRoute('home');
 
     }

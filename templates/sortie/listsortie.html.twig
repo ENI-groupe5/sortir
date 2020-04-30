@@ -57,6 +57,7 @@
             {{ form_end(search) }}
         </div>
 </div>
+    <div class="container-fluid">
     <table>
         <tr>
             {# sorting of properties based on query components #}
@@ -69,9 +70,11 @@
             </th>
         </tr>
     </table>
+
 <div class="count">
     {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
 </div>
+
     <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -167,7 +170,7 @@
         {% endfor %}
         </tbody>
     </table>
-
+        </div>
     <div class="pagination">
         {{ knp_pagination_render(sorties) }}
     </div>
