@@ -139,7 +139,7 @@
                 {% set inscrire = 'true' %}
         {% for sortieuser in app.user.sorties %}
         {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('U') > ("now"|date("U"))  %}
-        <br><a href="#">Se&nbspdésister</a>
+        <br><a href="{{ path('sortie_desinscrire',{'id':sortie.id}) }}">Se&nbspdésister</a>
         {% endif %}
             {% if (sortie.dateLimiteInscription|date('U')) > ("now"|date("U")) and sortie.sortieetat.id == 2%}
                 {% if sortie.nbInscriptionsMax > sortie.participants|length %}
@@ -155,7 +155,7 @@
                     {% set inscrire = 'false' %}
                     {% endif %}
                 {% if inscrire == 'true' %}
-                    <br><a href="#">S'inscrire</a>
+                    <br><a href="{{ path('sortie_inscrire',{'id':sortie.id}) }}">S'inscrire</a>
                 {% endif %}
         {% if sortie.organisateur == app.user and sortie.dateLimiteInscription|date('U')> ("now"|date("U"))and sortie.sortieetat.id == 2 %}
         <br><a href="#">Annuler</a>

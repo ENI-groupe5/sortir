@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,14 +37,9 @@ class SortieController extends AbstractController
        $form = $this->createForm(FiltreSortieType::class,$search);
        $form->handleRequest($request);
         $sortieRepo = $em->getRepository(Sortie::class);
-
            $user= $this->getUser();
            $sorties = $paginator->paginate($sortieRepo->listSortieQuery($search,$user),
                $request->query->getInt('page',1),10);
-
-
-
-
        return $this->render('sortie/listsortie.html.twig',[
            'sorties'=>$sorties,
            'search'=>$form->createView()
@@ -51,7 +49,7 @@ class SortieController extends AbstractController
 
     /**
      * Créer ou publier une sortie
-     * @Route("sortie/creer", name="sortie_creer")
+     * @Route("/sortie/creer", name="sortie_creer")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
@@ -153,34 +151,61 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/annuler", name="sortie_annuler")
+     * @Route("/sortie/inscrire/{id}", name="sortie_inscrire")
+     * requirements={"id": "\d+"})
      * @param $id
      * @param EntityManagerInterface $em
-     * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function annuler($id, EntityManagerInterface $em, Request $request)
+    public function inscrire ($id,EntityManagerInterface $em)
     {
-        //récupérer la sortie rattachée à l'id
+
+        $partirepo = $em->getRepository(Participant::class);
+        $user  = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
-        $sortie = $sortieRepo->find($id);
+        $sortie=$sortieRepo->find($id);
+        if (!$sortie->getParticipants()->contains($user)){
+        $sortie->getParticipants()[]= $user;
+        $user->setSorties($sortie);
+        }
+        $em->flush();
+        $this->addFlash('success','Vous êtes maintenant inscrit à cette sortie');
+        return $this->redirectToRoute('home');
 
-        //créer instance formulaire
-        $annulerForm = $this->createForm(SortieType::class, $sortie);
+    }
 
-        //récupérer les données
-        $annulerForm->handleRequest($request);
+    /**
+     * @Route("/sortie/desinscrire/{id}",name="sortie_desinscrire")
+     * requirements={"id": "\d+"})
+     * @param $id
+     * @param EntityManagerInterface $em
+     */
+    public function desinscrire ($id,EntityManagerInterface $em)
+    {
+        $partirepo = $em->getRepository(Participant::class);
+        $user  = $partirepo->find($this->getUser()->getId());
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sortie=$sortieRepo->find($id);
+        if ($sortie->getParticipants()->contains($user)){
+            $sortie->getParticipants()->removeElement($user);
+            if($user->getSorties()===$sortie){
+                $user->getSorties(null);
+            }
+        }
+        if($user->getSorties()->contains($sortie)) {
+            $user->getSorties()->removeElement($sortie);
+            if ($sortie->getParticipants() === $user) {
+                $sortie->setParticipants(null);
+            }
+        }
+        $em->flush();
+        if ($sortie->getParticipants()->contains($user)||$user->getSorties()->contains($sortie))
+        {
+            $this->addFlash('error','Desinscription échouée');
+        } else{
+            $this->addFlash('success','Vous êtes maintenant desinscrit de cette sortie');
+        }
 
-        //récupérer le msg saisi sur formulaire
-        $sortie->setInfosSortie();
-
-
-        //l'ajouter en bdd + etat annulée
-        //rediriger
-
-        //envoyer le formulaire
-        return $this->render('sortie/annuler.html.twig', [
-            'annulerForm'=> $annulerForm ->createView()
-        ]);
+        return $this->redirectToRoute('home');
     }
 }
