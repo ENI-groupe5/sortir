@@ -51,8 +51,9 @@
                     <div class="col-md-12">
                         <input type="submit" name="creer" class="bouton mx-2" value="Créer">
                         <input type="submit" name="publier" class="bouton mx-2" value="Publier">
-                        <input type="submit" name="annuler" class="bouton" value="Annuler">
+
                         {{ form_end(sortieForm) }}
+                        <a href="{{ path('home') }}"><input type="submit" name="annuler" class="bouton" value="Annuler"></a>
                     </div>
                 </div>
 
