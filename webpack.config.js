@@ -25,10 +25,14 @@ Encore
      */
     .addEntry('js', './assets/js/app.js')
     .addEntry('css', './assets/css/app.css')
-    .copyFiles({
+    .copyFiles([{
         from: './assets/img',
         to: 'img/[path][name].[ext]',
-    })
+    },
+    {
+        from: './assets/img/uploads',
+        to: 'img/uploads/[path][name].[ext]',}])
+
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
