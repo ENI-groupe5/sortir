@@ -42,12 +42,9 @@ class SortieType extends AbstractType
                 'choice_label'=> 'nom',
                 'multiple'=>false,
                 'expanded'=>false,
-                'label'=> 'lieu',
+                'label'=> 'Lieu',
                 'placeholder' => 'Veuillez choisir un lieu'
             ])
-            /*->add('enregistrer', SubmitType::class)
-            ->add('publier', SubmitType::class)
-            //->add('annuler2', ResetType::class)*/
         ;
     }
 
