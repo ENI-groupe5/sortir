@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SortieRepository")
@@ -17,22 +18,30 @@ class Sortie
      */
     private $id;
     /**
+     * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Assert\Length(min="1",max="255",minMessage="nom trop court! min 2 caractères",maxMessage="nom trop long!! max 255 caractères")
      * @ORM\Column(type="string",length=255)
      */
     private $nom;
     /**
+     * @Assert\DateTime(message="La date n'est pas au bon format")
+     * @Assert\GreaterThan("today",message="vous ne pouvez choisir une date antérieure à aujourd'hui")
      * @ORM\Column(type="datetime")
      */
     private $datHeureDebut;
     /**
+     * @Assert\GreaterThan("0",message="la durée doit être positive")
      * @ORM\Column(type="integer")
      */
     private $duree;
     /**
+     * @Assert\LessThan(propertyPath="datHeureDebut",message="date limite supérieure à la date de début!")
+     * @Assert\GreaterThanOrEqual("today",message="vous ne pouvez choisir une date antérieure à aujourd'hui")
      * @ORM\Column(type="date")
      */
     private $dateLimiteInscription;
     /**
+     * @Assert\GreaterThan("0",message="le nombre de participants doit être positif")
      * @ORM\Column(type="integer")
      */
     private $nbInscriptionsMax;

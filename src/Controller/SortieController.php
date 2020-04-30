@@ -9,7 +9,6 @@ use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
-use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,6 +61,9 @@ class SortieController extends AbstractController
 
         //créer instance sortie
         $sortie = new Sortie();
+        $sortie->setDatHeureDebut(new \DateTime("+7 days"));
+        $sortie->setDateLimiteInscription(new \DateTime());
+        $sortie->setDuree(90);
 
         //créer instance formulaire
         $sortieForm = $this->createForm(SortieType::class, $sortie);
