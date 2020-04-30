@@ -7,7 +7,6 @@ use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
-use App\Repository\EtatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,7 +50,7 @@ class SortieController extends AbstractController
 
     /**
      * Créer ou publier une sortie
-     * @Route("/sortie/creer", name="sortie_creer")
+     * @Route("sortie/creer", name="sortie_creer")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
@@ -117,4 +116,5 @@ class SortieController extends AbstractController
             "sortieForm"=>$sortieForm ->createView()
         ]);
     }
+
 }
