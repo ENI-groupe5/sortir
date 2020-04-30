@@ -141,4 +141,35 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/sortie/annuler", name="sortie_annuler")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
+     */
+    public function annuler($id, EntityManagerInterface $em, Request $request)
+    {
+        //récupérer la sortie rattachée à l'id
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        //créer instance formulaire
+        $annulerForm = $this->createForm(SortieType::class, $sortie);
+
+        //récupérer les données
+        $annulerForm->handleRequest($request);
+
+        //récupérer le msg saisi sur formulaire
+        $sortie->setInfosSortie();
+
+
+        //l'ajouter en bdd + etat annulée
+        //rediriger
+
+        //envoyer le formulaire
+        return $this->render('sortie/annuler.html.twig', [
+            'annulerForm'=> $annulerForm ->createView()
+        ]);
+    }
 }
