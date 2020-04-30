@@ -27,6 +27,7 @@ class SortieRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->join('s.sortie_etat','e');
 
+
             //Recherche par libelle
         if(($search->getLibelle())!=null)
         {
@@ -47,10 +48,6 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('dd',$search->getDateDebut())
                 ->setParameter('df',$search->getDateFin());
         }
-
-
-
-        {
         if (($search->getOrganisateur())!=null)
         {
             $query = $query
@@ -60,8 +57,6 @@ class SortieRepository extends ServiceEntityRepository
             $query = $query
             ->join('s.organisateur','o');
         }
-
-
         if ((($search->getInscrit())!=null)&&(($search->getNoinscrit())==null))
         {
             $query = $query
@@ -79,14 +74,12 @@ class SortieRepository extends ServiceEntityRepository
             $query = $query
                 ->andWhere('s.datHeureDebut <= :d')
                 ->setParameter('d',new \DateTime());
+        } else {
+            $query = $query
+                ->andWhere('s.datHeureDebut >= :da')
+                ->setParameter('da',new \DateTime('-1 month'));
         }
-        }
-
-
-
-
         return $query->getQuery();
-
     }
 
     /*
