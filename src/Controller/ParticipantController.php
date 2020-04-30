@@ -75,7 +75,7 @@ class ParticipantController extends AbstractController
             $em->persist($participant);
             $em->flush();
             $this->addFlash("success", "Votre profil a bien été modifié !");
-            return $this->redirectToRoute('afficher_profil', array('id' => $participant->getId()));
+            return $this->redirectToRoute('home', array('id' => $participant->getId()));
         }
 
         return $this->render('participant/formulaireProfil.html.twig', [
