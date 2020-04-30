@@ -112,3 +112,19 @@ Style pagination
     background-color: #F56565 !Important;
     border: solid 1px #F56565;
 }
+
+/*
+Style affichage du profil
+ */
+
+#profil {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+#avatar {
+    width: 150px;
+    margin-bottom: 30px;
+}
