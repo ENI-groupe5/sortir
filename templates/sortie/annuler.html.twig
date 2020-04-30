@@ -1,37 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme sortieForm 'bootstrap_4_horizontal_layout.html.twig' %}
+{% form_theme annulerForm 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block title %}  Annuler une sortie &middot; {{parent()}} {% endblock %}
 
 {% block main %}
-    {{ form_start(sortieForm) }}
+    {{ form_start(annulerForm) }}
 
     <h1>Annuler une sortie</h1>
     <hr>
     <div class="annulerSortie">
-        <div class="row">
-            <div class="col-6 gauche">
-                <p>Nom de la sortie :</p>
-                <p>Date de la sortie :</p>
-                <p>Site organisateur :</p>
-                <p>Lieu :</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Nom de la sortie :</p>
+                    <p>Date de la sortie :</p>
+                    <p>Site organisateur :</p>
+                    <p>Lieu :</p>
+                    <p>Motif :</p>
+                </div>
+                <div class="col-md-6">
+                    <p>{{ sortie.nom }}</p>
+                    <p>{{ sortie.datHeureDebut|date('d/m/Y') }}</p>
+                    <p>{{ sortie.site.nom }}</p>
+                    <p>{{ sortie.lieu.nom }}</p>
+                    <p>{{ form_start(annulerForm) }}</p>
+                    <p>{{ form_widget(annulerForm) }}</p>
+                </div>
             </div>
-            <div class="col-6 droit">
-                <p>{{ sortie.nom }}</p>
-                <p>{{ sortie.dateHeureDebut }}</p>
-                <p>{{ sortie.site }}</p>
-                <p>{{ sortie.lieu }}</p>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" name="enregistrer" class="bouton" value="Enregistrer">
+                    <input type="submit" name="annuler" class="bouton" value="Annuler">
+                </div>
+                {{ form_end(annulerForm) }}
             </div>
-        </div>
-        <div class="row">
-            {{ form_start(annulerForm) }}
-            {{ form_widget(annulerForm) }}
-            <div>
-                <input type="submit" name="enregistrer" class="bouton" value="Enregistrer">
-                <input type="submit" name="annuler" class="bouton" value="Annuler">
-            </div>
-            {{ form_end(annulerForm) }}
         </div>
     </div>
 {% endblock %}

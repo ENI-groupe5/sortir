@@ -14,9 +14,8 @@ class AnnulerSortieType extends AbstractType
     {
         $builder
             ->add('infosSortie', TextareaType::class, [
-                'label'=>'Motif'
-            ])
-        ;
+                'label'=> false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
