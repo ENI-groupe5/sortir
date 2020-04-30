@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,13 +71,19 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         //hydrater le champ organisateur
-        $sortie->setOrganisateur($user->getUsername());
+        $sortie->setOrganisateur($user);
 
         //tester les données
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
             //rediriger selon enregistrer / publier
-            if($sortieForm->get('creer')->isClicked()) {
+            if($sortieForm->get('enregistrer')->isClicked()) {
+
+                //recupérer l'état "Créée"
+                $etatrepo = $em->getRepository(Etat::class);
+                $etat = $etatrepo -> find(1);
+                //pour hydrater $sortie
+                $sortie->setSortieEtat($etat);
 
                 //sauvegarder données
                 $em ->persist($sortie);
@@ -84,12 +92,15 @@ class SortieController extends AbstractController
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été créée');
                 //redirection accueil
-                $this->redirectToRoute('home');
+                return $this->redirectToRoute('home');
 
             } elseif($sortieForm->get('publier')->isClicked()) {
 
+                //récupérer etat "Publiée"
+                $etatrepo = $em->getRepository(Etat::class);
+                $etat = $etatrepo->find(2);
                 //hydrater l'etat
-                $sortie->setSortieEtat('ouverte');
+                $sortie->setSortieEtat($etat);
 
                 //sauvegarder données
                 $em ->persist($sortie);
@@ -98,7 +109,7 @@ class SortieController extends AbstractController
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été publiée');
                 //redirection accueil
-                $this->redirectToRoute('home');
+                return $this->redirectToRoute('home');
             }
         }
         //afficher le formulaire

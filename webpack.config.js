@@ -27,7 +27,7 @@ Encore
     .addEntry('css', './assets/css/app.css')
     .copyFiles({
         from: './assets/img',
-        to: './build/img'
+        to: './img'
     })
     //.addEntry('page2', './assets/js/page2.js')
 
