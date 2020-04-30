@@ -98,7 +98,7 @@ class SortieController extends AbstractController
             $fp = fopen('results.json', 'w');
             fwrite($fp, json_encode($response));
             fclose($fp);
-        }   catch (Exception $e){
+        }   catch (\Exception $e){
             $this->addFlash("danger","erreur! veuillez vous rapprocher du service informatique");
             return $this->redirectToRoute('home');
         }
@@ -119,7 +119,7 @@ class SortieController extends AbstractController
                     //sauvegarder données
                     $em->persist($sortie);
                     $em->flush();
-                } catch (Exception $e){
+                } catch (\Exception $e){
                     $this->addFlash("danger","erreur! un problème est survenu lors de la création");
                 }
                 //message flash
