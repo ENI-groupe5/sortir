@@ -7,7 +7,6 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
-use App\Entity\Ville;
 use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
@@ -34,17 +33,17 @@ class SortieController extends AbstractController
      */
     public function list(Request $request, EntityManagerInterface $em, PaginatorInterface $paginator)
     {
-        $search = new SortieSearch();
-        $form = $this->createForm(FiltreSortieType::class, $search);
-        $form->handleRequest($request);
+       $search = new SortieSearch();
+       $form = $this->createForm(FiltreSortieType::class,$search);
+       $form->handleRequest($request);
         $sortieRepo = $em->getRepository(Sortie::class);
-        $user = $this->getUser();
-        $sorties = $paginator->paginate($sortieRepo->listSortieQuery($search, $user),
-            $request->query->getInt('page', 1), 10);
-        return $this->render('sortie/listsortie.html.twig', [
-            'sorties' => $sorties,
-            'search' => $form->createView()
-        ]);
+           $user= $this->getUser();
+           $sorties = $paginator->paginate($sortieRepo->listSortieQuery($search,$user),
+               $request->query->getInt('page',1),10);
+       return $this->render('sortie/listsortie.html.twig',[
+           'sorties'=>$sorties,
+           'search'=>$form->createView()
+       ]);
     }
 
 
@@ -54,11 +53,10 @@ class SortieController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
-     * @throws \Exception
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted(['ROLE_USER', 'ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
         //récupérer le user
         $user = $this->getUser();
 
@@ -84,50 +82,49 @@ class SortieController extends AbstractController
             $lieux = $repoLieux->findAll();
             $response = array();
             $posts = array();
-            for ($i = 0; $i < count($lieux); $i++) {
-                $id = $lieux[$i]->getId();
-                $nom = $lieux[$i]->getNom();
-                $rue = $lieux[$i]->getRue();
-                $latitude = $lieux[$i]->getLatitude();
-                $longitude = $lieux[$i]->getLongitude();
-                $nomVille = $lieux[$i]->getLieuVille()->getNom();
-                $cp = $lieux[$i]->getLieuVille()->getCodePostal();
-                $posts[] = array('id' => $id, 'nom' => $nom, 'rue' => $rue, 'latitude' => $latitude, 'longitude' => $longitude, 'nomVille' => $nomVille, 'cp' => $cp);
-            }
+                for ($i = 0; $i < count($lieux); $i++) {
+                    $id = $lieux[$i]->getId();
+                    $nom = $lieux[$i]->getNom();
+                    $rue = $lieux[$i]->getRue();
+                    $latitude = $lieux[$i]->getLatitude();
+                    $longitude = $lieux[$i]->getLongitude();
+                    $nomVille = $lieux[$i]->getLieuVille()->getNom();
+                    $cp = $lieux[$i]->getLieuVille()->getCodePostal();
+                    $posts[] = array('id' => $id, 'nom' => $nom, 'rue' => $rue, 'latitude' => $latitude, 'longitude' => $longitude, 'nomVille' => $nomVille, 'cp' => $cp);
+                }
             $response['posts'] = $posts;
             $fp = fopen('results.json', 'w');
             fwrite($fp, json_encode($response));
             fclose($fp);
-        } catch (\Exception $e) {
-            $this->addFlash("danger", "erreur! veuillez vous rapprocher du service informatique");
-            return $this->redirectToRoute('home');
+        }   catch (\Exception $e){
+            throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
         }
 
         //tester les données
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()){
 
             //rediriger selon enregistrer / publier
-            if ($request->request->get('creer')) {
+            if($request->request->get('creer')){
 
                 //recupérer l'état "Créée"
                 $etatrepo = $em->getRepository(Etat::class);
                 try {
-                    $etat = $etatrepo->find(1);
-                    //pour hydrater $sortie
-                    $sortie->setSortieEtat($etat);
+                $etat = $etatrepo -> find(1);
+                //pour hydrater $sortie
+                $sortie->setSortieEtat($etat);
 
                     //sauvegarder données
                     $em->persist($sortie);
                     $em->flush();
-                } catch (\Exception $e) {
-                    $this->addFlash("danger", "erreur! un problème est survenu lors de la création");
+                } catch (\Exception $e){
+                    $this->addFlash("danger","erreur! un problème est survenu lors de la création");
                 }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été créée');
                 //redirection accueil
                 return $this->redirectToRoute('home');
 
-            } elseif ($request->request->get('publier')) {
+            } elseif($request->request->get('publier')){
                 //récupérer etat "Publiée"
                 $etatrepo = $em->getRepository(Etat::class);
                 try {
@@ -138,21 +135,21 @@ class SortieController extends AbstractController
                     //sauvegarder données
                     $em->persist($sortie);
                     $em->flush();
-                } catch (\Exception $e) {
-                    $this->addFlash("danger", "erreur! un problème est survenu lors de la publication");
+                }catch (\Exception $e){
+                    $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
                 }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été publiée');
                 //redirection accueil
                 return $this->redirectToRoute('home');
             } else {
-                throw new \Exception("problème lors de la soumission du formulaire", 404);
+                throw new \Exception("problème lors de la soumission du formulaire",404);
             }
 
         }
         //afficher le formulaire
         return $this->render('sortie/creer.html.twig', [
-            "sortieForm" => $sortieForm->createView()
+            "sortieForm"=>$sortieForm ->createView()
         ]);
     }
 
@@ -163,19 +160,25 @@ class SortieController extends AbstractController
      * @param EntityManagerInterface $em
      * @return RedirectResponse
      */
-    public function inscrire($id, EntityManagerInterface $em)
+    public function inscrire ($id,EntityManagerInterface $em)
     {
 
         $partirepo = $em->getRepository(Participant::class);
         $user = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
-        if (!$sortie->getParticipants()->contains($user)) {
-            $sortie->getParticipants()[] = $user;
-            $user->setSorties($sortie);
-        }
+        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user)
+        {
+            if (!$sortie->getParticipants()->contains($user)) {
+                $sortie->getParticipants()[] = $user;
+                $user->setSorties($sortie);
+            }
         $em->flush();
         $this->addFlash('success', 'Vous êtes maintenant inscrit à cette sortie');
+          } else {
+            $this->addFlash('error','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+        }
+        
         return $this->redirectToRoute('home');
 
     }
@@ -185,31 +188,31 @@ class SortieController extends AbstractController
      * requirements={"id": "\d+"})
      * @param $id
      * @param EntityManagerInterface $em
-     * @return RedirectResponse
      */
-    public function desinscrire($id, EntityManagerInterface $em)
+    public function desinscrire ($id,EntityManagerInterface $em)
     {
         $partirepo = $em->getRepository(Participant::class);
-        $user = $partirepo->find($this->getUser()->getId());
+        $user  = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
-        $sortie = $sortieRepo->find($id);
-        if ($sortie->getParticipants()->contains($user)) {
+        $sortie=$sortieRepo->find($id);
+        if ($sortie->getParticipants()->contains($user)){
             $sortie->getParticipants()->removeElement($user);
-            if ($user->getSorties() === $sortie) {
+            if($user->getSorties()===$sortie){
                 $user->getSorties(null);
             }
         }
-        if ($user->getSorties()->contains($sortie)) {
+        if($user->getSorties()->contains($sortie)) {
             $user->getSorties()->removeElement($sortie);
             if ($sortie->getParticipants() === $user) {
                 $sortie->setParticipants(null);
             }
         }
         $em->flush();
-        if ($sortie->getParticipants()->contains($user) || $user->getSorties()->contains($sortie)) {
-            $this->addFlash('error', 'Desinscription échouée');
-        } else {
-            $this->addFlash('success', 'Vous êtes maintenant desinscrit de cette sortie');
+        if ($sortie->getParticipants()->contains($user)||$user->getSorties()->contains($sortie))
+        {
+            $this->addFlash('error','Desinscription échouée');
+        } else{
+            $this->addFlash('success','Vous êtes maintenant desinscrit de cette sortie');
         }
 
         return $this->redirectToRoute('home');
@@ -243,7 +246,6 @@ class SortieController extends AbstractController
         //récupérer la ville et le cp
         $ville = $detailLieu->getLieuVille()->getNom();
         $cp =$detailLieu->getLieuVille()->getCodePostal();
-
 
         //créer instance formulaire + l'associer à $sortie
         $annulerForm = $this->createForm(AnnulerSortieType::class, $sortie);

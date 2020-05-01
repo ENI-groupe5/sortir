@@ -48,6 +48,20 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('dd',$search->getDateDebut())
                 ->setParameter('df',$search->getDateFin());
         }
+        if((($search->getDateDebut())!=null)&&(($search->getDateFin())==null))
+        {
+            $query = $query
+                ->andWhere('s.datHeureDebut > :dd' )
+                ->setParameter('dd',$search->getDateDebut());
+        }
+        if((($search->getDateDebut())==null)&&(($search->getDateFin())!=null))
+        {
+            $query = $query
+                ->andWhere('s.datHeureDebut < :df' )
+                ->setParameter('df',$search->getDateFin());
+        }
+
+
         if (($search->getOrganisateur())!=null)
         {
             $query = $query
@@ -72,8 +86,9 @@ class SortieRepository extends ServiceEntityRepository
         if (($search->getPast())!=null)
         {
             $query = $query
-                ->andWhere('s.datHeureDebut <= :d')
-                ->setParameter('d',new \DateTime());
+                ->andWhere('s.datHeureDebut BETWEEN :d AND :da')
+                ->setParameter('d',new \DateTime())
+                ->setParameter('da',new \DateTime('-1 month'));
         } else {
             $query = $query
                 ->andWhere('s.datHeureDebut >= :da')
