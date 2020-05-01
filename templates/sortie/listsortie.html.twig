@@ -135,9 +135,9 @@
                 <td>
             {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
         {% if sortie.organisateur == app.user %}
-        <a href="#">Modifier</a>
+        <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a>
         {% else %}
-                <a href="#"> Afficher </a>
+                <a href="{{ path('sortie_afficher', {id:sortie.id}) }}"> Afficher </a>
         {% endif %}
                 {% set inscrire = 'true' %}
         {% for sortieuser in app.user.sorties %}

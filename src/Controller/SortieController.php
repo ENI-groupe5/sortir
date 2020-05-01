@@ -73,8 +73,9 @@ class SortieController extends AbstractController
         //récupérer les données
         $sortieForm->handleRequest($request);
 
-        //hydrater le champ organisateur
+        //hydrater le champ organisateur et site
         $sortie->setOrganisateur($user);
+        $sortie->setSite($user->getSite());
 
         try {
             //récupérer les lieux et leurs propriétés, les mettre dans un tableau
@@ -119,6 +120,7 @@ class SortieController extends AbstractController
                     $em->flush();
                 } catch (\Exception $e){
                     $this->addFlash("danger","erreur! un problème est survenu lors de la création");
+                    return $this->redirectToRoute('home');
                 }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été créée');
@@ -138,6 +140,7 @@ class SortieController extends AbstractController
                     $em->flush();
                 }catch (\Exception $e){
                     $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
+                    return $this->redirectToRoute('home');
                 }
                 //message flash
                 $this->addFlash('success', 'La sortie a bien été publiée');
@@ -218,6 +221,156 @@ class SortieController extends AbstractController
         }
 
         return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/sortie/afficher/{id}",name="sortie_afficher",requirements={"id"="\d+"})
+     */
+    public function afficherUneSortie($id){
+        // autoriser l'accès à l'affichage que pour les utilisateurs connectés
+        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+
+        // récupère le contenu de la sortie grâce à son id
+        $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $repoSortie->find($id);
+
+        // si l'id ne retourne pas de résultat, renvoi vers la page d'accueil sinon affichage de la sortie
+        if (empty($sortie)) {
+            $this->addFlash('danger', 'nous avons rencontré une erreur, veuillez réessayer!!');
+            return $this->redirectToRoute('home');
+        } else {
+            return $this->render('sortie/afficher.html.twig',['sortie'=>$sortie]);
+        }
+    }
+
+    /**
+     * @Route("/sortie/modifier/{id}",name="sortie_modifier",requirements={"id"="\d+"})
+     */
+    public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
+        // autoriser l'accès à l'affichage que pour les utilisateurs connectés
+        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+
+        // récupère le contenu de la sortie grâce à son id
+        $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $repoSortie->find($id);
+
+        // si l'id ne retourne pas de résultat, renvoi vers la page d'accueil
+        if (empty($sortie)) {
+            $this->addFlash('danger', 'nous avons rencontré une erreur, veuillez réessayer!!');
+            return $this->redirectToRoute('home');
+        } else {
+        // si pas d'erreur, autoriser l'accès à cette page uniquement si l'utilisateur est aussi l'organisateur
+        $user = $this->getUser();
+        $organisateur = $sortie->getOrganisateur();
+
+            if ($user === $organisateur){
+                //créer instance formulaire
+                $sortieForm = $this->createForm(SortieType::class, $sortie);
+
+                //récupérer les données
+                $sortieForm->handleRequest($request);
+
+                try {
+                    //récupérer les lieux et leurs propriétés, les mettre dans un tableau
+                    // et les écrire dans un nouveau fichier json pour les envoyer à la vue
+                    $repoLieux = $this->getDoctrine()->getRepository(Lieu::class);
+                    $lieux = $repoLieux->findAll();
+                    $response = array();
+                    $posts = array();
+                    for ($i = 0; $i < count($lieux); $i++) {
+                        $id = $lieux[$i]->getId();
+                        $nom = $lieux[$i]->getNom();
+                        $rue = $lieux[$i]->getRue();
+                        $latitude = $lieux[$i]->getLatitude();
+                        $longitude = $lieux[$i]->getLongitude();
+                        $nomVille = $lieux[$i]->getLieuVille()->getNom();
+                        $cp = $lieux[$i]->getLieuVille()->getCodePostal();
+                        $posts[] = array('id' => $id, 'nom' => $nom, 'rue' => $rue, 'latitude' => $latitude, 'longitude' => $longitude, 'nomVille' => $nomVille, 'cp' => $cp);
+                    }
+                    $response['posts'] = $posts;
+                    $fp = fopen('results.json', 'w');
+                    fwrite($fp, json_encode($response));
+                    fclose($fp);
+                }   catch (\Exception $e){
+                    throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
+                }
+
+
+                //tester les données
+                if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+                    $etatrepo = $em->getRepository(Etat::class);
+
+                    //si bouton enregistrer
+                    if($request->request->get('enregistrer')){
+                        try{
+                            $etat = $etatrepo -> find(1);
+                            //pour hydrater $sortie
+                            $sortie->setSortieEtat($etat);
+
+                            //sauvegarder données
+                            $em->persist($sortie);
+                            $em->flush();
+                        } catch (\Exception $e){
+                            $this->addFlash("danger","erreur! un problème est survenu lors de la modification");
+                            return $this->redirectToRoute('home');
+                        }
+                        //message flash
+                        $this->addFlash('success', 'La sortie a bien été modifiée');
+                        //redirection accueil
+                        return $this->redirectToRoute('home');
+
+                    } //si bouton publier
+                    elseif($request->request->get('publier')){
+                        try{
+                            $etat = $etatrepo -> find(2);
+                            //pour hydrater $sortie
+                            $sortie->setSortieEtat($etat);
+
+                            //sauvegarder données
+                            $em->persist($sortie);
+                            $em->flush();
+                        } catch (\Exception $e){
+                            $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
+                            return $this->redirectToRoute('home');
+                        }
+                        //message flash
+                        $this->addFlash('success', 'La sortie a bien été publiée');
+                        //redirection accueil
+                        return $this->redirectToRoute('home');
+
+                    } // si bouton supprimer
+                    elseif ($request->request->get('supprimer')){
+                        try{
+
+                            //sauvegarder données
+                            $em->remove($sortie);
+                            $em->flush();
+                        } catch (\Exception $e){
+                            $this->addFlash("danger","erreur! un problème est survenu lors de la suppression");
+                            return $this->redirectToRoute('home');
+                        }
+                    //message flash
+                    $this->addFlash('success', 'La sortie a bien été supprimée');
+                    //redirection accueil
+                    return $this->redirectToRoute('home');
+
+                    }
+                    else {
+                        // le formulaire n'est pas valide
+                        throw new \Exception("problème lors de la soumission du formulaire",404);
+                    }
+
+                }
+
+
+                // afficher le formulaire
+                return $this->render('sortie/modifier.html.twig',['sortieForm'=>$sortieForm->createView()]);
+            } else {
+                // ce n'est pas l'organisateur, renvoyer une erreur
+               $this->addFlash('warning','vous n\'êtes pas autorisé à modifier cette sortie!');
+               return $this->redirectToRoute('home');
+            }
+        }
     }
 
     /** Annuler une sortie
