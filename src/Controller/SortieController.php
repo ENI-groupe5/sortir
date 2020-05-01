@@ -7,6 +7,7 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\SortieSearch;
+use App\Entity\Ville;
 use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
@@ -231,6 +232,19 @@ class SortieController extends AbstractController
         $sortieRepo = $em->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
 
+        //récupérer lieu de la sortie
+        $lieu = $sortie->getLieu();
+
+        //récupérer la rue
+        $lieuRepo = $em->getRepository(Lieu::class);
+        $detailLieu = $lieuRepo ->find($lieu);
+        $rue = $detailLieu->getRue();
+
+        //récupérer la ville et le cp
+        $ville = $detailLieu->getLieuVille()->getNom();
+        $cp =$detailLieu->getLieuVille()->getCodePostal();
+
+
         //créer instance formulaire + l'associer à $sortie
         $annulerForm = $this->createForm(AnnulerSortieType::class, $sortie);
 
@@ -276,7 +290,10 @@ class SortieController extends AbstractController
         //envoyer le formulaire
         return $this->render('sortie/annuler.html.twig', [
             'annulerForm' => $annulerForm->createView(),
-            'sortie' => $sortie
+            'sortie' => $sortie,
+            'rue'=> $rue,
+            'cp'=> $cp,
+            'ville'=> $ville
         ]);
     }
 }

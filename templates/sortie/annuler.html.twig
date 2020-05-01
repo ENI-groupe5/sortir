@@ -23,7 +23,7 @@
                     <p>{{ sortie.nom }}</p>
                     <p>{{ sortie.datHeureDebut|date('d/m/Y') }}</p>
                     <p>{{ sortie.site.nom }}</p>
-                    <p>{{ sortie.lieu.nom }}</p>
+                    <p>{{ sortie.lieu.nom }} {{ rue }} {{ cp }} {{ ville }}</p>
                     <p>{{ form_start(annulerForm) }}</p>
                     <p>{{ form_widget(annulerForm) }}</p>
                 </div>
