@@ -15,6 +15,9 @@ let path = window.location.pathname;
 if(path.includes('sortie/creer')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
+if(path.includes('sortie/modifier')){
+    document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
+}
 function afficherLieu(){
     let lieu = document.getElementById('sortie_lieu');
     let value = lieu.value;

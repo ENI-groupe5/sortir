@@ -67,6 +67,10 @@ dl dt{
     color: #3D7FA8;
     font-weight: 400;
 }
+thead{
+    background-color: #3D7FA8;
+    color: white;
+}
 /*
 Styles formulaires
  */
@@ -112,7 +116,17 @@ Style pagination
     background-color: #F56565 !Important;
     border: solid 1px #F56565;
 }
-
+.scrolltable{
+    overflow-y: scroll;
+    overflow-x:hidden;
+    max-height: 100px;
+}
+.soustitre{
+    color: #3D7FA8;
+    font-weight: 500;
+    font-size: 1em;
+    text-decoration: underline;
+}
 /*
 Style affichage du profil
  */
@@ -128,4 +142,3 @@ Style affichage du profil
     width: 150px;
     margin-bottom: 30px;
 }
-

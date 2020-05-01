@@ -2,11 +2,11 @@
 
 {% form_theme sortieForm 'bootstrap_4_layout.html.twig' %}
 
-{% block title %}  Créer une sortie &middot; {{parent()}} {% endblock %}
+{% block title %}  Modifier une sortie &middot; {{parent()}} {% endblock %}
 
 {% block main %}
 
-    <h1>Créer une sortie</h1><hr>
+    <h1>Modifier une sortie</h1><hr>
     <div class="container">
         <div class="row mx-md-n5">
             <div class="col-md-6 px-md-5">
@@ -49,8 +49,9 @@
                 </dl>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="submit" name="creer" class="bouton mr-2" value="Enregistrer">
+                        <input type="submit" name="enregistrer" class="bouton mr-2" value="Enregistrer">
                         <input type="submit" name="publier" class="bouton mr-2" value="Publier">
+                        <input type="submit" name="supprimer" class="bouton mr-2" value="Supprimer">
 
                         {{ form_end(sortieForm) }}
                         <a href="{{ path('home') }}"><input type="submit" name="annuler" class="bouton" value="Annuler"></a>
