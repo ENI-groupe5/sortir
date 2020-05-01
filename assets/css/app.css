@@ -67,6 +67,10 @@ dl dt{
     color: #3D7FA8;
     font-weight: 400;
 }
+
+.navbar-toggler-icon{
+    background-image: url('https://mdbootstrap.com/img/svg/hamburger2.svg?color=fff');
+}
 /*
 Styles formulaires
  */
