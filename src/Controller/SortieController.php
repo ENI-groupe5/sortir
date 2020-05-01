@@ -53,6 +53,7 @@ class SortieController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
+     * @throws \Exception
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
@@ -191,6 +192,7 @@ class SortieController extends AbstractController
      * requirements={"id": "\d+"})
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function desinscrire ($id,EntityManagerInterface $em)
     {
@@ -393,12 +395,12 @@ class SortieController extends AbstractController
 
         //récupérer la rue
         $lieuRepo = $em->getRepository(Lieu::class);
-        $detailLieu = $lieuRepo ->find($lieu);
+        $detailLieu = $lieuRepo->find($lieu);
         $rue = $detailLieu->getRue();
 
         //récupérer la ville et le cp
         $ville = $detailLieu->getLieuVille()->getNom();
-        $cp =$detailLieu->getLieuVille()->getCodePostal();
+        $cp = $detailLieu->getLieuVille()->getCodePostal();
 
         //créer instance formulaire + l'associer à $sortie
         $annulerForm = $this->createForm(AnnulerSortieType::class, $sortie);
@@ -410,8 +412,10 @@ class SortieController extends AbstractController
         if ($user == $organisateur || $role == 'ROLE_ADMIN') {
 
             //la sortie ne doit pas être commencée : now < dateDébut
+            // et ne peut être modifiée que si son etat est ouvert
             $now = new \DateTime('now');
-            if ($now < $sortie->getDatHeureDebut()) {
+            $etatSortie = $sortie->getSortieEtat()->getId();
+            if ($now < $sortie->getDatHeureDebut() && $etatSortie == 2) {
 
                 //récupérer les données : motif
                 $annulerForm->handleRequest($request);
@@ -432,23 +436,25 @@ class SortieController extends AbstractController
                     //redirection accueil
                     return $this->redirectToRoute('home');
                 } else {
-                    $this->addFlash('error', 'Annulation échouée : la sortie ne peut être annulée qu\'avant la date de son commencement !');
-                    //redirection accueil
-                    return $this->redirectToRoute('home');
+                    $this->addFlash('info', 'Veuillez renseigner le formulaire');
                 }
             } else {
-                $this->addFlash('error', 'Annulation échouée : accès limité à l\'organisateur de la sortie et aux administrateurs !');
+                $this->addFlash('danger', 'Annulation échouée : la sortie ne peut être annulée qu\'avant la date de son commencement et si son etat est ouvert !');
                 //redirection accueil
                 return $this->redirectToRoute('home');
             }
+        } else {
+            $this->addFlash('danger', 'Annulation échouée : accès limité à l\'organisateur de la sortie et aux administrateurs !');
+            //redirection accueil
+            return $this->redirectToRoute('home');
         }
         //envoyer le formulaire
         return $this->render('sortie/annuler.html.twig', [
             'annulerForm' => $annulerForm->createView(),
             'sortie' => $sortie,
-            'rue'=> $rue,
-            'cp'=> $cp,
-            'ville'=> $ville
+            'rue' => $rue,
+            'cp' => $cp,
+            'ville' => $ville
         ]);
     }
 }
