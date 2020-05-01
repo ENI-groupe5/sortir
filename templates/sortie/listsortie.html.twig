@@ -165,7 +165,7 @@
                     <br><a href="{{ path('sortie_inscrire',{'id':sortie.id}) }}">S'inscrire</a>
                 {% endif %}
         {% if sortie.organisateur == app.user and sortie.dateLimiteInscription|date('U')> ("now"|date("U"))and sortie.sortieetat.id == 2 %}
-        <br><a href="#">Annuler</a>
+        <br><a href="{{ path('sortie_annuler', {'id':sortie.id}) }}">Annuler</a>
         {% endif %}
             {% endif %}
                 </td>
