@@ -79,7 +79,7 @@ class SortieController extends AbstractController
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
         //récupérer le user
         $user = $this->getUser();
 
@@ -250,7 +250,7 @@ class SortieController extends AbstractController
      */
     public function afficherUneSortie($id){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         // récupère le contenu de la sortie grâce à son id
         $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
@@ -270,7 +270,7 @@ class SortieController extends AbstractController
      */
     public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         // récupère le contenu de la sortie grâce à son id
         $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
@@ -402,7 +402,7 @@ class SortieController extends AbstractController
     public function annuler($id, EntityManagerInterface $em, Request $request)
     {
         // acces limité
-        $this->denyAccessUnlessGranted(['ROLE_USER', 'ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         //récupérer la sortie rattachée à l'id
         $sortieRepo = $em->getRepository(Sortie::class);
