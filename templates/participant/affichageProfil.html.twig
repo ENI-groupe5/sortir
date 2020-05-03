@@ -4,9 +4,9 @@
 
 {% block main %}
     {% if app.user.id == participant.id %}
-        <h1 class="text-primary">Votre profil</h1>
+        <h1>Votre profil</h1><hr>
     {% else %}
-        <h1 class="text-secondary">Profil de {{ participant.username }}</h1>
+        <h1">Profil de {{ participant.username }}</h1><hr>
     {% endif %}
     <div id="profil">
         {% if app.user.avatar is empty %}
