@@ -6,8 +6,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
-        if($(window).width() <= 699) {
-            window.location = "{{ path('sortie_list_mobile') }}";
+        if($(window).width() > 699) {
+            window.location = "{{ path('home') }}";
         }
     });
 </script>
@@ -97,12 +97,7 @@
         <tbody>
             <div id="sorties">
         {% for sortie in sorties %}
-            {% if (sortie.organisateur != app.user ) %}
-                {% if(sortie.sortieetat.id != 2) %}
-                {% else %}
-
             <tr scope="row">
-
 
         <td>
             {{ sortie.nom }}
@@ -188,11 +183,8 @@
         <br><a href="{{ path('sortie_annuler', {'id':sortie.id}) }}">Annuler</a>
         {% endif %}
             {% endif %}
-
                 </td>
             </tr>
-                {% endif %}
-            {% endif %}
         {% endfor %}
             </div>
         </tbody>

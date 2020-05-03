@@ -37,7 +37,8 @@ class SortieController extends AbstractController
        $form = $this->createForm(FiltreSortieType::class,$search);
        $form->handleRequest($request);
         $sortieRepo = $em->getRepository(Sortie::class);
-           $user= $this->getUser();
+        $participanRepo = $em->getRepository(Participant::class);
+           $user= $participanRepo->find($this->getUser()->getId());
            $sorties = $paginator->paginate($sortieRepo->listSortieQuery($search,$user),
                $request->query->getInt('page',1),10);
        return $this->render('sortie/listsortie.html.twig',[
@@ -47,6 +48,27 @@ class SortieController extends AbstractController
     }
 
 
+    /**
+     * @Route("/mobile", name="sortie_list_mobile")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param PaginatorInterface $paginator
+     */
+    public function listMobile(Request $request,EntityManagerInterface $em, PaginatorInterface $paginator)
+    {
+        $search = new SortieSearch();
+        $form = $this->createForm(FiltreSortieType::class,$search);
+        $form->handleRequest($request);
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $user= $this->getUser();
+        $sorties = $paginator->paginate($sortieRepo->sortieMobileQuery($user),
+            $request->query->getInt('page',1),10);
+
+        return $this->render('sortie/listsortiemobile.html.twig',[
+            'sorties'=>$sorties,
+            'search'=>$form->createView()
+        ]);
+    }
     /**
      * Créer ou publier une sortie
      * @Route("/sortie/creer", name="sortie_creer")

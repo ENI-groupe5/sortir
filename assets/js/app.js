@@ -18,18 +18,19 @@ if(path.includes('sortie/creer')){
 if(path.includes('sortie/modifier')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
-function afficherLieu(){
+
+function afficherLieu() {
     let lieu = document.getElementById('sortie_lieu');
     let value = lieu.value;
     let json = require('../../public/results.json');
     let ville = document.getElementById('ville');
     let rue = document.getElementById('rue');
     let cp = document.getElementById('cp');
-    let latitude =document.getElementById('lat');
+    let latitude = document.getElementById('lat');
     let longitude = document.getElementById('long');
 
-    for (let $i=0 ; $i < json.posts.length; $i++){
-        if ((json["posts"][$i].id) == value){
+    for (let $i = 0; $i < json.posts.length; $i++) {
+        if ((json["posts"][$i].id) == value) {
             console.log(json["posts"][$i]);
             document.getElementById('labelville').innerText = 'Ville : '
             ville.innerText = json["posts"][$i].nomVille;
@@ -45,9 +46,8 @@ function afficherLieu(){
             break;
         }
     }
-
-
-
-
 }
+
+
+
 
