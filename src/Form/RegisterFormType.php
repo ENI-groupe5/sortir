@@ -28,7 +28,7 @@ class RegisterFormType extends AbstractType
             ->add('username',TextType::class)
             ->add('password',RepeatedType::class,[
         'type' => PasswordType::class,
-        'invalid_message' => 'Les mots de passes doivent correspondre.',
+        'invalid_message' => 'Les mots de passe doivent correspondre.',
         'options' => ['attr' => ['class' => 'form-control']],
         'required' => true,
         'first_options'  => ['label' => 'Password'],

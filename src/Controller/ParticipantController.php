@@ -103,7 +103,7 @@ class ParticipantController extends AbstractController
             return $this->redirectToRoute('app_login');
         } elseif ($registerForm->isSubmitted()&&!$registerForm->isValid())
         {
-            $this->addFlash('error','Enregistrement échoué');
+            $this->addFlash('danger','Enregistrement échoué');
         }
         return $this->render('participant/register.html.twig',[
             'form'=>$registerForm->createView()
