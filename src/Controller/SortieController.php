@@ -33,6 +33,10 @@ class SortieController extends AbstractController
      */
     public function list(Request $request, EntityManagerInterface $em, PaginatorInterface $paginator)
     {
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
        $search = new SortieSearch();
        $form = $this->createForm(FiltreSortieType::class,$search);
        $form->handleRequest($request);
@@ -56,6 +60,10 @@ class SortieController extends AbstractController
      */
     public function listMobile(Request $request,EntityManagerInterface $em, PaginatorInterface $paginator)
     {
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
         $search = new SortieSearch();
         $form = $this->createForm(FiltreSortieType::class,$search);
         $form->handleRequest($request);
