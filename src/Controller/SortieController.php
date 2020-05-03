@@ -303,10 +303,6 @@ class SortieController extends AbstractController
                     //si bouton enregistrer
                     if($request->request->get('enregistrer')){
                         try{
-                            $etat = $etatrepo -> find(1);
-                            //pour hydrater $sortie
-                            $sortie->setSortieEtat($etat);
-
                             //sauvegarder données
                             $em->persist($sortie);
                             $em->flush();
