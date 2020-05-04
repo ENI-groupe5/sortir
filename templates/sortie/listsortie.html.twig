@@ -84,9 +84,7 @@
         </tr>
     </table>
 
-<div class="count">
-    {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
-</div>
+
     </div>
     <table class="table table-bordered table-hover">
         <thead>
@@ -97,9 +95,7 @@
         <tbody>
             <div id="sorties">
         {% for sortie in sorties %}
-            {% if (sortie.organisateur != app.user ) %}
-                {% if(sortie.sortieetat.id != 2) %}
-                {% else %}
+            {% if ((sortie.organisateur == app.user) or (sortie.organisateur != app.user) and (sortie.sortieetat.id == 2)) %}
 
             <tr scope="row">
 
@@ -192,7 +188,6 @@
                 </td>
             </tr>
                 {% endif %}
-            {% endif %}
         {% endfor %}
             </div>
         </tbody>
