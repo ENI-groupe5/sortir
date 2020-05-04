@@ -5,11 +5,11 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
-        if($(window).width() <= 699) {
+
+        if(($(window).width() <= 699)&& ( window.innerHeight <= 600 )) {
             window.location = "{{ path('sortie_list_mobile') }}";
         }
-    });
+    ;
 </script>
 {% endblock %}
 {% block main %}
@@ -83,6 +83,7 @@
             </th>
         </tr>
     </table>
+        <div class="count">
             {% if sorties.getTotalItemCount >1 %}
             <div class="count">
                 {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
@@ -92,9 +93,9 @@
             {% else %}
             Aucune sortie ne correspond à votre recherche
             {% endif %}
-
+        </div>
     </div>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-responsive-md ">
         <thead>
         <tr>
             <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
@@ -105,12 +106,12 @@
         {% for sortie in sorties %}
             {% if ((sortie.organisateur == app.user) or (sortie.organisateur != app.user) and (sortie.sortieetat.id == 2)) %}
 
-            <tr scope="row">
+            <tr>
 
 
-        <td>
+        <th scope="row">
             {{ sortie.nom }}
-        </td>
+        </th>
         <td>
             {{ sortie.datHeureDebut|date('d/m/Y') }}
         </td>
