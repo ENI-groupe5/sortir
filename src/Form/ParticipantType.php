@@ -72,8 +72,8 @@ class ParticipantType extends AbstractType
             'invalid_message' => 'Les mots de passe doivent être identiques.',
             'required' => true,
             'options' => ['attr' => ['class' => 'form-control form-control-lg']],
-            'first_options'  => ['label' => 'Mot de passe :'],
-            'second_options' => ['label' => 'Confirmation :'],
+            'first_options'  => ['label' => 'Mot de passe:'],
+            'second_options' => ['label' => 'Confirmation:'],
         ]);
         $builder->add('site',EntityType::class, [
             'required' => true,

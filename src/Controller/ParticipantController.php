@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Form\RegisterFormType;
-use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -41,9 +40,10 @@ class ParticipantController extends AbstractController
      * @param Request $request
      * @param Participant $participant
      * @param EntityManagerInterface $em
+     * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
      */
-    public function modifierProfil(Request $request, Participant $participant, EntityManagerInterface $em) {
+    public function modifierProfil(Request $request, Participant $participant, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
         $formulaire = $this->createForm(ParticipantType::class, $participant);
         $formulaire -> handleRequest($request);
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
@@ -67,6 +67,8 @@ class ParticipantController extends AbstractController
             }
 
             $em = $this->getDoctrine()->getManager();
+            $hashed = $encoder->encodePassword($participant,$participant->getPassword());
+            $participant->setPassword($hashed);
             $em->persist($participant);
             $em->flush();
             $this->addFlash("success", "Votre profil a bien été modifié !");
