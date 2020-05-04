@@ -5,11 +5,11 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
+
         if($(window).width() > 699) {
             window.location = "{{ path('home') }}";
         }
-    });
+    ;
 </script>
 {% endblock %}
 {% block main %}
@@ -85,10 +85,18 @@
     </table>
 
 <div class="count">
-    {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+    {% if sorties.getTotalItemCount >1 %}
+        <div class="count">
+            {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+        </div>
+    {% elseif sorties.getTotalItemCount == 1 %}
+        {{ sorties.getTotalItemCount }} Sortie correspond à votre recherche
+    {% else %}
+        Aucune sortie ne correspond à votre recherche
+    {% endif %}
 </div>
     </div>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-responsive">
         <thead>
         <tr>
             <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
@@ -150,9 +158,13 @@
                 <td>
             {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
         {% if sortie.organisateur == app.user %}
+                    <div class="d-none d-md-block">
         <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a>
+                    </div>
         {% else %}
+                    <div class="d-none d-md-block">
                 <a href="{{ path('sortie_afficher', {id:sortie.id}) }}"> Afficher </a>
+                    </div>
         {% endif %}
                 {% set inscrire = 'true' %}
         {% for sortieuser in app.user.sorties %}
@@ -161,7 +173,7 @@
         <br><a href="{{ path('sortie_desinscrire',{'id':sortie.id}) }}">Se&nbspdésister</a>
         {% endif %}
             {% if (sortie.dateLimiteInscription|date('U')) > ("now"|date("U")) and sortie.sortieetat.id == 2%}
-                {% if sortie.nbInscriptionsMax > sortie.participants|length %}
+                {% if sortie.nbInscriptionsMax >= sortie.participants|length %}
         {% if sortieuser.id==sortie.id %}
             {% set inscrire = 'false' %}
             {% endif %}
@@ -179,8 +191,11 @@
                 {% if inscrire == 'true' %}
                     <br><a href="{{ path('sortie_inscrire',{'id':sortie.id}) }}">S'inscrire</a>
                 {% endif %}
+
         {% if sortie.organisateur == app.user and sortie.dateLimiteInscription|date('U')> ("now"|date("U"))and sortie.sortieetat.id == 2 %}
-        <br><a href="{{ path('sortie_annuler', {'id':sortie.id}) }}">Annuler</a>
+                    <div class="d-none d-md-block">
+            <br><a href="{{ path('sortie_annuler', {'id':sortie.id}) }}">Annuler</a>
+                    </div>
         {% endif %}
             {% endif %}
                 </td>
