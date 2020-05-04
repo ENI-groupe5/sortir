@@ -44,6 +44,7 @@ class ParticipantController extends AbstractController
      * @return RedirectResponse|Response
      */
     public function modifierProfil(Request $request, Participant $participant, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $formulaire = $this->createForm(ParticipantType::class, $participant);
         $formulaire -> handleRequest($request);
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
