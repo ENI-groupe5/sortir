@@ -83,9 +83,15 @@
             </th>
         </tr>
     </table>
+            {% if sorties.getTotalItemCount >1 %}
             <div class="count">
-                {{ sorties.getTotalItemCount }} Articles correspondent à votre recherche
+                {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
             </div>
+            {% elseif sorties.getTotalItemCount == 1 %}
+            {{ sorties.getTotalItemCount }} Sortie correspond à votre recherche
+            {% else %}
+            Aucune sortie ne correspond à votre recherche
+            {% endif %}
 
     </div>
     <table class="table table-bordered table-hover">
