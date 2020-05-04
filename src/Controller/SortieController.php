@@ -210,7 +210,7 @@ class SortieController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Vous êtes maintenant inscrit à cette sortie');
           } else {
-            $this->addFlash('error','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
         }
         
         return $this->redirectToRoute('home');
@@ -482,5 +482,32 @@ class SortieController extends AbstractController
             'cp' => $cp,
             'ville' => $ville
         ]);
+    }
+
+
+    /**
+     * @Route("sortie/publish/{id}", name="sortie_publier")
+     * requirements={"id"="\d+"}
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function publier($id, EntityManagerInterface $em){
+        $user = $this->getUser();
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+        if ($sortie->getOrganisateur()!=$user)
+        {
+            $this->addFlash('danger','Vous devez être l\'organisateur de cette sortie pour la publier');
+            return $this->redirectToRoute("home");
+        }
+        $etatRepo = $em->getRepository(Etat::class);
+        $etat = $etatRepo->find(2);
+        $sortie->setSortieEtat($etat);
+        $em->flush();
+        $this->addFlash('success','La sortie '.$sortie->getNom(). ' est bien publiée');
+        return $this->redirectToRoute("home");
+
+
     }
 }

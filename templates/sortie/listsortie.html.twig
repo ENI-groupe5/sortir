@@ -152,6 +152,9 @@
             {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
         {% if sortie.organisateur == app.user %}
         <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a>
+            {% if sortie.sortieetat.id == 1 %}
+                <br><a href="{{ path('sortie_publier', {id:sortie.id}) }}">Publier</a>
+                {% endif %}
         {% else %}
                 <a href="{{ path('sortie_afficher', {id:sortie.id}) }}"> Afficher </a>
         {% endif %}
