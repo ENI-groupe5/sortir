@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}  Afficher une sortie &middot; {{parent()}} {% endblock %}
+
+{% block main %}
+
+    <h1>Afficher une sortie</h1><hr>
+    <div class="container">
+        <div class="row mx-md-n5">
+            <div class="col-md-6 px-md-5">
+                <dl class="row">
+                    <dt class="col-md-6">Nom de la sortie :</dt>
+                    <dd class="col-md-6">{{ sortie.nom }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Date et heure de la sortie :</dt>
+                    <dd class="col-md-6">{{ sortie.datHeureDebut|date("d/m/Y H:mm") }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Date limite d'inscription :</dt>
+                    <dd class="col-md-6">{{ sortie.dateLimiteInscription|date("d/m/Y") }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Nombre de places :</dt>
+                    <dd class="col-md-6">{{ sortie.nbInscriptionsMax }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Durée :</dt>
+                    <dd class="col-md-6">{{ sortie.duree }} minutes</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Description et infos :</dt>
+                    <dd class="col-md-6">{{ sortie.infosSortie }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-6 px-md-5">
+                <dl class="row">
+                    <dt class="col-md-6">Lieu :</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.nom }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Rue :</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.rue }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Ville :</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.lieuVille.nom }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Code Postal :</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.lieuVille.codePostal }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Latitude :</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.latitude }}</dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-6">Longitude:</dt>
+                    <dd class="col-md-6">{{ sortie.lieu.longitude }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row pt-2">
+            <div class="col-md-6">
+                {% if sortie.participants is empty %}
+                <p class="soustitre">Aucun participant n'est encore inscrit à cette sortie</p>
+                {% else %}
+                    <p class="soustitre">liste des participants inscrits</p>
+                    <div class="col-md-12 scrolltable">
+
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Pseudo</th>
+                                <th scope="col">Nom</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for participant in sortie.participants %}
+                                <tr>
+                                    <td>{{ participant.username }}</td>
+                                    <td>{{ participant.nom }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div><br><br><br>
+
+
+{% endblock %}

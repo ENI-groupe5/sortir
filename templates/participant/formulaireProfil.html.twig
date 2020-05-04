@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier Profil{% endblock %}
+{% block title %}Modifier Profil &middot; {{ parent() }}{% endblock %}
 
 {% block main %}
     {% form_theme formulaire 'bootstrap_4_horizontal_layout.html.twig' %}
     {% if app.user.id == participant.id %}
-        <h1 class="text-primary">Modifier votre profil</h1>
+        <h1>Modifier votre profil</h1><hr>
         <div id="profil">
             {{ form_start(formulaire) }}
             <div id="avatarUpload">

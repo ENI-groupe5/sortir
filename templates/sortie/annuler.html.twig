@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme annulerForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}  Annuler une sortie &middot; {{parent()}} {% endblock %}
+
+{% block main %}
+    {{ form_start(annulerForm) }}
+
+    <h1>Annuler une sortie</h1>
+    <hr>
+    <div class="annulerSortie">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Nom de la sortie :</p>
+                    <p>Date de la sortie :</p>
+                    <p>Site organisateur :</p>
+                    <p>Lieu :</p>
+                    <p>Motif :</p>
+                </div>
+                <div class="col-md-6">
+                    <p>{{ sortie.nom }}</p>
+                    <p>{{ sortie.datHeureDebut|date('d/m/Y') }}</p>
+                    <p>{{ sortie.site.nom }}</p>
+                    <p>{{ sortie.lieu.nom }} {{ rue }} {{ cp }} {{ ville }}</p>
+                    <p>{{ form_start(annulerForm) }}</p>
+                    <p>{{ form_widget(annulerForm) }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" class="bouton" value="Annuler">
+                    {{ form_end(annulerForm) }}
+                    <a href="{{ path('home') }}"><input type="button" class="bouton" value="Abandonner"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
