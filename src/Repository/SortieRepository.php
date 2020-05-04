@@ -25,7 +25,9 @@ class SortieRepository extends ServiceEntityRepository
     {
         $query = $this
             ->createQueryBuilder('s')
-            ->join('s.sortie_etat','e');
+            ->join('s.sortie_etat','e')
+            ->andWhere('e.id = 2 OR s.organisateur = :u')
+            ->setParameter('u',$user);
             //Recherche par libelle
         if(($search->getLibelle())!=null)
         {
@@ -58,19 +60,23 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('s.datHeureDebut < :df' )
                 ->setParameter('df',$search->getDateFin());
         }
-        if (($search->getOrganisateur())!=null)
+        if ((($search->getOrganisateur())!=null)&&(($search->getInscrit())==null))
         {
             $query = $query
-                ->join('s.organisateur','o','WITH','o.id=:u')
+                ->andWhere('s.organisateur = :u')
                 ->setParameter('u',$user);
-        } else {
-            $query = $query
-            ->join('s.organisateur','o');
         }
-        if ((($search->getInscrit())!=null)&&(($search->getNoinscrit())==null))
+        if (((($search->getOrganisateur())!=null)&&(($search->getInscrit())!=null))&&(($search->getNoinscrit())==null))
         {
             $query = $query
-                ->join('s.participants','p','WITH','p.id=:u')
+                ->andWhere(':u MEMBER OF s.participants OR s.organisateur = :u')
+                ->setParameter('u',$user);
+
+        }
+        if (((($search->getInscrit())!=null)&&(($search->getNoinscrit())==null))&&(($search->getOrganisateur())==null))
+        {
+            $query = $query
+                ->andWhere(':u MEMBER OF s.participants')
                 ->setParameter('u',$user->getId());
         }
         if ((($search->getNoinscrit())!=null)&&(($search->getInscrit())==null))
@@ -100,6 +106,9 @@ class SortieRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->andWhere('s.site = :i')
             ->setParameter('i',$user->getSite())
+            ->join('s.sortie_etat','e')
+            ->andWhere('e.id = 2 OR s.organisateur = :u')
+            ->setParameter('u',$user)
             ->andWhere('s.datHeureDebut >= :da')
             ->setParameter('da',new \DateTime('-1 month'));
         return $query->getQuery();
