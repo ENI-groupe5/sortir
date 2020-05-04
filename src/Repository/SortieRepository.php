@@ -104,6 +104,8 @@ class SortieRepository extends ServiceEntityRepository
     {
         $query = $this
             ->createQueryBuilder('s')
+            ->join('s.lieu','l')
+            ->join('l.lieu_ville','v')
             ->andWhere('s.site = :i')
             ->setParameter('i',$user->getSite())
             ->join('s.sortie_etat','e')
