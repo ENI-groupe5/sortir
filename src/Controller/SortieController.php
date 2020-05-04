@@ -275,6 +275,11 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sortie/modifier/{id}",name="sortie_modifier",requirements={"id"="\d+"})
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
