@@ -3,17 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Form\LoadType;
 use App\Form\ParticipantType;
 use App\Form\RegisterFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Csv\Reader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 /**
  * Class ParticipantController
@@ -93,5 +94,27 @@ class ParticipantController extends AbstractController
         return $this->render('participant/register.html.twig',[
             'form'=>$registerForm->createView()
         ]);
+    }
+    /**
+     * @Route("/register/charger",name="app_charger")
+     */
+    public function chargerFichier(EntityManagerInterface $em,UserPasswordEncoderInterface $encoder){
+
+
+        $csv = Reader::createFromPath('../assets/file/file4.csv', 'r');
+        $csv->setHeaderOffset(0);
+        $resultats = $csv->getRecords();
+        $repoParticipant = $this->getDoctrine()->getRepository(Participant::class);
+        try {
+            $repoParticipant->ajouterViaCsv($resultats,$em,$encoder);
+        } catch (\Exception $e){
+            $this->addFlash("danger", $e->getMessage());
+            return $this->redirectToRoute('app_register');
+        }
+
+        $this->addFlash('success','vos utilisateurs ont bien été enregistrés');
+        return $this->redirectToRoute('app_register');
+
+
     }
 }
