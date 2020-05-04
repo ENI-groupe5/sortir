@@ -21,9 +21,9 @@ class ParticipantType extends AbstractType
     {
         $builder->add('avatarFile', VichImageType::class, [
             'required' => false,
-            'allow_delete' => true,
-            'download_uri' => true,
-            'image_uri' => true,
+            'allow_delete' => false,
+            'download_uri' => false,
+            'image_uri' => false,
             'asset_helper' => true,
         ]);
         $builder->add('username', TextType::class, [
