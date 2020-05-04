@@ -65,8 +65,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             } else {
                 throw new \Exception("email obligatoire! il manque au moins un email dans votre fichier");
             }
-            if ($resultat['roles']){
-                $user->setRoles($resultat['roles']);
+            if ($resultat['role']){
+                $user->setRoles([$resultat['role']]);
             } else {
                 $user->setRoles(['ROLE_USER']);
             }
@@ -93,6 +93,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
                 $this->_em->persist($user);
                 $this->_em->flush();
             } catch (UniqueConstraintViolationException $e){
+
                 throw new \Exception("un des emails ou username existe déjà dans le fichier");
             }
         }

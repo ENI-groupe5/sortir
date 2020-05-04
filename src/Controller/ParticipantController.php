@@ -101,7 +101,7 @@ class ParticipantController extends AbstractController
     public function chargerFichier(EntityManagerInterface $em,UserPasswordEncoderInterface $encoder){
 
 
-        $csv = Reader::createFromPath('../assets/file/file4.csv', 'r');
+        $csv = Reader::createFromPath('../assets/file/Classeur1.csv', 'r');
         $csv->setHeaderOffset(0);
         $resultats = $csv->getRecords();
         $repoParticipant = $this->getDoctrine()->getRepository(Participant::class);
