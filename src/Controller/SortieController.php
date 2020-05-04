@@ -208,9 +208,9 @@ class SortieController extends AbstractController
                 $user->setSorties($sortie);
             }
         $em->flush();
-        $this->addFlash('success', 'Vous êtes maintenant inscrit à cette sortie');
+        $this->addFlash('success', 'Vous êtes maintenant inscrit à la sortie '.$sortie->getNom());
           } else {
-            $this->addFlash('error','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
         }
         
         return $this->redirectToRoute('home');
@@ -247,7 +247,7 @@ class SortieController extends AbstractController
         {
             $this->addFlash('error','Desinscription échouée');
         } else{
-            $this->addFlash('success','Vous êtes maintenant desinscrit de cette sortie');
+            $this->addFlash('success','Vous êtes maintenant desinscrit de la sortie '.$sortie->getNom());
         }
 
         return $this->redirectToRoute('home');
@@ -275,6 +275,11 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sortie/modifier/{id}",name="sortie_modifier",requirements={"id"="\d+"})
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
@@ -482,5 +487,32 @@ class SortieController extends AbstractController
             'cp' => $cp,
             'ville' => $ville
         ]);
+    }
+
+
+    /**
+     * @Route("sortie/publish/{id}", name="sortie_publier")
+     * requirements={"id"="\d+"}
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function publier($id, EntityManagerInterface $em){
+        $user = $this->getUser();
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+        if ($sortie->getOrganisateur()!=$user)
+        {
+            $this->addFlash('danger','Vous devez être l\'organisateur de cette sortie pour la publier');
+            return $this->redirectToRoute("home");
+        }
+        $etatRepo = $em->getRepository(Etat::class);
+        $etat = $etatRepo->find(2);
+        $sortie->setSortieEtat($etat);
+        $em->flush();
+        $this->addFlash('success','La sortie '.$sortie->getNom(). ' est bien publiée');
+        return $this->redirectToRoute("home");
+
+
     }
 }
