@@ -208,7 +208,7 @@ class SortieController extends AbstractController
                 $user->setSorties($sortie);
             }
         $em->flush();
-        $this->addFlash('success', 'Vous êtes maintenant inscrit à cette sortie');
+        $this->addFlash('success', 'Vous êtes maintenant inscrit à la sortie '.$sortie->getNom());
           } else {
             $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
         }
@@ -247,7 +247,7 @@ class SortieController extends AbstractController
         {
             $this->addFlash('error','Desinscription échouée');
         } else{
-            $this->addFlash('success','Vous êtes maintenant desinscrit de cette sortie');
+            $this->addFlash('success','Vous êtes maintenant desinscrit de la sortie '.$sortie->getNom());
         }
 
         return $this->redirectToRoute('home');
