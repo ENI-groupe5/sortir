@@ -9,11 +9,9 @@
         <div id="profil">
             {{ form_start(formulaire) }}
             <div id="avatarUpload">
-                {% if app.user.avatar is empty %}
-                    {{ form_row(formulaire.avatar) }}
-                {% else %}
-                    <img id="avatar" alt="avatar"  src="{{ asset('build/uploads/') }}{{ app.user.avatar }}">
-                    {{ form_row(formulaire.avatar) }}
+                {# {% if participant.avatar %}
+                    <img id="avatar" src="{{ vich_uploader_asset(participant, 'avatarFile') }}">
+                    {{ form_row(formulaire.avatarFile) }}
                 {% endif %}
             </div>
             <div class="row">
@@ -32,7 +30,11 @@
             <div class="row">
                 <div class="col-6">
                     <button class="bouton">{{ button_label|default('Enregistrer') }}</button>
-                    {{ form_end(formulaire) }}
+                    {{ form_end(formulaire) }} #}
+                {{ form_start(formulaire) }}
+                {{ form_widget(formulaire) }}
+                <button class="bouton">{{ button_label|default('Enregistrer') }}</button>
+                {{ form_end(formulaire) }}
                 </div>
                 <div class="col-6">
                     <a href="{{ path('afficher_profil', { 'id' : app.user.id}) }}"><button class="bouton">Annuler</button></a>

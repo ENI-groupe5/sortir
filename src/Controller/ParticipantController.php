@@ -48,25 +48,6 @@ class ParticipantController extends AbstractController
         $formulaire = $this->createForm(ParticipantType::class, $participant);
         $formulaire -> handleRequest($request);
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
-            /**
-             * @var UploadedFile $avatar
-             */
-            $avatar = $formulaire ['avatar']->getData();
-            if ($avatar) {
-                $avatarActuel = pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME);
-                $nouvelAvatar = $avatarActuel . '-' . uniqid() . '.' . $avatar->guessExtension();
-                // Déplacement des avatars vers l'emplacement où sont stocké les avatars
-                try {
-                    $avatar->move(
-                        $this->getParameter('avatar_directory'),
-                        $nouvelAvatar
-                    );
-                } catch (FileException $e) {
-                    // Gérer les exceptions si une erreur se produit pendant le téléchargement d'un avatar
-                }
-                $participant->setAvatar($nouvelAvatar);
-            }
-
             $em = $this->getDoctrine()->getManager();
             $hashed = $encoder->encodePassword($participant,$participant->getPassword());
             $participant->setPassword($hashed);
