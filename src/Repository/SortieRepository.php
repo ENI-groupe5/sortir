@@ -106,6 +106,9 @@ class SortieRepository extends ServiceEntityRepository
             ->createQueryBuilder('s')
             ->andWhere('s.site = :i')
             ->setParameter('i',$user->getSite())
+            ->join('s.sortie_etat','e')
+            ->andWhere('e.id = 2 OR s.organisateur = :u')
+            ->setParameter('u',$user)
             ->andWhere('s.datHeureDebut >= :da')
             ->setParameter('da',new \DateTime('-1 month'));
         return $query->getQuery();
