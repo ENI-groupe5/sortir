@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Participant;
+use App\Entity\Site;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -26,7 +28,7 @@ class RegisterFormType extends AbstractType
             ->add('username',TextType::class)
             ->add('password',RepeatedType::class,[
         'type' => PasswordType::class,
-        'invalid_message' => 'Les mots de passes doivent correspondre.',
+        'invalid_message' => 'Les mots de passe doivent correspondre.',
         'options' => ['attr' => ['class' => 'form-control']],
         'required' => true,
         'first_options'  => ['label' => 'Password'],
@@ -35,6 +37,13 @@ class RegisterFormType extends AbstractType
             ->add('avatar',FileType::class,[
                 'required'=>false
             ])
+            ->add('site',EntityType::class,[
+                'class'=>Site::class,
+                'label'=>'Site de rattachement',
+                'choice_label'=>'nom',
+                'placeholder'=>'Sélectionnez un site'
+            ])
+
         ;
     }
 

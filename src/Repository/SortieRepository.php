@@ -26,8 +26,6 @@ class SortieRepository extends ServiceEntityRepository
         $query = $this
             ->createQueryBuilder('s')
             ->join('s.sortie_etat','e');
-
-
             //Recherche par libelle
         if(($search->getLibelle())!=null)
         {
@@ -60,8 +58,6 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('s.datHeureDebut < :df' )
                 ->setParameter('df',$search->getDateFin());
         }
-
-
         if (($search->getOrganisateur())!=null)
         {
             $query = $query
@@ -97,6 +93,17 @@ class SortieRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
 
+
+    public function sortieMobileQuery($user) :Query
+    {
+        $query = $this
+            ->createQueryBuilder('s')
+            ->andWhere('s.site = :i')
+            ->setParameter('i',$user->getSite())
+            ->andWhere('s.datHeureDebut >= :da')
+            ->setParameter('da',new \DateTime('-1 month'));
+        return $query->getQuery();
+    }
     /*
     public function findOneBySomeField($value): ?SortieFixtures
     {

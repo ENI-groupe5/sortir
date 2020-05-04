@@ -33,11 +33,16 @@ class SortieController extends AbstractController
      */
     public function list(Request $request, EntityManagerInterface $em, PaginatorInterface $paginator)
     {
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
        $search = new SortieSearch();
        $form = $this->createForm(FiltreSortieType::class,$search);
        $form->handleRequest($request);
         $sortieRepo = $em->getRepository(Sortie::class);
-           $user= $this->getUser();
+        $participanRepo = $em->getRepository(Participant::class);
+           $user= $participanRepo->find($this->getUser()->getId());
            $sorties = $paginator->paginate($sortieRepo->listSortieQuery($search,$user),
                $request->query->getInt('page',1),10);
        return $this->render('sortie/listsortie.html.twig',[
@@ -48,6 +53,31 @@ class SortieController extends AbstractController
 
 
     /**
+     * @Route("/mobile", name="sortie_list_mobile")
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param PaginatorInterface $paginator
+     */
+    public function listMobile(Request $request,EntityManagerInterface $em, PaginatorInterface $paginator)
+    {
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
+        $search = new SortieSearch();
+        $form = $this->createForm(FiltreSortieType::class,$search);
+        $form->handleRequest($request);
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $user= $this->getUser();
+        $sorties = $paginator->paginate($sortieRepo->sortieMobileQuery($user),
+            $request->query->getInt('page',1),10);
+
+        return $this->render('sortie/listsortiemobile.html.twig',[
+            'sorties'=>$sorties,
+            'search'=>$form->createView()
+        ]);
+    }
+    /**
      * Créer ou publier une sortie
      * @Route("/sortie/creer", name="sortie_creer")
      * @param Request $request
@@ -57,7 +87,7 @@ class SortieController extends AbstractController
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
         //récupérer le user
         $user = $this->getUser();
 
@@ -228,7 +258,7 @@ class SortieController extends AbstractController
      */
     public function afficherUneSortie($id){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         // récupère le contenu de la sortie grâce à son id
         $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
@@ -248,7 +278,7 @@ class SortieController extends AbstractController
      */
     public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
-        $this->denyAccessUnlessGranted(['ROLE_USER','ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         // récupère le contenu de la sortie grâce à son id
         $repoSortie = $this->getDoctrine()->getRepository(Sortie::class);
@@ -303,10 +333,6 @@ class SortieController extends AbstractController
                     //si bouton enregistrer
                     if($request->request->get('enregistrer')){
                         try{
-                            $etat = $etatrepo -> find(1);
-                            //pour hydrater $sortie
-                            $sortie->setSortieEtat($etat);
-
                             //sauvegarder données
                             $em->persist($sortie);
                             $em->flush();
@@ -384,7 +410,7 @@ class SortieController extends AbstractController
     public function annuler($id, EntityManagerInterface $em, Request $request)
     {
         // acces limité
-        $this->denyAccessUnlessGranted(['ROLE_USER', 'ROLE_ADMIN']);
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         //récupérer la sortie rattachée à l'id
         $sortieRepo = $em->getRepository(Sortie::class);
