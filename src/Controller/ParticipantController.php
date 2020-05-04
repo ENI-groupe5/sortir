@@ -77,6 +77,7 @@ class ParticipantController extends AbstractController
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted()&&$registerForm->isValid())
         {
+            $user->setUpdatedAt(new \DateTime());
             $user->setRoles(['ROLE_USER']);
             $user->setActif(true);
             $hashed = $encoder->encodePassword($user,$user->getPassword());

@@ -6,6 +6,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
  * @Vich\Uploadable
  */
-class Participant implements UserInterface
+class Participant implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -84,7 +85,7 @@ class Participant implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      *
-     * @var \DateTimeInterface|null
+     * @var DateTimeInterface|null
      */
     private $updatedAt;
 
@@ -270,7 +271,7 @@ class Participant implements UserInterface
     }
 
     /**
-     * @return
+     * @return ArrayCollection
      */
     public function getSortiesOrganisees()
     {
@@ -286,7 +287,7 @@ class Participant implements UserInterface
     }
 
     /**
-     * @return
+     * @return ArrayCollection
      */
     public function getSorties()
     {
@@ -331,10 +332,8 @@ class Participant implements UserInterface
     public function setAvatarFile(?File $avatarFile = null): void
     {
         $this->avatarFile = $avatarFile;
-        if (null !== $avatarFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTimeImmutable();
+        if ($this->avatarFile instanceof UploadedFile) {
+            $this->updatedAt = new \DateTime('now');
         }
     }
 
@@ -354,4 +353,31 @@ class Participant implements UserInterface
         $this->updatedAt = $updatedAt;
     }
 
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->prenom,
+            $this->nom,
+            $this->email,
+            $this->telephone,
+            $this->password,
+            $this->site,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->prenom,
+            $this->nom,
+            $this->email,
+            $this->telephone,
+            $this->password,
+            $this->site,
+            ) = unserialize($serialized, array('allowed_classes' => false));
+    }
 }
