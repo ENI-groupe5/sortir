@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -32,6 +33,7 @@ class Participant implements UserInterface
      */
     private $telephone;
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner un email.")
      * @ORM\Column(type="string", unique=true, length=255)
      */
     private $email;
@@ -55,6 +57,18 @@ class Participant implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @var string
+     * @UserPassword(message="Mot de passe invalide.", groups={"password"})
+     */
+    private $oldPassword;
+
+    /**
+     * @var string
+     * @Assert\NotBlank(message="Veuillez renseigner le champ du mot de passe.")
+     */
+    private $plainPassword;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Site",inversedBy="participants")
@@ -138,6 +152,38 @@ class Participant implements UserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOldPassword(): string
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * @param string $oldPassword
+     */
+    public function setOldPassword(string $oldPassword): void
+    {
+        $this->oldPassword = $oldPassword;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string
+     */
+    public function setPlainPassword(string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     /**

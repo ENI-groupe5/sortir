@@ -67,7 +67,7 @@ class ParticipantType extends AbstractType
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
-        $builder->add('password', RepeatedType::class, [
+        $builder->add('plainPassword', RepeatedType::class, [
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe doivent être identiques.',
             'required' => true,
