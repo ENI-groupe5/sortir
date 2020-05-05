@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}
+        AjoutVille &middot; {{ parent() }}
+
+{% endblock %}
+
+{% block main %}
+
+<div align="center">
+    <br>
+    <h2>Ajouter une ville</h2>
+</div>
+
+{{ form_start(form) }}
+                {{ form_widget(form) }}
+
+<br>
+<button type="submit" class="bouton">Ajouter</button>
+<a href="{{ path('home') }}"><button type="button" class="bouton">Annuler</button></a>
+{{ form_end(form) }}
+
+
+{% endblock %}
+

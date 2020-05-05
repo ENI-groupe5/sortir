@@ -92,9 +92,6 @@ class SortieController extends AbstractController
         //récupérer le user
         $user = $this->getUser();
 
-        //créer le formulaire lieu
-        $lieu = new Lieu();
-        $lieuForm = $this->createForm(LieuType::class,$lieu);
 
         //créer instance sortie
         $sortie = new Sortie();
@@ -189,7 +186,6 @@ class SortieController extends AbstractController
         //afficher le formulaire
         return $this->render('sortie/creer.html.twig', [
             "sortieForm"=>$sortieForm ->createView(),
-            'lieuForm'=>$lieuForm->createView()
         ]);
     }
 
