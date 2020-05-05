@@ -6,6 +6,8 @@ use App\Entity\Participant;
 use App\Form\LoadType;
 use App\Form\ParticipantType;
 use App\Form\RegisterFormType;
+use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -128,6 +130,37 @@ class ParticipantController extends AbstractController
         ]);
 
 
+    }
+
+    /**
+     * @Route("/liste", name="liste_participants", methods={"GET"})
+     * @param ParticipantRepository $participantRepository
+     * @param SiteRepository $siteRepository
+     * @return Response
+     */
+    public function listeParticipants(ParticipantRepository $participantRepository, SiteRepository $siteRepository)
+    {
+        return $this->render('participant/listeUtilisateurs.html.twig', [
+            'participant' => $participantRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/supprimer/{id}", name="supprimer_participant", methods={"supprimer"})
+     * @param Request $request
+     * @param Participant $participant
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function supprimerParticipants(Request $request, Participant $participant, EntityManagerInterface $em)
+    {
+        if ($this->isCsrfTokenValid('supprimerParticipants'.$participant->getId(), $request->request->get('_token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($participant);
+            $em->flush();
+        }
+        $this->addFlash("danger", "Le participant vient d'être supprimé.");
+        return $this->redirectToRoute('liste_participants');
     }
 
 }

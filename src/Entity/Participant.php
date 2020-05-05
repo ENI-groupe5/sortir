@@ -86,7 +86,7 @@ class Participant implements UserInterface, \Serializable
     private $site;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Sortie",mappedBy="organisateur")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie",mappedBy="organisateur", orphanRemoval=true)
      */
     private $sortiesOrganisees;
 
