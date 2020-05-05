@@ -15,9 +15,20 @@ let path = window.location.pathname;
 if(path.includes('sortie/creer')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
+if(path.includes('sortie/creer')){
+    document.onload=remember();
+}
+
+if(path.includes('sortie/creer')) {
+    document.onload = fill();
+}
 if(path.includes('sortie/modifier')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
+if(path.includes('lieu/add')){
+    document.getElementById('lieu_lieu_ville').addEventListener("change",chercherCoor);
+}
+
 
 function afficherLieu() {
     let lieu = document.getElementById('sortie_lieu');
@@ -49,16 +60,18 @@ function afficherLieu() {
 }
 
 function chercherCoor(){
-    var ville = $("#ville").val();
+    var lat = document.getElementById('lieu_latitude');
+    var long = document.getElementById('lieu_longitude');
+    var ville = $("#lieu_ville").val();
     if(ville != ""){
         $.ajax({
-            url: "https://nominatim.openstreetmap.org/search", // URL de Nominatim
+            url: "https://nominatim.openstreetmap.org/search?", // URL de Nominatim
             type: 'get', // Requête de type GET
-            data: "q="+ville+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
+            data: "city="+ville+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
         }).done(function (response) {
             if(response != ""){
-                userlat = response[0]['lat'];
-                userlon = response[0]['lon'];
+                lat.value = response[0]['lat'];
+                long.value = response[0]['lon'];
             }
         }).fail(function (error) {
             alert(error);
@@ -66,6 +79,67 @@ function chercherCoor(){
     }
 }
 
+function remember(){
+    document.getElementById("sortie_nom").addEventListener("blur", function()
+    {
+        sessionStorage.setItem('nom',document.getElementById("sortie_nom").value);
+    });
+    document.getElementById("sortie_datHeureDebut").addEventListener("change", function()
+    {
+        sessionStorage.setItem('dd',(document.getElementById("sortie_datHeureDebut").value));
+    });
+    document.getElementById("sortie_dateLimiteInscription").addEventListener("change",function()
+    {
+        sessionStorage.setItem('dl',document.getElementById("sortie_dateLimiteInscription").value);
+    })
+    document.getElementById("sortie_duree").addEventListener("blur",function()
+    {
+        sessionStorage.setItem('duree',document.getElementById("sortie_duree").value);
+    });
+    document.getElementById("sortie_infosSortie").addEventListener("blur",function()
+    {
+        sessionStorage.setItem('infos',document.getElementById("sortie_infosSortie").value);
+    });
+    document.getElementById("sortie_nbInscriptionsMax").addEventListener("blur",function()
+    {
+        sessionStorage.setItem('max',document.getElementById("sortie_nbInscriptionsMax").value);
+    });
+    document.getElementById("sortie_lieu").addEventListener("blur",function ()
+    {
+        sessionStorage.setItem('lieu',document.getElementById("sortie_lieu").value);
+    });
 
+}
 
+function fill(){
+    if (sessionStorage.getItem('nom'))
+    {
+        document.getElementById("sortie_nom").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('dd'))
+    {
+        document.getElementById("sortie_datHeureDebut").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('dl'))
+    {
+        document.getElementById("sortie_dateLimiteInscription").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('duree'))
+    {
+        document.getElementById("sortie_duree").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('infos'))
+    {
+        document.getElementById("sortie_infosSortie").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('max'))
+    {
+        document.getElementById("sortie_nbInscriptionsMax").value = (sessionStorage.getItem('nom'));
+    }
+    if (sessionStorage.getItem('lieu'))
+    {
+        document.getElementById("sortie_lieu").value = (sessionStorage.getItem('nom'));
+    }
+
+}
 

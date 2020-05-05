@@ -39,6 +39,25 @@ class LieuType extends AbstractType
                 'attr'=>[
                     'class'=>'form-control',
                     'placeholder'=>'recherche par nom de sortie'
+
+                ]
+            ])
+            ->add('latitude',TextType::class,[
+                'required'=>true,
+                'label'=>false,
+                'attr'=>[
+                    'class'=>'form-control',
+                    'placeholder'=>'latitude',
+                    'hidden'=>true
+                ]
+            ])
+            ->add('longitude',TextType::class,[
+                'required'=>true,
+                'label'=>false,
+                'attr'=>[
+                    'class'=>'form-control',
+                    'placeholder'=>'longitude',
+                    'hidden'=>true
                 ]
             ])
         ;
