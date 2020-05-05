@@ -20,7 +20,45 @@
             {# partie pour insérer des utilisateurs par import de fichier .csv #}
             <h1>Charger un fichier</h1><hr>
             <p>Sélectionnez cette option si vous souhaitez importer une liste d'utilisateurs via un fichier csv</p>
-            <a href="{{ path('app_charger') }}"><button class="bouton">Charger</button></a>
+            <div class="alert alert-danger row" role="alert">
+                Champs à avoir dans votre fichier (peu importe l'ordre). Respecter l'orthographe et la casse :
+                <div class="col-md-6">
+                    champs obligatoires
+                    <ul>
+                        <li>nom</li>
+                        <li>prenom</li>
+                        <li>username</li>
+                        <li>email</li>
+                        <li>idsite</li>
+                        <li>password</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    champs facultatifs
+                    <ul>
+                        <li>telephone</li>
+                        <li>role (par défaut si non renseigné : 'ROLE_USER')</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="alert alert-warning row" role="alert">
+                Attention! <br>Votre fichier doit impérativement :<br>
+                <ul>
+                    <li>être au format *.csv</li>
+                    <li>avoir des champs séparés par des "," et non par des ";"</li>
+                </ul>
+                Si ce n'est pas le cas, veuillez ouvrir votre fichier dans un bloc-notes, et remplacer tous les points
+                virgules par des virgules.
+            </div>
+
+            {% form_theme loadform 'bootstrap_4_layout.html.twig' %}
+            <div class="form-group">
+                {{ form_start(loadform) }}
+                {{ form_widget(loadform) }}
+                <input class="bouton " name="charger" value="Envoyer fichier" type="submit"/>
+                {{ form_end(loadform) }}
+            </div>
+
         </div>
     </div>
 
