@@ -4,12 +4,27 @@
 
 
 {% block main %}
-    <h1>S'inscrire</h1><hr>
-    {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="bouton" type="submit" value="ok">Enregistrer</button>
-    {{ form_end(form) }}
+    <div class="row px-n5">
+        <div class="col-md-6 px-5">
+            {# partie pour saisir manuellement un utilisateur#}
+            <h1>Inscrire manuellement</h1><hr>
+            {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="bouton" type="submit" value="ok">Enregistrer</button>
+            {{ form_end(form) }}
+        </div>
+        <div class="col-md-6 px-5">
+            {# partie pour insérer des utilisateurs par import de fichier .csv #}
+            <h1>Charger un fichier</h1><hr>
+            <p>Sélectionnez cette option si vous souhaitez importer une liste d'utilisateurs via un fichier csv</p>
+            <a href="{{ path('app_charger') }}"><button class="bouton">Charger</button></a>
+        </div>
+    </div>
+
+
+
 
 {% endblock %}
