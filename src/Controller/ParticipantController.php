@@ -77,12 +77,23 @@ class ParticipantController extends AbstractController
      */
     public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
-        //$this->denyAccessUnlessGranted("ROLE_ADMIN");
+        // accès autorisé pour les administrateurs seulement
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+
+        // on crée un nouveau participant
         $user = new Participant();
+
+        // on crée un formulaire d'enregistrement et on traite la réponse
         $registerForm = $this->createForm(RegisterFormType::class,$user);
-        $loadform = $this->createForm(LoadType::class);
         $registerForm->handleRequest($request);
+
+        // on crée un formulaire d'import csv et on traite la réponse
+        $loadform = $this->createForm(LoadType::class);
         $loadform->handleRequest($request);
+
+        // si on clique sur le bouton de création manuelle du formulaire
+
+        // s'il est valide on crée un nouvel utilisateur en bdd
         if ($registerForm->isSubmitted()&&$registerForm->isValid())
         {
             $user->setUpdatedAt(new \DateTime());
@@ -94,43 +105,58 @@ class ParticipantController extends AbstractController
             $em->flush();
             $this->addFlash('success','Enregistrement réussi');
             return $this->redirectToRoute('app_login');
-        } elseif ($registerForm->isSubmitted()&&!$registerForm->isValid())
+
+        } // s'il n'est pas valide, on lui envoie un message d'échec
+        elseif ($registerForm->isSubmitted()&&!$registerForm->isValid())
         {
             $this->addFlash('danger','Enregistrement échoué');
         }
 
+        // si on clique sur le bouton pour importer des utilisateurs via un fichier
+        // s'il est valide
         if ($loadform->isSubmitted() && $loadform->isValid()){
+
+            // nom que l'on donnera au fichier
             $nomFichier = "fichier.csv";
-
+            // on récupère les données chargées dans le champ
             $file = $loadform['filefield']->getData();
+            // on sauvegarde ce fichier dans le dossier assets
             $file->move("../assets/file/", $nomFichier);
-
+            // on récupère le fichier csv
             $csv = Reader::createFromPath('../assets/file/fichier.csv', 'r');
+            // on lui attribue un header (la première ligne du fichier csv)
             $csv->setHeaderOffset(0);
+            // on compte le nombre de lignes du fichier
             $taille = count($csv);
+            // on récupère les lignes
             $resultats = $csv->getRecords();
 
+            // on récupère le repository du participant et on appelle une fonction qui va nous permettre
+            // de créer chaque utilisateur en bdd ou de nous retourner les erreurs quand il y en a
             $repoParticipant = $this->getDoctrine()->getRepository(Participant::class);
-
             $errors = $repoParticipant->ajouterViaCsv($resultats, $em, $encoder, $validator);
+
+            // s'il n'y a pas d'erreurs, tout s'est bien déroulé, on renvoie un emssage
             if (empty($errors)){
                 $this->addFlash('success', 'vos utilisateurs ont bien été enregistrés');
                 return $this->redirectToRoute('app_register');
             }
 
 
-        }
+        } // s'il n'est pas valide, on lui envoie un message d'échec
         elseif ($loadform->isSubmitted()&&!$loadform->isValid())
         {
             $this->addFlash('danger','problème lors de l\'opération');
         }
 
+        // s'il y a eu des erreurs, on renvoie vers la page de création avec les erreurs
         if (isset($errors)) {
             return $this->render('participant/register.html.twig', [
                 'form' => $registerForm->createView(),
                 'loadform' => $loadform->createView(), 'errors' => $errors,'taille'=>$taille
             ]);
-        } else{
+        } // sinon on ne renvoie que vers la page d'accueil
+        else{
             return $this->render('participant/register.html.twig', [
                 'form' => $registerForm->createView(),
                 'loadform' => $loadform->createView(),
