@@ -36,6 +36,8 @@ nav{
     background-color: #F56565;
     color: #e9d2d2;
     font-size: 16px;
+    width: 100%;
+    position: fixed;
 }
 nav a:hover{
     color: white;
@@ -71,6 +73,7 @@ thead{
     background-color: #3D7FA8;
     color: white;
 }
+
 /*
 Styles formulaires
  */

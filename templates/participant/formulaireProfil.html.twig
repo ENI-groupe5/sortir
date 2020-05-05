@@ -9,11 +9,12 @@
         <div id="profil">
             {{ form_start(formulaire) }}
             <div id="avatarUpload">
-                {% if app.user.avatar is empty %}
-                    {{ form_row(formulaire.avatar) }}
-                {% else %}
-                    <img id="avatar" alt="avatar"  src="{{ asset('build/uploads/') }}{{ app.user.avatar }}">
-                    {{ form_row(formulaire.avatar) }}
+                {% if participant.avatar is empty %}
+                    <img id="avatar" src="{{ asset('build/img/defaultAvatar.png') }}">
+                    {{ form_row(formulaire.avatarFile) }}
+                    {% else %}
+                    <img id="avatar" src="{{ vich_uploader_asset(participant, 'avatarFile') }}">
+                    {{ form_row(formulaire.avatarFile) }}
                 {% endif %}
             </div>
             <div class="row">

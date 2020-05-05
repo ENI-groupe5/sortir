@@ -5,11 +5,11 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
+
         if($(window).width() > 699) {
             window.location = "{{ path('home') }}";
         }
-    });
+    ;
 </script>
 {% endblock %}
 {% block main %}
@@ -85,120 +85,45 @@
     </table>
 
 <div class="count">
-    {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+    {% if sorties.getTotalItemCount >1 %}
+        <div class="count">
+            {{ sorties.getTotalItemCount }} Sorties correspondent à votre recherche
+        </div>
+    {% elseif sorties.getTotalItemCount == 1 %}
+        {{ sorties.getTotalItemCount }} Sortie correspond à votre recherche
+    {% else %}
+        Aucune sortie ne correspond à votre recherche
+    {% endif %}
 </div>
     </div>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-responsive">
         <thead>
         <tr>
-            <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Clôture</th><th scope="col">Inscrits/Places</th><th scope="col">Etat</th><th scope="col">Inscrit</th><th scope="col">Organisteur</th><th scope="col">Actions</th>
+            <th scope="col">Nom de la sortie</th><th scope="col">Date de la sortie</th><th scope="col">Lieu</th>
         </tr>
         </thead>
         <tbody>
             <div id="sorties">
         {% for sortie in sorties %}
-            <tr scope="row">
-
-        <td>
-            {{ sortie.nom }}
-        </td>
+            <tr>
+                <th scope="row">
+                    <a href="{{ path('sortie_afficher', {id:sortie.id}) }}">{{ sortie.nom }}</a>
+                </th>
         <td>
             {{ sortie.datHeureDebut|date('d/m/Y') }}
         </td>
-        <td>
-            {{ sortie.dateLimiteInscription|date('d/m/Y') }}
-        </td>
-        <td>
-            {{ sortie.participants|length }}/{{ sortie.nbInscriptionsMax }}
-        </td>
-        <td>
-            {% if ((sortie.nbInscriptionsMax <= sortie.participants|length)or(sortie.dateLimiteInscription|date('U')<=("now"|date("U")))) %}
-                Cloturée
-            {% else %}
-            {% if sortie.sortieetat.id == 2 %}
-                {% if (sortie.datHeureDebut|date('U')+sortie.duree|date('U')) == ("now"|date("U")) %}
-                En cours
-                {% elseif sortie.datHeureDebut|date('U') > ("now"|date("U")) and sortie.dateLimiteInscription|date('U') < ("now"|date("U"))  %}
-                Fermé
-                {% elseif sortie.datHeureDebut|date('U') < ("now"|date("U"))%}
-                    Activitée terminée
-                    {% else %}
-                Ouvert
-                {% endif %}
-            {% endif %}
-            {% if sortie.sortieetat.id == 1 %}
-                En création
-            {% endif %}
-            {% if sortie.sortieetat.id == 3 %}
-                Annulée
-            {% endif %}
-        {% endif %}
-            </td>
-        <td>
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {% for sortieuser in app.user.sorties %}
-            {% if sortieuser.id==sortie.id %}
-                  x
-            {% endif %}
-            {% endfor %}
-            {% endif %}
 
-        </td>
         <td>
-            <a href="{{ path('afficher_profil', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.username }}</a>
+           {{ sortie.lieu.lieuville.nom }}
         </td>
-                <td>
-            {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
-        {% if sortie.organisateur == app.user %}
-        <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a>
-        {% else %}
-                <a href="{{ path('sortie_afficher', {id:sortie.id}) }}"> Afficher </a>
-        {% endif %}
-                {% set inscrire = 'true' %}
-        {% for sortieuser in app.user.sorties %}
-        {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('U') > ("now"|date("U"))  %}
-
-        <br><a href="{{ path('sortie_desinscrire',{'id':sortie.id}) }}">Se&nbspdésister</a>
-        {% endif %}
-            {% if (sortie.dateLimiteInscription|date('U')) > ("now"|date("U")) and sortie.sortieetat.id == 2%}
-                {% if sortie.nbInscriptionsMax > sortie.participants|length %}
-        {% if sortieuser.id==sortie.id %}
-            {% set inscrire = 'false' %}
-            {% endif %}
-                    {% endif %}
-            {% else %}
-            {% set inscrire = 'false' %}
-            {% endif %}
-            {% endfor %}
-                {% if sortie.organisateur==app.user %}
-                    {% set inscrire = 'false' %}
-                    {% endif %}
-                {% if sortie.sortieetat.id !=2 %}
-                    {% set inscrire = 'false' %}
-                    {% endif %}
-                {% if inscrire == 'true' %}
-                    <br><a href="{{ path('sortie_inscrire',{'id':sortie.id}) }}">S'inscrire</a>
-                {% endif %}
-        {% if sortie.organisateur == app.user and sortie.dateLimiteInscription|date('U')> ("now"|date("U"))and sortie.sortieetat.id == 2 %}
-        <br><a href="{{ path('sortie_annuler', {'id':sortie.id}) }}">Annuler</a>
-        {% endif %}
-            {% endif %}
-                </td>
             </tr>
         {% endfor %}
             </div>
         </tbody>
     </table>
         </div>
-    <div class="pagination">
-        {{ knp_pagination_render(sorties) }}
-    </div>
+
     <br>
-<div class="d-none d-md-block">
-    <div>
-    <a href="{{ path('sortie_creer') }}"><button type="button" class="bouton">Créer une sortie</button> </a>
-    </div>
-</div>
     <br><br><br>
 
 {% endblock %}

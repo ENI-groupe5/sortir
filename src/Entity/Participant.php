@@ -2,16 +2,20 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
+ * @Vich\Uploadable
  */
-class Participant implements UserInterface
+class Participant implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -67,36 +71,10 @@ class Participant implements UserInterface
     private $sortiesOrganisees;
 
     /**
-     * @Assert\File(mimeTypes={"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Veuillez insérer une image au format valide (PNG, JPG ou JPEG)")
      * @ORM\Column(type="string", name="avatar", nullable=true)
+     * @var string|null
      */
     private $avatar;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $reset_token;
-
-    /**
-     * @return mixed
-     */
-    public function getResetToken()
-    {
-        return $this->reset_token;
-    }
-
-    /**
-     * @param mixed $reset_token
-     */
-    public function setResetToken($reset_token): void
-    {
-        $this->reset_token = $reset_token;
-    }
-
-
-
-
-
 
     public function __construct()
     {
@@ -281,7 +259,7 @@ class Participant implements UserInterface
     }
 
     /**
-     * @return
+     * @return ArrayCollection
      */
     public function getSortiesOrganisees()
     {
@@ -297,7 +275,7 @@ class Participant implements UserInterface
     }
 
     /**
-     * @return
+     * @return ArrayCollection
      */
     public function getSorties()
     {
@@ -323,9 +301,71 @@ class Participant implements UserInterface
     /**
      * @param mixed $avatar
      */
-    public function setAvatar(string $avatar): void
+    public function setAvatar(?string $avatar): void
     {
         $this->avatar = $avatar;
     }
 
+    /**
+     * @return File|null
+     */
+    public function getAvatarFile(): ?File
+    {
+        return $this->avatarFile;
+    }
+
+    /**
+     * @param File|null $avatarFile
+     */
+    public function setAvatarFile(?File $avatarFile = null): void
+    {
+        $this->avatarFile = $avatarFile;
+        if ($this->avatarFile instanceof UploadedFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTimeInterface|null $updatedAt
+     */
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->prenom,
+            $this->nom,
+            $this->email,
+            $this->telephone,
+            $this->password,
+            $this->site,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->prenom,
+            $this->nom,
+            $this->email,
+            $this->telephone,
+            $this->password,
+            $this->site,
+            ) = unserialize($serialized, array('allowed_classes' => false));
+    }
 }
