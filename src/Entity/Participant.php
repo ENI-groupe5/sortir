@@ -76,6 +76,28 @@ class Participant implements UserInterface, \Serializable
      */
     private $avatar;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
+
+    /**
+     * @return mixed
+     */
+    public function getResetToken()
+    {
+        return $this->reset_token;
+    }
+
+    /**
+     * @param mixed $reset_token
+     */
+    public function setResetToken($reset_token): void
+    {
+        $this->reset_token = $reset_token;
+    }
+
+
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
