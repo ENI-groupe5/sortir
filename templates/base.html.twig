@@ -52,6 +52,11 @@
                     <a class="nav-link" href="{{ path('app_register') }}">Créer Utilisateur</a>
                 </li>
                 </div>
+                <div class="d-none d-sm-block">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('liste_participants') }}">Liste Utilisateurs</a>
+                    </li>
+                </div>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <li class="nav-item">

@@ -19,6 +19,22 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
+    /**
+     * @param $siteId
+     * @return Site[] Returns an array of Site objects
+     */
+    public function rechercherSite($siteId)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :site')
+            ->setParameter('site', $siteId)
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(25)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Site[] Returns an array of Site objects
     //  */

@@ -1,5 +1,4 @@
-<form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûre de vouloir supprimer votre compte');">
-    <input type="hidden" name="_method" value="DELETE">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-    <button class="btn btn-danger"><img alt="plus" class="plus" src="{{ asset('build/images/close.svg') }}"></button>
+<form method="post" action="{{ path('supprimer_participant', {'id': participant.id}) }}" onsubmit="return confirm('Êtes-vous sûre de vouloir supprimer ce participant ?');">
+    <input type="hidden" name="_method" value="supprimer">
+    <button class="btn btn-danger">Supprimer</button>
 </form>

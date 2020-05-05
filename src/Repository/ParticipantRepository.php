@@ -111,7 +111,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->andWhere('p.id = :participant')
             ->setParameter('participant', $participantId)
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(100)
+            ->setMaxResults(25)
             ->getQuery()
             ->getResult()
         ;
