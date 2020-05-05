@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -52,15 +53,18 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Participant
+    /**
+     * @param $email
+     * @return Participant
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmail($email)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.email = :participant')
+            ->setParameter('val', $email)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
