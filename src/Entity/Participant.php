@@ -5,18 +5,22 @@ namespace App\Entity;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 
 /**
+ * @UniqueEntity(fields={"username"},message="Ce nom est déjà utilisé")
+ * @UniqueEntity(fields={"email"},message="cet email existe déjà")
  * @ORM\Entity(repositoryClass="App\Repository\ParticipantRepository")
  * @Vich\Uploadable
  */
+
 class Participant implements UserInterface, \Serializable
 {
     /**
@@ -26,10 +30,14 @@ class Participant implements UserInterface, \Serializable
      */
     private $id;
     /**
+     * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Assert\Length(min="1",max="50",minMessage="le nom doit comporter minimum un caractère",maxMessage="le nom doit comporter maximum 50 caractères")
      * @ORM\Column(type="string",length=50)
      */
     private $nom;
     /**
+     * @Assert\NotBlank(message="le prénom est obligatorie")
+     * @Assert\Length(min="1",max="50",minMessage="le prénom doit comporter minimum un caractère",maxMessage="le prénom doit comporter maximum 50 caractères")
      * @ORM\Column(type="string", length=50)
      */
     private $prenom;
@@ -38,6 +46,7 @@ class Participant implements UserInterface, \Serializable
      */
     private $telephone;
     /**
+     * @Assert\Email(message="cet email n'est pas valide!")
      * @ORM\Column(type="string", unique=true, length=255)
      */
     private $email;
@@ -47,6 +56,8 @@ class Participant implements UserInterface, \Serializable
     private $actif;
 
     /**
+     * @Assert\NotBlank(message="nom d'utilisateur obligatoire!")
+     * @Assert\Length(min="1",maxMessage="180",minMessage="le nom d'utilisateur doit comporter minimum 1 caractère",maxMessage="le nom d'utilisateur doit comporter maximum 180 caractères")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
@@ -57,6 +68,8 @@ class Participant implements UserInterface, \Serializable
     private $roles = [];
 
     /**
+     * @Assert\Regex(pattern="/^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$/",message="
+     * le mot de passe doit comporter minimum 8 caractères, dont au moins 1 chiffre, 1 caractère spécial, 1 majuscule, 1 minuscule")
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
@@ -78,6 +91,7 @@ class Participant implements UserInterface, \Serializable
     private $sortiesOrganisees;
 
     /**
+     * @Assert\File(mimeTypes={"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Veuillez insérer une image au format valide (PNG, JPG ou JPEG)")
      * @ORM\Column(type="string", name="avatar", nullable=true)
      * @var string|null
      */
