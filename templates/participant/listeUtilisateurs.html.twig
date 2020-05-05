@@ -23,7 +23,6 @@
             <tbody>
             {% for participant in participant %}
                 <tr>
-                    {% if participant == 'ROLE USER' %}
                         <td>{{ participant.username }}</td>
                         <td>{{ participant.prenom }}</td>
                         <td>{{ participant.nom }}</td>
@@ -40,8 +39,6 @@
                             {{ include('participant/supprimerUtilisateurs.html.twig') }}
                         </div>
                     </td>
-            {% else %}
-                {% endif %}
                 </tr>
             {% else %}
                 <tr>
