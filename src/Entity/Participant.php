@@ -76,6 +76,7 @@ class Participant implements UserInterface, \Serializable
      */
     private $avatar;
 
+    //pour gérer l'oubli de mot de passe ********************************************************
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -94,8 +95,11 @@ class Participant implements UserInterface, \Serializable
      */
     public function setResetToken($reset_token): void
     {
-        $this->reset_token = $reset_token;
+         $this->reset_token = $reset_token;
     }
+
+    // fin gérer oubli mdp ***************************************************************************
+
 
 
     public function __construct()

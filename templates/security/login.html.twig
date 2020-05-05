@@ -3,6 +3,10 @@
 {% block title %}Log in! &middot; {{parent()}}{% endblock %}
 
 {% block main %}
+
+    {{ dump(user) }}
+
+
     <h1>Se connecter</h1><hr>
     {# Formulaire d'authentification#}
     <form method="post">

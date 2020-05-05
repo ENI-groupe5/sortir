@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Form\AskEmailForResetPassType;
 use App\Form\ResetPassType;
 use App\Repository\ParticipantRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +45,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/oubli-pass", name="app_forgotten_password")
+     * @Route("/oubliPass", name="app_oubliPass")
      * @param Request $request
      * @param ParticipantRepository $participants
      * @param TokenGeneratorInterface $tokenGenerator
@@ -54,8 +53,9 @@ class SecurityController extends AbstractController
      */
     public function oubliPass(Request $request, ParticipantRepository $participants, TokenGeneratorInterface $tokenGenerator)
     {
+
         //initialiser le formulaire
-        $emailForm = $this->createForm(AskEmailForResetPassType::class);
+        $emailForm = $this->createForm(AskEmailForResetPassType::class, ['email' => ""]);
 
         //récupérer le formulaire
         $emailForm->handleRequest($request);
@@ -63,15 +63,16 @@ class SecurityController extends AbstractController
         // si formulaire est valide
         if ($emailForm->isSubmitted() && $emailForm->isValid()) {
             //récupérer les données
-            $donnees = $emailForm->getData();
+            $email = $emailForm->get('email')->getData();
+
             try {
                 // chercher un utilisateur ayant cet e-mail
-                $user = $participants->findOneByEmail($donnees['email']);
+                $user = $participants->findOneByEmail($email);
             } catch (\Exception $e) {
                 $this->addFlash("danger", "Erreur ! Un problème est survenu lors de l'identification de l'email. Veuillez contacter le service technique.");
                 return $this->redirectToRoute('home');
             }
-            // Si l'utilisateur n'existe pas
+
             if ($user === null) {
                 $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
                 return $this->redirectToRoute('home');
@@ -94,7 +95,8 @@ class SecurityController extends AbstractController
             // générer l'URL de réinitialisation de mdp
             $url = $this->generateUrl('app_resetPassword', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-            /*générer l'e-mail
+    /*
+            //générer l'e-mail
             $message = (new \Swift_Message('Mot de passe oublié'))
                 ->setFrom('votre@adresse.fr')
                 ->setTo($user->getEmail())
@@ -103,22 +105,26 @@ class SecurityController extends AbstractController
                     'text/html'
                 )
             ;
-
             // On envoie l'e-mail
             $mailer->send($message);
-
             // On crée le message flash de confirmation
             $this->addFlash('message', 'E-mail de réinitialisation du mot de passe envoyé !');
-            */
+    */
 
-            // rediriger vers la page de login
-            return $this->redirectToRoute('app_login');
+            //à la place de l'envoi de l'email, envoi sur une page avec le lien URL pour réinitialiser mdp:
+            $this->addFlash("info", "simulation d'envoi d'email");
+            return $this->render('security/simulation_email.html.twig', [
+                'url'=>$url,
+                'email'=>$email,
+                'pseudo'=>$user->getUsername()
+            ]);
+
         } else {
             $this->addFlash('info', 'Veuillez renseigner votre adresse e-mail associée à votre compte');
         }
 
         // envoyer le formulaire à la vue
-        return $this->render('security/forgotten_password.html.twig', [
+        return $this->render('security/oubliPass.html.twig', [
             'emailForm' => $emailForm->createView()
         ]);
     }
@@ -155,9 +161,10 @@ class SecurityController extends AbstractController
             $user->setResetToken(null);
 
             // On chiffre le mot de passe saisi
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            //$user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $user->setPassword($request->request->get('password')); //todo erreur sur le get : pwd = null
 
-            // On sauvegarde en BDD
+            // On sauvegarde le user en BDD
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -169,7 +176,7 @@ class SecurityController extends AbstractController
             $this->addFlash('info','Veuillez saisir votre nouveau mot de passe');
         }
         // Si on n'a pas reçu les données, on affiche le formulaire
-        return $this->render('security/reset_password.html.twig', [
+        return $this->render('security/resetPass.html.twig', [
             'token' => $token,
             'pwdForm' => $pwdForm->createView()
         ]);
