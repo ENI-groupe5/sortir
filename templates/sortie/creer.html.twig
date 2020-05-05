@@ -23,10 +23,32 @@
             <div class="col-md-6 px-md-5">
                 <div>
                     {{ form_row(sortieForm.nbInscriptionsMax) }}
-                    {{ form_row(sortieForm.lieu) }}
-
-
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            {{ form_row(sortieForm.lieu) }} </div> <div class="form-group col-md-2"><br><label>
+                                <div class="open.btn"><button type="button"  class="bouton btn-bold" data-toggle="modal" data-target="#dataModal" href="#">Ajout lieu</button></div></label>
+                        </div>
+                    </div>
                 </div>
+                <div id="dataModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                     <div class="modal-header">
+                         Ajouter un lieu
+                     </div>
+                    <div class="modal-body">
+                            {{ form_start(lieuForm) }}
+                            {{ form_widget(lieuForm) }}
+                    </div>
+                    <div class="modal-footer">
+                            <button type="submit" class="bouton">Ajouter</button>
+                            <a href="{{ path('sortie_creer') }}"><button type="button" class="bouton">Annuler</button></a>
+                            {{ form_end(lieuForm) }}
+                    </div>
+                </div>
+                </div>
+                </div>
+
                 <dl class="row">
                     <dt id="labelville" class="col-md-3"></dt>
                     <dd id="ville" class="col-md-9"></dd>
@@ -61,4 +83,30 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.btn-bold').click(function () {
+                $('#modal-title').html("Modifier profile");
+
+                var url = '{{ path('lieu_ajout') }}';
+
+                $.ajax({
+                    type: 'post',
+                    url: '{{ path('lieu_ajout') }}',
+                    success: function (data) {
+                        $('#modal_detail').html(data);
+                        $('#dataModal').modal("show");
+                    }
+                });
+
+            });
+
+
+        });
+    </script>
+{{ parent() }}
 {% endblock %}

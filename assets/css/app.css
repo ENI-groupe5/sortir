@@ -144,3 +144,35 @@ Style affichage du profil
     width: 150px;
     margin-bottom: 30px;
 }
+
+.open-btn {
+    display: flex;
+    justify-content: left;
+}
+/* Stylez et fixez le bouton sur la page */
+.open-button {
+    background-color: #1c87c9;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+}
+/* Positionnez la forme Popup */
+.login-popup {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+/* Masquez la forme Popup */
+.form-popup {
+    display: none;
+    position: fixed;
+    left: 45%;
+    top:5%;
+    transform: translate(-45%,5%);
+    border: 2px solid #666;
+    z-index: 9;
+}

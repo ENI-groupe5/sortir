@@ -1,0 +1,18 @@
+<div id="dataModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Ajouter un lieu
+            </div>
+            <div class="modal-body">
+                {{ form_start(lieuForm) }}
+                {{ form_widget(lieuForm) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="bouton">Ajouter</button>
+                <a href="{{ path('sortie_creer') }}"><button type="button" class="bouton">Annuler</button></a>
+                {{ form_end(lieuForm) }}
+            </div>
+        </div>
+    </div>
+</div>
