@@ -91,7 +91,6 @@ class Participant implements UserInterface, \Serializable
     private $sortiesOrganisees;
 
     /**
-     * @Assert\File(mimeTypes={"image/jpeg", "image/png", "image/jpg"}, mimeTypesMessage="Veuillez insérer une image au format valide (PNG, JPG ou JPEG)")
      * @ORM\Column(type="string", name="avatar", nullable=true)
      * @var string|null
      */
@@ -427,6 +426,7 @@ class Participant implements UserInterface, \Serializable
             $this->telephone,
             $this->password,
             $this->site,
+            $this->avatar,
         ));
     }
 
@@ -441,6 +441,7 @@ class Participant implements UserInterface, \Serializable
             $this->telephone,
             $this->password,
             $this->site,
+            $this->avatar,
             ) = unserialize($serialized, array('allowed_classes' => false));
     }
 }
