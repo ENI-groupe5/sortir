@@ -97,14 +97,18 @@ class ParticipantController extends AbstractController
         if ($registerForm->isSubmitted()&&$registerForm->isValid())
         {
             $user->setUpdatedAt(new \DateTime());
-            $user->setRoles(['ROLE_USER']);
+            dump($registerForm);
+            dump($registerForm->get("roles")->getData());
+            if (is_null($registerForm->get("roles")->getData())) {
+                $user->setRoles(['ROLE_USER']);
+            }
             $user->setActif(true);
             $hashed = $encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hashed);
             $em->persist($user);
             $em->flush();
             $this->addFlash('success','Enregistrement réussi');
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_register');
 
         } // s'il n'est pas valide, on lui envoie un message d'échec
         elseif ($registerForm->isSubmitted()&&!$registerForm->isValid())
