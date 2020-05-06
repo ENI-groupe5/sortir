@@ -97,6 +97,31 @@ class Participant implements UserInterface, \Serializable
      */
     private $avatar;
 
+    /**
+     * @Vich\UploadableField(mapping="avatar_participant", fileNameProperty="avatar")
+     * @var File|null
+     */
+    private $avatarFile;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var DateTimeInterface|null
+     */
+    private $updatedAt;
+
+    public function __construct()
+    {
+        $this->sortiesOrganisees = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Sortie",inversedBy="participants")
+     */
+    private $sorties;
+
+
     //pour gérer l'oubli de mot de passe ********************************************************
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -116,24 +141,10 @@ class Participant implements UserInterface, \Serializable
      */
     public function setResetToken($reset_token): void
     {
-         $this->reset_token = $reset_token;
+        $this->reset_token = $reset_token;
     }
 
     // fin gérer oubli mdp ***************************************************************************
-
-
-
-    public function __construct()
-    {
-        $this->sortiesOrganisees = new ArrayCollection();
-        $this->sorties = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Sortie",inversedBy="participants")
-     */
-    private $sorties;
-
 
 
     public function getId(): ?int
@@ -432,3 +443,4 @@ class Participant implements UserInterface, \Serializable
             ) = unserialize($serialized, array('allowed_classes' => false));
     }
 }
+
