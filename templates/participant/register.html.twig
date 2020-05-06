@@ -5,6 +5,21 @@
 
 {% block main %}
 
+{% if errors is defined %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                Des erreurs se sont produites à l'importation!
+            </div>
+            <p>Il y a {{ errors|length }} erreurs sur {{ taille }} imports</p>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
     <div class="row px-n5">
         <div class="col-md-6 px-5">
             {# partie pour saisir manuellement un utilisateur#}

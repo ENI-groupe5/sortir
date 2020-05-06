@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 /**
@@ -74,7 +75,7 @@ class ParticipantController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
      */
-    public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder)
+    public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
         //$this->denyAccessUnlessGranted("ROLE_ADMIN");
         $user = new Participant();
@@ -97,6 +98,7 @@ class ParticipantController extends AbstractController
         {
             $this->addFlash('danger','Enregistrement échoué');
         }
+
         if ($loadform->isSubmitted() && $loadform->isValid()){
             $nomFichier = "fichier.csv";
 
@@ -105,29 +107,35 @@ class ParticipantController extends AbstractController
 
             $csv = Reader::createFromPath('../assets/file/fichier.csv', 'r');
             $csv->setHeaderOffset(0);
+            $taille = count($csv);
             $resultats = $csv->getRecords();
+
             $repoParticipant = $this->getDoctrine()->getRepository(Participant::class);
-            try {
-                $repoParticipant->ajouterViaCsv($resultats, $em, $encoder);
-            } catch (\Exception $e) {
-                $this->addFlash("danger", $e->getMessage());
+
+            $errors = $repoParticipant->ajouterViaCsv($resultats, $em, $encoder, $validator);
+            if (empty($errors)){
+                $this->addFlash('success', 'vos utilisateurs ont bien été enregistrés');
                 return $this->redirectToRoute('app_register');
             }
 
-            $this->addFlash('success', 'vos utilisateurs ont bien été enregistrés');
-            return $this->redirectToRoute('app_register');
-
 
         }
-
         elseif ($loadform->isSubmitted()&&!$loadform->isValid())
         {
             $this->addFlash('danger','problème lors de l\'opération');
         }
-        return $this->render('participant/register.html.twig',[
-            'form'=>$registerForm->createView(),
-            'loadform'=>$loadform->createView()
-        ]);
+
+        if (isset($errors)) {
+            return $this->render('participant/register.html.twig', [
+                'form' => $registerForm->createView(),
+                'loadform' => $loadform->createView(), 'errors' => $errors,'taille'=>$taille
+            ]);
+        } else{
+            return $this->render('participant/register.html.twig', [
+                'form' => $registerForm->createView(),
+                'loadform' => $loadform->createView(),
+            ]);
+        }
 
 
     }
