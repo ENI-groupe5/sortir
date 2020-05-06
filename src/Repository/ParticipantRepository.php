@@ -5,12 +5,14 @@ namespace App\Repository;
 use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use App\Entity\Site;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @method Participant|null find($id, $lockMode = null, $lockVersion = null)
@@ -44,65 +46,74 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     /**
      * fonction pour ajouter un participant via un fichier csv
      */
-    public function ajouterViaCsv($resultats, $em, $encoder):void {
 
-        foreach ($resultats as $resultat){
+    public function ajouterViaCsv($resultats, $em, $encoder, $validator)//:void
+    {
+        // création d'un tableau d'erreurs à retourner
+        $errors = array();
+        // création d'un booléen de test sur champ role
+        $ok = true;
+
+        // pour chaque ligne du fichier résultats on teste si le champ est bien présent
+        // et on analyse via validator si le user est conforme
+        foreach ($resultats as $resultat) {
+
             $user = new Participant();
-            if ($resultat['nom']){
-            $user->setNom($resultat['nom']);
-            } else {
-                throw new \Exception("Nom obligatoire! il manque au moins un nom dans votre fichier");
-            }
-            if ($resultat['prenom']){
-                $user->setPrenom($resultat['prenom']);
-            } else {
-                throw new \Exception("Prénom obligatoire! il manque au moins un prénom dans votre fichier");
-            }
-            if ($resultat['username']){
-                $user->setUsername($resultat['username']);
-            } else {
-                throw new \Exception("Username obligatoire! il manque au moins un username dans votre fichier");
-            }
-            if ($resultat['email']){
-                $user->setEmail($resultat['email']);
-            } else {
-                throw new \Exception("email obligatoire! il manque au moins un email dans votre fichier");
-            }
-            if ($resultat['role']){
+            if (isset($resultat['nom'])) {
+            $user->setNom($resultat['nom']);}
+            if (isset($resultat['prenom'])) {
+            $user->setPrenom($resultat['prenom']);}
+            if (isset($resultat['username'])) {
+            $user->setUsername($resultat['username']);}
+            if (isset($resultat['email'])) {
+            $user->setEmail($resultat['email']);}
+            if (isset($resultat['role'])) {
                 $user->setRoles([$resultat['role']]);
             } else {
                 $user->setRoles(['ROLE_USER']);
             }
-
-            if ($resultat['telephone']){
-                $user->setRoles($resultat['telephone']);
-            }
-            if ($resultat['idsite']){
+            if (isset($resultat['telephone'])) {
+            $user->setTelephone($resultat['telephone']);}
+            $user->setPassword($resultat['password']);
+            // pour le site, on vérifie que l'id passé existe bien
+            // sinon, on passe le booléen à false
+            if (isset($resultat['idsite'])) {
                 $siteRepo = $em->getRepository(Site::class);
                 $site = $siteRepo->find($resultat['idsite']);
-                $user->setSite($site);
-            } else {
-                throw new \Exception("il manque au moins un site ou il n'est pas au bon format");
-            }
-            if ($resultat['password']){
-                $hashed = $encoder->encodePassword($user,$resultat['password']);
-                $user->setPassword($hashed);
-            } else {
-                throw new \Exception("il manque au moins un mot de passe");
+                if ($site) {
+                    $user->setSite($site);
+                } else {
+                    $ok = false;
+                }
             }
             $user->setUpdatedAt(new \DateTime());
             $user->setActif(true);
-            try {
+
+            // test du user par validator
+            $userViolation = $validator->validate($user);
+
+
+            // si le validator ne retourne pas d'erreurs et que le booléen est à true on encode le mdp
+            // et on le met dans la base
+            if (count($userViolation)<1 && $ok === true){
+                $hashed = $encoder->encodePassword($user, $resultat['password']);
+                $user->setPassword($hashed);
+                // injection du user en cours
                 $this->_em->persist($user);
-                $this->_em->flush();
-            } catch (UniqueConstraintViolationException $e){
 
-                throw new \Exception("un des emails ou username existe déjà dans le fichier");
+                // sinon on remplit le tableau d'erreurs
+            } else {
+                $errors [] = $userViolation;
             }
-        }
 
+        }
+            // on flushe toutes les données non erronnées dans la base
+            $this->_em->flush();
+            // on retourne les erreurs s'il y en a
+            return $errors;
 
     }
+
 
     /**
      * @param $participantId

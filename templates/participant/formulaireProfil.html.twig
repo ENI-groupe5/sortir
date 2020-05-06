@@ -10,7 +10,7 @@
             {{ form_start(formulaire) }}
             <div id="avatarUpload">
                 {% if participant.avatar is empty %}
-                    <img id="avatar" src="{{ asset('build/img/defaultAvatar.png') }}">
+                    <img id="avatar" src="{{ asset('build/defaultAvatar.png') }}">
                     {{ form_row(formulaire.avatarFile) }}
                     {% else %}
                     <img id="avatar" src="{{ vich_uploader_asset(participant, 'avatarFile') }}">
@@ -42,7 +42,7 @@
             </div>
         </div>
     {% else %}
-        <h1 class="text-alert">Vous ne pouvez pas modifier ce profil !</h1>
+        <h1>Vous ne pouvez pas modifier ce profil !</h1><hr>
     {% endif %}
 
 {% endblock %}
