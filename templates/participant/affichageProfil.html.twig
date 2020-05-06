@@ -9,10 +9,10 @@
         <h1>Profil de {{ participant.username }}</h1><hr>
     {% endif %}
     <div id="profil">
-        {% if app.user.avatar is empty %}
+        {% if participant.avatar is empty %}
             <img id="avatar" alt="defaultAvatar" src="{{ asset('build/defaultAvatar.png') }}">
         {% else %}
-            <img id="avatar" alt="avatar" src="{{ asset('img/uploads/') }}{{ app.user.avatar }}">
+            <img id="avatar" alt="avatar" src="{{ asset('img/uploads/'~ participant.avatar) }}">
         {% endif %}
         <div class="infosProfil">
             <div class="row">
