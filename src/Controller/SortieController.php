@@ -129,30 +129,7 @@ class SortieController extends AbstractController
         $sortie->setOrganisateur($user);
         $sortie->setSite($user->getSite());
 
-        try {
-            //récupérer les lieux et leurs propriétés, les mettre dans un tableau
-            // et les écrire dans un nouveau fichier json
-            $repoLieux = $this->getDoctrine()->getRepository(Lieu::class);
-            $lieux = $repoLieux->findAll();
-            $response = array();
-            $posts = array();
-                for ($i = 0; $i < count($lieux); $i++) {
-                    $id = $lieux[$i]->getId();
-                    $nom = $lieux[$i]->getNom();
-                    $rue = $lieux[$i]->getRue();
-                    $latitude = $lieux[$i]->getLatitude();
-                    $longitude = $lieux[$i]->getLongitude();
-                    $nomVille = $lieux[$i]->getLieuVille()->getNom();
-                    $cp = $lieux[$i]->getLieuVille()->getCodePostal();
-                    $posts[] = array('id' => $id, 'nom' => $nom, 'rue' => $rue, 'latitude' => $latitude, 'longitude' => $longitude, 'nomVille' => $nomVille, 'cp' => $cp);
-                }
-            $response['posts'] = $posts;
-            $fp = fopen('results.json', 'w');
-            fwrite($fp, json_encode($response));
-            fclose($fp);
-        }   catch (\Exception $e){
-            throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
-        }
+
 
         //tester les données
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
