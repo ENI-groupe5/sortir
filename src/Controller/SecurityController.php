@@ -142,9 +142,6 @@ class SecurityController extends AbstractController
     {
         //chercher un utilisateur avec le token donné
         $user = $participant->findOneBy(['reset_token' => $token]);
-        //dd($user);
-
-        //$user->setAvatarFile(new UploadedFile("",""));
 
         //si user n'existe pas
         if ($user === null) {
