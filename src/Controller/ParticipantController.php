@@ -171,4 +171,36 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('liste_participants');
     }
 
+    /**
+     * @Route("/user/modifactif/{id}", name="user_modifieractif")
+     * @param $id
+     * @param EntityManagerInterface $em
+     */
+    public function modifactifparticipant($id, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $userRepo = $em->getRepository(Participant::class);
+        $user = $userRepo->find($id);
+        if ($user)
+        {
+            if ($user->getActif()==1)
+            {
+                $user->setActif(0);
+                $em->flush();
+                $this->addFlash('success',"l'utilisateur à été desactivé");
+            }
+            else
+            {
+                $user->setActif(1);
+                $em->flush();
+                $this->addFlash('success',"l'utilisateur à été activé");
+            }
+        }
+        else
+        {
+            $this->addFlash('danger','L\'utilisateur n\'a pas été trouvé');
+        }
+        return $this->redirectToRoute('liste_participants');
+
+    }
 }

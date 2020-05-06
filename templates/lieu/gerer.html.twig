@@ -3,10 +3,9 @@
 {% block title %} Gerer les lieux &middot; {{ parent() }} {% endblock %}
 
 {% block main %}
-<br>
-<div align="center">
-    <h2>Gerer les lieux</h2>
-</div>
+    <h1>Gerer les lieux</h1>
+    <hr>
+
 
 <h4>Filtrer les lieux</h4>
 {{ form_start(form) }}
@@ -32,8 +31,8 @@
                     {{ lieu.lieuville.codepostal }}
                 </td>
                 <td>
-                    <a href="{{ path('lieu_gerer_modifier',{id:lieu.id}) }}">Modifier</a>&nbsp;-&nbsp;
-                    <a href="{{ path('lieu_gerer_supprimer',{id:lieu.id}) }}">Supprimer</a>
+                    <a href="{{ path('lieu_gerer_modifier',{id:lieu.id}) }}"><button type="button" class="bouton"> Modifier</button></a>&nbsp;&nbsp;
+                    <a href="{{ path('lieu_gerer_supprimer',{id:lieu.id}) }}"><button type="button" class="bouton"> Supprimer</button></a>
                 </td>
              </tr>
         {% endfor %}

@@ -162,18 +162,18 @@
         {% if is_granted ('IS_AUTHENTICATED_REMEMBERED') %}
           {% if sortie.organisateur == app.user %}
 
-              <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a>
+              <a href="{{ path('sortie_modifier', {id:sortie.id}) }}">Modifier</a><br>
 
             {% if sortie.sortieetat.id == 1 %}
 
                 <br><a href="{{ path('sortie_publier', {id:sortie.id}) }}">Publier</a>
 
             {% endif %}
-        {% else %}
+          {% endif %}
 
                 <a href="{{ path('sortie_afficher', {id:sortie.id}) }}"> Afficher </a>
 
-        {% endif %}
+
                 {% set inscrire = 'true' %}
         {% for sortieuser in app.user.sorties %}
             {% if sortieuser.id==sortie.id and sortie.datHeureDebut|date('U') > ("now"|date("U"))  %}
@@ -226,6 +226,5 @@
     <a href="{{ path('sortie_creer') }}"><button type="button" class="bouton">Créer une sortie</button> </a>
     </div>
 </div>
-    <br><br><br>
 
 {% endblock %}

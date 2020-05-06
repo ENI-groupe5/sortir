@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -25,6 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SortieController extends AbstractController
 {
+
+    private $session;
+
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
     /**
      * @Route("/", name="home")
      * @param Request $request
@@ -98,6 +108,16 @@ class SortieController extends AbstractController
         $sortie->setDatHeureDebut(new \DateTime("+7 days"));
         $sortie->setDateLimiteInscription(new \DateTime());
         $sortie->setDuree(90);
+
+
+        //Recuperer le lieu en session
+
+
+            if ($this->session->get('lieu')) {
+                $lieu = $this->session->get('lieu');
+                $sortie->setLieu($lieu->getId());
+            }
+
 
         //créer instance formulaire
         $sortieForm = $this->createForm(SortieType::class, $sortie);
@@ -203,7 +223,7 @@ class SortieController extends AbstractController
         $user = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
-        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user)
+        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user&&$sortie->getDateLimiteInscription()>(new \DateTime()))
         {
             if (!$sortie->getParticipants()->contains($user)) {
                 $sortie->getParticipants()[] = $user;
@@ -247,9 +267,9 @@ class SortieController extends AbstractController
         $em->flush();
         if ($sortie->getParticipants()->contains($user)||$user->getSorties()->contains($sortie))
         {
-            $this->addFlash('error','Desinscription échouée');
+            $this->addFlash('error','Désinscription échouée');
         } else{
-            $this->addFlash('success','Vous êtes maintenant desinscrit de la sortie '.$sortie->getNom());
+            $this->addFlash('success','Vous êtes maintenant désinscrit de la sortie '.$sortie->getNom());
         }
 
         return $this->redirectToRoute('home');

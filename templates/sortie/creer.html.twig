@@ -5,7 +5,6 @@
 {% block title %}  Créer une sortie &middot; {{parent()}} {% endblock %}
 
 {% block main %}
-
     <h1>Créer une sortie</h1><hr>
     <div class="container">
         <div class="row mx-md-n5">
@@ -25,7 +24,7 @@
                     {{ form_row(sortieForm.nbInscriptionsMax) }}
                     <div class="form-row">
                         <div class="form-group col-md-10">
-                            {{ form_row(sortieForm.lieu) }} </div> <div class="form-group col-md-2"><br><label>
+                            {{ form_row(sortieForm.lieu, {'value': 'sortieForm.lieu'}) }} </div> <div class="form-group col-md-2"><br><label>
                                <a href="{{ path('lieu_ajout') }}"><i class="gg-add-r" id="newlieu"></i></a></label>
                         </div>
                     </div>

@@ -13,10 +13,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class LieuController extends AbstractController
 {
+    private $session;
+
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+
+
+
     /**
      * @Route("/lieu", name="lieu")
      */
@@ -43,6 +55,7 @@ class LieuController extends AbstractController
             $em->persist($lieu);
             $em->flush();
             $this->addFlash('success','Le lieu à bien été ajouté');
+            $this->session->set('lieu',$lieu);
             return $this->redirectToRoute('sortie_creer');
         }
 
@@ -122,7 +135,7 @@ class LieuController extends AbstractController
         {
             $em->persist($lieu);
             $em->flush();
-            $this->addFlash('success','Le lieu à bien été ajouté');
+            $this->addFlash('success','Le lieu a bien été ajouté');
             return $this->redirectToRoute('home');
         }
 

@@ -16,11 +16,11 @@ if(path.includes('sortie/creer')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
 if(path.includes('sortie/creer')){
-    document.onload=remember();
+    document.onload=remember;
 }
 
 if(path.includes('sortie/creer')) {
-    document.onload = fill();
+    document.onload = remplir;
 }
 if(path.includes('sortie/modifier')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
@@ -104,41 +104,41 @@ function remember(){
     {
         sessionStorage.setItem('max',document.getElementById("sortie_nbInscriptionsMax").value);
     });
-    document.getElementById("sortie_lieu").addEventListener("blur",function ()
+    document.getElementById("sortie_lieu").addEventListener("change",function ()
     {
         sessionStorage.setItem('lieu',document.getElementById("sortie_lieu").value);
     });
 
 }
 
-function fill(){
+function remplir(){
     if (sessionStorage.getItem('nom'))
     {
         document.getElementById("sortie_nom").value = (sessionStorage.getItem('nom'));
     }
     if (sessionStorage.getItem('dd'))
     {
-        document.getElementById("sortie_datHeureDebut").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_datHeureDebut").value = (sessionStorage.getItem('dd'));
     }
     if (sessionStorage.getItem('dl'))
     {
-        document.getElementById("sortie_dateLimiteInscription").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_dateLimiteInscription").value = (sessionStorage.getItem('dl'));
     }
     if (sessionStorage.getItem('duree'))
     {
-        document.getElementById("sortie_duree").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_duree").value = (sessionStorage.getItem('duree'));
     }
     if (sessionStorage.getItem('infos'))
     {
-        document.getElementById("sortie_infosSortie").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_infosSortie").value = (sessionStorage.getItem('infos'));
     }
     if (sessionStorage.getItem('max'))
     {
-        document.getElementById("sortie_nbInscriptionsMax").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_nbInscriptionsMax").value = (sessionStorage.getItem('max'));
     }
     if (sessionStorage.getItem('lieu'))
     {
-        document.getElementById("sortie_lieu").value = (sessionStorage.getItem('nom'));
+        document.getElementById("sortie_lieu").value = (sessionStorage.getItem('lieu'));
     }
 
 }

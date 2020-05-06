@@ -4,20 +4,20 @@
 
 {% block main %}
     {% if is_granted('ROLE_ADMIN') %}
-    <h1 class="text-primary">Liste des utilisateurs</h1>
+    <h1 c>Liste des utilisateurs</h1><hr>
     <br><br><br>
     <div id="participant" class="table-responsive-xl">
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>Pseudo</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Téléphone</th>
-                <th>Email</th>
-                <th>Site de rattachement</th>
-                <th>Rôle du participant</th>
-                <th>Action</th>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Site de rattachement</th>
+                <th scope="col">Rôle du participant</th>
+                <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +39,11 @@
                         <div class="d-inline-block">
                             {{ include('participant/supprimerUtilisateurs.html.twig') }}
                         </div>
+                        {% if participant.actif==1 %}
+                        <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Desactiver</button> </a>
+                        {% else %}
+                        <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Activer</button> </a>
+                        {% endif %}
                     </td>
                     {% else %}
                         {% endif %}

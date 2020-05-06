@@ -10,10 +10,21 @@ footer{
     position: fixed;
     left: 0;
     bottom: 0;
-    padding: 10px;
+    padding: 20px;
     width: 100%;
     color: #e9d2d2;
     background-color: #F56565;
+    margin-top: 20px;
+
+}
+
+.wrap {
+    height: auto;
+    margin: 0 auto -80px; /* footer height + space */
+    min-height: 100%;
+    padding: 0 0 80px; /* footer height + space */
+    box-sizing: border-box;
+    overflow: auto;
 }
 
 h1{
