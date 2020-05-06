@@ -160,9 +160,11 @@ class SecurityController extends AbstractController
             // On supprime le token
             $user->setResetToken(null);
 
+            //récupérer les données
+            $pwd = $pwdForm->get('password')->getData();
+
             // On chiffre le mot de passe saisi
-            //$user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-            $user->setPassword($request->request->get('password')); //todo erreur sur le get : pwd = null
+            $user->setPassword($passwordEncoder->encodePassword($user, $pwd));
 
             // On sauvegarde le user en BDD
             $em = $this->getDoctrine()->getManager();
