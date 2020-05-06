@@ -10,9 +10,9 @@
     {% endif %}
     <div id="profil">
         {% if app.user.avatar is empty %}
-            <img id="avatar" alt="defaultAvatar" src="{{ asset('build/img/defaultAvatar.png') }}">
+            <img id="avatar" alt="defaultAvatar" src="{{ asset('build/defaultAvatar.png') }}">
         {% else %}
-            <img id="avatar" alt="avatar" src="{{ asset('build/img/uploads/') }}{{ app.user.avatar }}">
+            <img id="avatar" alt="avatar" src="{{ asset('img/uploads/') }}{{ app.user.avatar }}">
         {% endif %}
         <div class="infosProfil">
             <div class="row">

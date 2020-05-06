@@ -114,6 +114,7 @@ class Participant implements UserInterface, \Serializable
     {
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->updatedAt = new \DateTime();
     }
 
     /**
