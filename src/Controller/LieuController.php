@@ -48,6 +48,7 @@ class LieuController extends AbstractController
      */
     public function ajout(EntityManagerInterface $em, Request $request)
     {
+
         $lieu = new Lieu();
         $form = $this->createForm(LieuType::class,$lieu);
         $form->handleRequest($request);
@@ -104,7 +105,7 @@ class LieuController extends AbstractController
     {
         if ($this->isGranted('ROLE_ADMIN')) {
 
-
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
             $search = new LieuxSearch();
             $form = $this->createForm(LieuxSearchType::class, $search);
             $form->handleRequest($request);
