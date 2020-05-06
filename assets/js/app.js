@@ -28,10 +28,62 @@ if(path.includes('sortie/modifier')){
 if(path.includes('lieu/add')){
     document.getElementById('lieu_lieu_ville').addEventListener("change",chercherCoor);
 }
+if(path.includes('lieu/add')){
+    document.getElementById('lieu_rue').addEventListener("blur",chercherCoor);
+}
+
 
 
 function afficherLieu() {
+
     let lieu = document.getElementById('sortie_lieu');
+    let ville = document.getElementById('ville');
+    let rue = document.getElementById('rue');
+    let cp = document.getElementById('cp');
+    let latitude = document.getElementById('lat');
+    let longitude = document.getElementById('long');
+    let id = lieu.value
+    $.ajax({
+        url: "../lieu/recuperer/"+id,
+        method: "GET",
+
+    }).done (function(data){
+        if (data !=="")
+        {
+
+            document.getElementById('labelville').innerText = 'Ville : '
+            ville.innerText = data['ville'];
+            document.getElementById('labelrue').innerText = 'Rue : '
+            rue.innerText = data['rue'];
+            document.getElementById('labelcp').innerText = 'Code Postal : '
+            cp.innerText = data['cp'];
+            document.getElementById('labellat').innerText = 'Latitude : '
+            latitude.innerText = data['lat'];
+            document.getElementById('labellong').innerText = 'Longitude : '
+            longitude.innerText = data['long'];
+
+        }
+    }).fail()
+    {
+        document.getElementById('labelville').innerText = 'Les donnees n\'ont pas pu être récupérées'
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     let value = lieu.value;
     let json = require('../../public/results.json');
     let ville = document.getElementById('ville');
@@ -57,17 +109,20 @@ function afficherLieu() {
             break;
         }
     }
+    */
+
 }
 
 function chercherCoor(){
     var lat = document.getElementById('lieu_latitude');
     var long = document.getElementById('lieu_longitude');
-    var ville = $("#lieu_ville").val();
+    var street = document.getElementById('lieu_rue').value;
+    var ville = document.getElementById('lieu_lieu_ville').options[document.getElementById('lieu_lieu_ville').selectedIndex].text;;
     if(ville != ""){
         $.ajax({
-            url: "https://nominatim.openstreetmap.org/search?", // URL de Nominatim
+            url: "https://nominatim.openstreetmap.org/search", // URL de Nominatim
             type: 'get', // Requête de type GET
-            data: "city="+ville+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
+            data: "city="+ville+"&street=" +street+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
         }).done(function (response) {
             if(response != ""){
                 lat.value = response[0]['lat'];
