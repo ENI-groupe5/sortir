@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,7 +82,7 @@ class LieuController extends AbstractController
         {
             $em->persist($lieu);
             $em->flush();
-            $this->addFlash('success','Le lieu à bien été ajouté');
+            $this->addFlash('success','Le lieu a bien été ajouté');
             return $this->redirectToRoute('sortie_modifier');
         }
 
@@ -188,5 +189,24 @@ class LieuController extends AbstractController
             $this->addFlash('danger','erreur dans la suppression du lieu');
             return $this->redirectToRoute('lieux_gerer');
         }
+    }
+
+    /**
+     * @Route("/lieu/recuperer/{id}" ,name="lieu_recuperer_id")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    public function recuplieu($id=0, EntityManagerInterface $em)
+    {
+        $lieuRepo = $em->getRepository(Lieu::class);
+        $lieu = $lieuRepo->find($id);
+        return $this->json(["nom"=>$lieu->getNom(),
+            "rue"=>$lieu->getRue(),
+            "ville"=>$lieu->getLieuVille()->getNom(),
+            "cp"=>$lieu->getLieuVille()->getCodePostal(),
+            "lat"=>$lieu->getLatitude(),
+            "long"=>$lieu->getLongitude(),
+            ]);
     }
 }
