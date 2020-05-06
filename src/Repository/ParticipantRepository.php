@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Participant;
-use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -25,6 +27,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @param UserInterface $user
+     * @param string $newEncodedPassword
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
@@ -40,158 +44,65 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     /**
      * fonction pour ajouter un participant via un fichier csv
      */
+    public function ajouterViaCsv($resultats, $em, $encoder):void {
 
-    public function ajouterViaCsv($resultats, $em, $encoder, $validator)//:void
-    {
-
-        $errors = array();
-        $ok = true;
-
-        // pour chaque ligne du fichier résultats
-        foreach ($resultats as $resultat) {
-
+        foreach ($resultats as $resultat){
             $user = new Participant();
-            if (isset($resultat['nom'])) {
-            $user->setNom($resultat['nom']);}
-            if (isset($resultat['prenom'])) {
-            $user->setPrenom($resultat['prenom']);}
-            if (isset($resultat['username'])) {
-            $user->setUsername($resultat['username']);}
-            if (isset($resultat['email'])) {
-            $user->setEmail($resultat['email']);}
-            if (isset($resultat['role'])) {
-                $user->setRoles([$resultat['role']]);
+            if ($resultat['nom']){
+            $user->setNom($resultat['nom']);
             } else {
-                $user->setRoles(['ROLE_USER']);
+                throw new \Exception("Nom obligatoire! il manque au moins un nom dans votre fichier");
             }
-            if (isset($resultat['telephone'])) {
-            $user->setTelephone($resultat['telephone']);}
-            $user->setPassword($resultat['password']);
-            if (isset($resultat['idsite'])) {
-                $siteRepo = $em->getRepository(Site::class);
-                $site = $siteRepo->find($resultat['idsite']);
-                if ($site) {
-                    $user->setSite($site);
-                } else {
-                    $ok = false;
-                }
-            }
-            $user->setUpdatedAt(new \DateTime());
-            $user->setActif(true);
-            $userViolation = $validator->validate($user);
-
-
-
-            if (count($userViolation)<1 && $ok === true){
-                $hashed = $encoder->encodePassword($user, $resultat['password']);
-                $user->setPassword($hashed);
-                // injection du user en cours
-                $this->_em->persist($user);
-            } else {
-                $errors [] = $userViolation;
-            }
-
-        }
-            $this->_em->flush();
-            return $errors;
-
-
-
-
-        /*
-              // ouverture d'une transaction
-            $this->_em->getConnection()->beginTransaction();
-            $this->_em->getConnection()->setAutoCommit(false);
-
-            // mise en place d'un message et d'un compteur pour récupérer les erreurs et leur numéro de ligne
-            $message = "";
-            $ligne = 0;
-            // vérification de chacun des champs du fichier si le champ est présent et si le contenu n'est pas vide
-            // si ok, on hydrate le user
-            // si non, on alimente un message en renseignant une exception et un numéro de ligne
-
-            if (isset($resultat['nom']) && !empty($resultat['nom'])) {
-                $user->setNom($resultat['nom']);
-            } else {
-                $message .= "Nom obligatoire à la ligne" . $ligne . ". ";
-            }
-            if (isset($resultat['prenom']) && !empty($resultat['prenom'])) {
+            if ($resultat['prenom']){
                 $user->setPrenom($resultat['prenom']);
             } else {
-                $message .= "Prenom obligatoire à la ligne" . $ligne . ". ";
+                throw new \Exception("Prénom obligatoire! il manque au moins un prénom dans votre fichier");
             }
-            if (isset($resultat['username']) && !empty($resultat['username'])) {
+            if ($resultat['username']){
                 $user->setUsername($resultat['username']);
             } else {
-                $message .= "Username obligatoire à la ligne" . $ligne . ". ";
+                throw new \Exception("Username obligatoire! il manque au moins un username dans votre fichier");
             }
-            if (isset($resultat['email']) && !empty($resultat['email'])) {
+            if ($resultat['email']){
                 $user->setEmail($resultat['email']);
             } else {
-                $message .= "Email obligatoire à la ligne" . $ligne . ". ";
+                throw new \Exception("email obligatoire! il manque au moins un email dans votre fichier");
             }
-            if (isset($resultat['role']) && !empty($resultat['role'])) {
+            if ($resultat['role']){
                 $user->setRoles([$resultat['role']]);
             } else {
                 $user->setRoles(['ROLE_USER']);
             }
 
-            if (isset($resultat['telephone']) && !empty($resultat['telephone'])) {
-                $user->setTelephone($resultat['telephone']);
+            if ($resultat['telephone']){
+                $user->setRoles($resultat['telephone']);
             }
-            if (isset($resultat['idsite']) && !empty($resultat['idsite'])) {
+            if ($resultat['idsite']){
                 $siteRepo = $em->getRepository(Site::class);
                 $site = $siteRepo->find($resultat['idsite']);
                 $user->setSite($site);
             } else {
-                $message .= "Id site obligatoire ou pas au bon format à la ligne" . $ligne . ". ";
-
+                throw new \Exception("il manque au moins un site ou il n'est pas au bon format");
             }
-
-            if (isset($resultat['password']) && !empty($resultat['password'])) {
-                $hashed = $encoder->encodePassword($user, $resultat['password']);
+            if ($resultat['password']){
+                $hashed = $encoder->encodePassword($user,$resultat['password']);
                 $user->setPassword($hashed);
             } else {
-                $message .= "Mot de passe obligatoire à la ligne" . $ligne . ". ";
+                throw new \Exception("il manque au moins un mot de passe");
             }
             $user->setUpdatedAt(new \DateTime());
             $user->setActif(true);
+            try {
+                $this->_em->persist($user);
+                $this->_em->flush();
+            } catch (UniqueConstraintViolationException $e){
+
+                throw new \Exception("un des emails ou username existe déjà dans le fichier");
             }
-
-            // injection du user en cours
-            $this->_em->persist($user);
-
-
-        // validation en BDD
-        $this->_em->flush();
-        $this->_em->getConnection()->commit();
-
-        // récupère les violations de contrainte unique (un des champs username ou email)
-        // annule la transaction et alimente le message si c'est le cas
-        } catch (UniqueConstraintViolationException $e) {
-        $this->_em->getConnection()->rollBack();
-        $message .= "Un des emails ou username existe déjà dans le fichier. ";
-
-        // récupère toutes les autres erreurs et effectue le rollback s'il y en a
-        } catch (\Exception $e) {
-        $this->_em->getConnection()->rollBack();
-        $message .= $e->getMessage();
-
-        } finally {
-        // si le message n'est pas vide, on propage une exception au controller avec le message qu'il contient
-        if (!empty($message)){
-            $message .= "Opération annulée, veuillez vérifier votre fichier et recommencer. ";
-            throw new \Exception($message);
         }
-}*/
+
 
     }
-
-
-
-
-
-
 
     /**
      * @param $participantId
@@ -208,6 +119,23 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getResult()
         ;
     }
+
+
+    /**
+     * @param $email
+     * @return Participant
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmail($email)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.email = :participant')
+            ->setParameter('participant', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Participant

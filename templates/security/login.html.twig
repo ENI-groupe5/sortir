@@ -3,6 +3,7 @@
 {% block title %}Log in! &middot; {{parent()}}{% endblock %}
 
 {% block main %}
+
     <h1>Se connecter</h1><hr>
     {# Formulaire d'authentification#}
     <form method="post">
@@ -27,6 +28,11 @@
             <label>
                 <input type="checkbox" name="_remember_me">
                 <span>Se souvenir de moi!</span>
+            </label>
+        </div>
+        <div>
+            <label>
+                <a href="{{ path('app_oubliPass') }}">Mot de passe oublié</a>
             </label>
         </div>
         <div>

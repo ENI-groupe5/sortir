@@ -11,28 +11,33 @@
     <hr>
     <div class="annulerSortie">
         <div class="container">
-            <div class="row">
+            <div class="row d-flex justify-content-center">
                 <div class="col-md-6">
-                    <p>Nom de la sortie :</p>
-                    <p>Date de la sortie :</p>
-                    <p>Site organisateur :</p>
-                    <p>Lieu :</p>
-                    <p>Motif :</p>
-                </div>
-                <div class="col-md-6">
-                    <p>{{ sortie.nom }}</p>
-                    <p>{{ sortie.datHeureDebut|date('d/m/Y') }}</p>
-                    <p>{{ sortie.site.nom }}</p>
-                    <p>{{ sortie.lieu.nom }} {{ rue }} {{ cp }} {{ ville }}</p>
-                    <p>{{ form_start(annulerForm) }}</p>
-                    <p>{{ form_widget(annulerForm) }}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <input type="submit" class="bouton" value="Annuler">
-                    {{ form_end(annulerForm) }}
-                    <a href="{{ path('home') }}"><input type="button" class="bouton" value="Abandonner"></a>
+                    <dl class="row">
+                        <dt class="col-md-6">Nom de la sortie :</dt>
+                        <dd class="col-md-6">{{ sortie.nom }}</dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-md-6">Date de la sortie :</dt>
+                        <dd class="col-md-6">{{ sortie.datHeureDebut|date('d/m/Y') }}</dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-md-6">Site organisateur :</dt>
+                        <dd class="col-md-6">{{ sortie.site.nom  }}</dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-md-6">Lieu :</dt>
+                        <dd class="col-md-6">{{ sortie.lieu.nom }} {{ rue }} {{ cp }} {{ ville }}</dd>
+                    </dl>
+                    <dl class="row">
+                        <dt class="col-md-2">Motif :</dt>
+                        <dd class="col-md-10">{{ form_widget(annulerForm) }}</dd>
+                    </dl>
+                    <div class="row d-flex justify-content-center">
+                        <dt class="col-md-6>"><input type="submit" class="bouton" value="Valider"></dt>
+                        {{ form_end(annulerForm) }}
+                        <dt class="col-md-6"><a href="{{ path('home') }}"><input type="button" class="bouton" value="Abandonner"></a></dt>
+                    </div>
                 </div>
             </div>
         </div>
