@@ -29,28 +29,28 @@ class ParticipantType extends AbstractType
         $builder->add('username', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
-            "label" => "Pseudo :",
+            "label" => "Pseudo",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('prenom', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
-            "label" => "Prénom :",
+            "label" => "Prénom",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('nom', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
-            "label" => "Nom :",
+            "label" => "Nom",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('telephone', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
-            "label" => "Téléphone :",
+            "label" => "Téléphone",
             "required" => false,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
@@ -58,17 +58,22 @@ class ParticipantType extends AbstractType
         $builder->add('email', EmailType::class, [
             "error_bubbling" => true,
             "trim" => true,
-            "label" => "Email :",
+            "label" => "Email",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
-        $builder->add('password', RepeatedType::class, [
+        $builder->add('oldPassword', PasswordType::class, [
+            'label' => 'Ancien mot de passe',
+            'required' => false,
+            'invalid_message' => 'Veuillez indiquer votre mot de passe actuel.',
+        ])
+                ->add('password', RepeatedType::class, [
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe doivent être identiques.',
             'required' => true,
             'options' => ['attr' => ['class' => 'form-control form-control-lg']],
-            'first_options'  => ['label' => 'Mot de passe:'],
-            'second_options' => ['label' => 'Confirmation:'],
+            'first_options'  => ['label' => 'Mot de passe'],
+            'second_options' => ['label' => 'Confirmation'],
         ]);
         $builder->add('site',EntityType::class, [
             'required' => true,

@@ -9,6 +9,7 @@ use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -90,6 +91,7 @@ class SortieController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         //récupérer le user
         $user = $this->getUser();
+
 
         //créer instance sortie
         $sortie = new Sortie();
@@ -183,7 +185,7 @@ class SortieController extends AbstractController
         }
         //afficher le formulaire
         return $this->render('sortie/creer.html.twig', [
-            "sortieForm"=>$sortieForm ->createView()
+            "sortieForm"=>$sortieForm ->createView(),
         ]);
     }
 

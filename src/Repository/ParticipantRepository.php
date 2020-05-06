@@ -42,6 +42,69 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     }
 
     /**
+     * fonction pour ajouter un participant via un fichier csv
+     */
+    public function ajouterViaCsv($resultats, $em, $encoder):void {
+
+        foreach ($resultats as $resultat){
+            $user = new Participant();
+            if ($resultat['nom']){
+            $user->setNom($resultat['nom']);
+            } else {
+                throw new \Exception("Nom obligatoire! il manque au moins un nom dans votre fichier");
+            }
+            if ($resultat['prenom']){
+                $user->setPrenom($resultat['prenom']);
+            } else {
+                throw new \Exception("Prénom obligatoire! il manque au moins un prénom dans votre fichier");
+            }
+            if ($resultat['username']){
+                $user->setUsername($resultat['username']);
+            } else {
+                throw new \Exception("Username obligatoire! il manque au moins un username dans votre fichier");
+            }
+            if ($resultat['email']){
+                $user->setEmail($resultat['email']);
+            } else {
+                throw new \Exception("email obligatoire! il manque au moins un email dans votre fichier");
+            }
+            if ($resultat['role']){
+                $user->setRoles([$resultat['role']]);
+            } else {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+            if ($resultat['telephone']){
+                $user->setRoles($resultat['telephone']);
+            }
+            if ($resultat['idsite']){
+                $siteRepo = $em->getRepository(Site::class);
+                $site = $siteRepo->find($resultat['idsite']);
+                $user->setSite($site);
+            } else {
+                throw new \Exception("il manque au moins un site ou il n'est pas au bon format");
+            }
+            if ($resultat['password']){
+                $hashed = $encoder->encodePassword($user,$resultat['password']);
+                $user->setPassword($hashed);
+            } else {
+                throw new \Exception("il manque au moins un mot de passe");
+            }
+            $user->setUpdatedAt(new \DateTime());
+            $user->setActif(true);
+            try {
+                $this->_em->persist($user);
+                $this->_em->flush();
+            } catch (UniqueConstraintViolationException $e){
+
+                throw new \Exception("un des emails ou username existe déjà dans le fichier");
+            }
+        }
+
+
+    }
+
+    /**
      * @param $participantId
      * @return Participant[] Returns an array of Participant objects
      */
@@ -51,7 +114,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->andWhere('p.id = :participant')
             ->setParameter('participant', $participantId)
             ->orderBy('p.id', 'ASC')
-            ->setMaxResults(100)
+            ->setMaxResults(25)
             ->getQuery()
             ->getResult()
         ;

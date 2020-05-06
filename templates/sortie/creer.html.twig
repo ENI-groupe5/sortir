@@ -23,10 +23,14 @@
             <div class="col-md-6 px-md-5">
                 <div>
                     {{ form_row(sortieForm.nbInscriptionsMax) }}
-                    {{ form_row(sortieForm.lieu) }}
-
-
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            {{ form_row(sortieForm.lieu) }} </div> <div class="form-group col-md-2"><br><label>
+                               <a href="{{ path('lieu_ajout') }}"><i class="gg-add-r" id="newlieu"></i></a></label>
+                        </div>
+                    </div>
                 </div>
+
                 <dl class="row">
                     <dt id="labelville" class="col-md-3"></dt>
                     <dd id="ville" class="col-md-9"></dd>

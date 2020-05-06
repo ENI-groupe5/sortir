@@ -3,7 +3,7 @@
 {% block title %}Modifier Profil &middot; {{ parent() }}{% endblock %}
 
 {% block main %}
-    {% form_theme formulaire 'bootstrap_4_horizontal_layout.html.twig' %}
+    {% form_theme formulaire 'bootstrap_4_layout.html.twig' %}
     {% if app.user.id == participant.id %}
         <h1>Modifier votre profil</h1><hr>
         <div id="profil">
@@ -26,6 +26,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     {{ form_row(formulaire.email) }}
+                    {{ form_row(formulaire.oldPassword) }}
                     {{ form_row(formulaire.password) }}
                     {{ form_row(formulaire.site) }}
                 </div>
