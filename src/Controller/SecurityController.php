@@ -6,6 +6,7 @@ use App\Form\AskEmailForResetPassType;
 use App\Form\ResetPassType;
 use App\Repository\ParticipantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -141,6 +142,9 @@ class SecurityController extends AbstractController
     {
         //chercher un utilisateur avec le token donné
         $user = $participant->findOneBy(['reset_token' => $token]);
+        //dd($user);
+
+        //$user->setAvatarFile(new UploadedFile("",""));
 
         //si user n'existe pas
         if ($user === null) {
