@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme pwdForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %} Nouveau mot de passe &middot; {{parent()}}{% endblock %}
+
+{% block main %}
+    <h1>Nouveau mot de passe</h1>
+    <hr>
+    <div class="reset_pwd">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-5">
+                    {{ form_start(pwdForm) }}
+                    {{ form_widget(pwdForm) }}
+                    <div class="row d-flex justify-content-center">
+                        <input type="submit" name="enregistrer" class="bouton mr-2" value="Enregistrer">
+                        {{ form_end(pwdForm) }}
+                        <a href="{{ path('home') }}"><input type="button" name="annuler" class="bouton" value="Annuler"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

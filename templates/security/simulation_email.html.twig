@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Simulation email &middot; {{parent()}} {% endblock %}
+
+{% block main %}
+
+    <h1>Lien de réinitialisation du mot de passe</h1>
+    <hr>
+    <div class="simulation_email">
+        <p> De : admin@sortir.com</p>
+        <p> A : {{ email }}</p>
+        <p> Objet : demande de réinitialisation du mot de passe</p>
+        <br>
+        <p>
+            Bonjour {{ pseudo }},
+            <br>
+            Une demande de réinitialisation de mot de passe a été effectuée pour le site Sortir.com.
+            <br>
+            Veuillez cliquer sur ce lien : <a href="{{ url }}">Réinitialiser mon mot de passe</a>
+            <br>
+        </p>
+    </div>
+
+{% endblock %}
+

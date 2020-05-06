@@ -114,12 +114,38 @@ class Participant implements UserInterface, \Serializable
     {
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->updatedAt = new \DateTime();
     }
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Sortie",inversedBy="participants")
      */
     private $sorties;
+
+
+    //pour gérer l'oubli de mot de passe ********************************************************
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reset_token;
+
+    /**
+     * @return mixed
+     */
+    public function getResetToken()
+    {
+        return $this->reset_token;
+    }
+
+    /**
+     * @param mixed $reset_token
+     */
+    public function setResetToken($reset_token): void
+    {
+        $this->reset_token = $reset_token;
+    }
+
+    // fin gérer oubli mdp ***************************************************************************
 
 
     public function getId(): ?int
@@ -418,3 +444,4 @@ class Participant implements UserInterface, \Serializable
             ) = unserialize($serialized, array('allowed_classes' => false));
     }
 }
+

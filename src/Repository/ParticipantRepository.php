@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Participant;
-use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -25,6 +27,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     * @param UserInterface $user
+     * @param string $newEncodedPassword
      */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
@@ -124,6 +128,23 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getResult()
         ;
     }
+
+
+    /**
+     * @param $email
+     * @return Participant
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmail($email)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.email = :participant')
+            ->setParameter('participant', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Participant
