@@ -6,6 +6,7 @@ use App\Form\AskEmailForResetPassType;
 use App\Form\ResetPassType;
 use App\Repository\ParticipantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,7 +70,7 @@ class SecurityController extends AbstractController
                 // chercher un utilisateur ayant cet e-mail
                 $user = $participants->findOneByEmail($email);
             } catch (\Exception $e) {
-                $this->addFlash("danger", "Erreur ! Un problème est survenu lors de l'identification de l'email. Veuillez contacter le service technique.");
+                $this->addFlash("danger", "Erreur ! Un problème est survenu lors de l'identification de l'e-mail.");
                 return $this->redirectToRoute('home');
             }
 
