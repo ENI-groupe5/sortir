@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Lieu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,23 +20,20 @@ class LieuRepository extends ServiceEntityRepository
         parent::__construct($registry, Lieu::class);
     }
 
-    // /**
-    //  * @return LieuFixtures[] Returns an array of LieuFixtures objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+   public function listallquery($search) :Query
+   {
+        $query = $this
+            ->createQueryBuilder('l')
+            ->join('l.lieu_ville','v');
 
+            if ($search->getLibelle())
+            {
+                $query = $query
+                    ->andWhere('l.nom LIKE :s')
+                    ->setParameter('s',"%{$search->getLibelle()}%");
+            }
+            return $query->getQuery();
+   }
     /*
     public function findOneBySomeField($value): ?LieuFixtures
     {

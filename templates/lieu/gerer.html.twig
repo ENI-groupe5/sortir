@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gerer les lieux &middot; {{ parent() }} {% endblock %}
+
+{% block main %}
+<br>
+<div align="center">
+    <h2>Gerer les lieux</h2>
+</div>
+
+<h4>Filtrer les lieux</h4>
+{{ form_start(form) }}
+<div class="form-row">
+    {{ form_widget(form) }} &nbsp;<button type="submit" class="bouton">Rechercher</button>
+</div>
+{{ form_end(form) }}
+
+<table class="table table-bordered table-hover table-responsive-md">
+    <thead>
+    <th scope="col">Lieux</th> <th scope="col">Ville</th><th scope="col">Code Postal</th><th scope="col">Actions</th>
+    </thead>
+        <tbody>
+             {% for lieu in list %}
+             <tr>
+                <th scope="row">
+                    {{ lieu.nom }}
+                </th>
+                <td>
+                    {{ lieu.lieuville.nom }}
+                </td>
+                <td>
+                    {{ lieu.lieuville.codepostal }}
+                </td>
+                <td>
+                    <a href="{{ path('lieu_gerer_modifier',{id:lieu.id}) }}">Modifier</a>&nbsp;-&nbsp;
+                    <a href="{{ path('lieu_gerer_supprimer',{id:lieu.id}) }}">Supprimer</a>
+                </td>
+             </tr>
+        {% endfor %}
+  </tbody>
+</table>
+<a href="{{ path('lieu_gerer_ajout') }}"><button type="button" class="bouton">Ajouter</button> </a>
+<br><br><br>
+
+{% endblock %}
