@@ -46,6 +46,7 @@ class ParticipantController extends AbstractController
      * @param EntityManagerInterface $em
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function modifierProfil(Request $request, Participant $participant, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -74,6 +75,7 @@ class ParticipantController extends AbstractController
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
@@ -207,6 +209,7 @@ class ParticipantController extends AbstractController
      * @Route("/user/modifactif/{id}", name="user_modifieractif")
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function modifactifparticipant($id, EntityManagerInterface $em)
     {
