@@ -67,7 +67,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             $user->setUsername($resultat['username']);}
             if (isset($resultat['email'])) {
             $user->setEmail($resultat['email']);}
-            if (isset($resultat['role'])) {
+            if (isset($resultat['role']) && !empty($resultat['role'])) {
                 $user->setRoles([$resultat['role']]);
             } else {
                 $user->setRoles(['ROLE_USER']);
