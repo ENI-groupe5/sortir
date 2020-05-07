@@ -9,7 +9,6 @@ use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
-use App\Form\LieuType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -210,7 +209,7 @@ class SortieController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Vous êtes maintenant inscrit à la sortie '.$sortie->getNom());
           } else {
-            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\'avez pas les droits');
         }
         
         return $this->redirectToRoute('home');
