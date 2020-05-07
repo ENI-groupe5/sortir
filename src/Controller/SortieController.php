@@ -229,26 +229,29 @@ class SortieController extends AbstractController
         $user  = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
         $sortie=$sortieRepo->find($id);
-        if ($sortie->getParticipants()->contains($user)){
-            $sortie->getParticipants()->removeElement($user);
-            if($user->getSorties()===$sortie){
-                $user->getSorties(null);
+        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user&&$sortie->getDatHeureDebut()>(new \DateTime())) {
+            if ($sortie->getParticipants()->contains($user)) {
+                $sortie->getParticipants()->removeElement($user);
+                if ($user->getSorties() === $sortie) {
+                    $user->getSorties(null);
+                }
             }
-        }
-        if($user->getSorties()->contains($sortie)) {
-            $user->getSorties()->removeElement($sortie);
-            if ($sortie->getParticipants() === $user) {
-                $sortie->setParticipants(null);
+            if ($user->getSorties()->contains($sortie)) {
+                $user->getSorties()->removeElement($sortie);
+                if ($sortie->getParticipants() === $user) {
+                    $sortie->setParticipants(null);
+                }
             }
-        }
-        $em->flush();
-        if ($sortie->getParticipants()->contains($user)||$user->getSorties()->contains($sortie))
+            $em->flush();
+            if ($sortie->getParticipants()->contains($user) || $user->getSorties()->contains($sortie)) {
+                $this->addFlash('error', 'Désinscription échouée');
+            } else {
+                $this->addFlash('success', 'Vous êtes maintenant désinscrit de la sortie ' . $sortie->getNom());
+            }
+        } else
         {
-            $this->addFlash('error','Désinscription échouée');
-        } else{
-            $this->addFlash('success','Vous êtes maintenant désinscrit de la sortie '.$sortie->getNom());
+            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\'avez pas les droits');
         }
-
         return $this->redirectToRoute('home');
     }
 
