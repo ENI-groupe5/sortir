@@ -219,13 +219,13 @@ class ParticipantController extends AbstractController
             {
                 $user->setActif(0);
                 $em->flush();
-                $this->addFlash('success',"l'utilisateur à été desactivé");
+                $this->addFlash('success',"l'utilisateur a été desactivé");
             }
             else
             {
                 $user->setActif(1);
                 $em->flush();
-                $this->addFlash('success',"l'utilisateur à été activé");
+                $this->addFlash('success',"l'utilisateur a été activé");
             }
         }
         else
