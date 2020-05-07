@@ -23,8 +23,7 @@
             <tbody>
             {% for participant in participant %}
                 <tr>
-                    {% if participant.roles == ["ROLE_USER"] %}
-                        <td>{{ participant.username }}</td>
+                    <td><a href="{{ path('afficher_profil', {'id': participant.id}) }}">{{ participant.username }}</a></td>
                         <td>{{ participant.prenom }}</td>
                         <td>{{ participant.nom }}</td>
                     {% if participant.telephone is null %}
@@ -36,6 +35,7 @@
                         <td>{{ participant.site.nom }}</td>
                         <td>{{ participant.roles | json_encode }}</td>
                     <td>
+                        {% if participant.roles == ["ROLE_USER"] %}
                         <div class="d-inline-block">
                             {{ include('participant/supprimerUtilisateurs.html.twig') }}
                         </div>
@@ -44,9 +44,9 @@
                         {% else %}
                         <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Activer</button> </a>
                         {% endif %}
+                        {% else %}
+                            {% endif %}
                     </td>
-                    {% else %}
-                        {% endif %}
                 </tr>
             {% else %}
                 <tr>
