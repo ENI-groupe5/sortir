@@ -8,7 +8,6 @@ use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\LieuxSearchType;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
