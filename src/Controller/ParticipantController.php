@@ -97,11 +97,13 @@ class ParticipantController extends AbstractController
         if ($registerForm->isSubmitted()&&$registerForm->isValid())
         {
             $user->setUpdatedAt(new \DateTime());
-            dump($registerForm);
-            dump($registerForm->get("roles")->getData());
-            if (is_null($registerForm->get("roles")->getData())) {
-                $user->setRoles(['ROLE_USER']);
-            }
+            $roles = $registerForm->get("roles")->getData();
+            $user->setRoles($roles);
+            dump($roles);
+            /*
+            if (empty($roles)) {
+                $user->setRoles('ROLE_USER');
+            }*/
             $user->setActif(true);
             $hashed = $encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hashed);
@@ -217,13 +219,13 @@ class ParticipantController extends AbstractController
             {
                 $user->setActif(0);
                 $em->flush();
-                $this->addFlash('success',"l'utilisateur à été desactivé");
+                $this->addFlash('success',"l'utilisateur a été desactivé");
             }
             else
             {
                 $user->setActif(1);
                 $em->flush();
-                $this->addFlash('success',"l'utilisateur à été activé");
+                $this->addFlash('success',"l'utilisateur a été activé");
             }
         }
         else

@@ -26,14 +26,14 @@ class RegisterFormType extends AbstractType
                 'required'=>false
             ])
             ->add('email',EmailType::class)
-            ->add('username',TextType::class)
+            ->add('username',TextType::class,['label'=>'nom d\'utilisateur'])
             ->add('password',RepeatedType::class,[
         'type' => PasswordType::class,
         'invalid_message' => 'Les mots de passe doivent correspondre.',
         'options' => ['attr' => ['class' => 'form-control']],
         'required' => true,
-        'first_options'  => ['label' => 'Password'],
-        'second_options' => ['label' => 'Repeat Password'],
+        'first_options'  => ['label' => 'Mot de passe'],
+        'second_options' => ['label' => 'Répéter mot de passe'],
     ])
             ->add('avatar',FileType::class,[
                 'required'=>false
