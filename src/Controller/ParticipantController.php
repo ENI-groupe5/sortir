@@ -47,6 +47,7 @@ class ParticipantController extends AbstractController
      * @param EntityManagerInterface $em
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function modifierProfil(Request $request, Participant $participant, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder) {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -74,7 +75,7 @@ class ParticipantController extends AbstractController
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
-     * @throws Exception
+     * @throws \Exception
      */
     public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
@@ -195,13 +196,18 @@ class ParticipantController extends AbstractController
      */
     public function supprimerParticipants(Request $request, Participant $participant, EntityManagerInterface $em)
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
         if ($this->isCsrfTokenValid('supprimerParticipants'.$participant->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($participant);
             $em->flush();
         }
-        $this->addFlash("danger", "L'utilisateur ".$participant->getPrenom()." ".$participant->getNom(). " vient d'être supprimé.");
-        return $this->redirectToRoute('liste_participants');
+            $this->addFlash("danger", "L'utilisateur ".$participant->getPrenom()." ".$participant->getNom(). " vient d'être supprimé.");
+        return $this->redirectToRoute('liste_participants');}
+        else {
+            $this->addFlash('danger',"Vous n'avez pas accès à cette fonction");
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**

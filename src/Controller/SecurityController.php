@@ -168,7 +168,7 @@ class SecurityController extends AbstractController
 
             // On sauvegarde le user en BDD
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            //$em->persist($user);
             $em->flush();
 
             // redirection login
