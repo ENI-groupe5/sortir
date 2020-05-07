@@ -31,28 +31,24 @@ class ParticipantType extends AbstractType
             "trim" => true,
             "label" => "Pseudo",
             "required" => true,
-            'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('prenom', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
             "label" => "Prénom",
             "required" => true,
-            'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('nom', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
             "label" => "Nom",
             "required" => true,
-            'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('telephone', TextType::class, [
             "error_bubbling" => true,
             "trim" => true,
             "label" => "Téléphone",
             "required" => false,
-            'attr' => array('class' => 'form-control form-control-lg'),
         ]);
 
         $builder->add('email', EmailType::class, [
@@ -60,7 +56,6 @@ class ParticipantType extends AbstractType
             "trim" => true,
             "label" => "Email",
             "required" => true,
-            'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('oldPassword', PasswordType::class, [
             'label' => 'Mot de passe actuel',
@@ -71,7 +66,6 @@ class ParticipantType extends AbstractType
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe doivent être identiques.',
             'required' => false,
-            'options' => ['attr' => ['class' => 'form-control form-control-lg']],
             'first_options'  => ['label' => 'Nouveau mot de passe'],
             'second_options' => ['label' => 'Confirmation nouveau mot de passe'],
         ]);
@@ -81,7 +75,6 @@ class ParticipantType extends AbstractType
             'choice_label'=>'nom',
             'label'=>'Campus',
             'trim'=>true,
-            'attr'=> array('class'=>'form-control')
         ]);
     }
 
