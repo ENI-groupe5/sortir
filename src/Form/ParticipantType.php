@@ -25,30 +25,26 @@ class ParticipantType extends AbstractType
             'download_uri' => false,
             'image_uri' => false,
             'asset_helper' => true,
+            'label'=>'charger un avatar'
         ]);
         $builder->add('username', TextType::class, [
-            "trim" => true,
             "label" => "Pseudo",
             "required" => true,
         ]);
         $builder->add('prenom', TextType::class, [
-            "trim" => true,
             "label" => "Prénom",
             "required" => true,
         ]);
         $builder->add('nom', TextType::class, [
-            "trim" => true,
             "label" => "Nom",
             "required" => true,
         ]);
         $builder->add('telephone', TextType::class, [
-            "trim" => true,
             "label" => "Téléphone",
             "required" => false,
         ]);
 
         $builder->add('email', EmailType::class, [
-            "trim" => true,
             "label" => "Email",
             "required" => true,
         ]);

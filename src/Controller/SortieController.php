@@ -9,8 +9,8 @@ use App\Entity\Sortie;
 use App\Entity\SortieSearch;
 use App\Form\AnnulerSortieType;
 use App\Form\FiltreSortieType;
-use App\Form\LieuType;
 use App\Form\SortieType;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
@@ -69,6 +69,7 @@ class SortieController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @param PaginatorInterface $paginator
+     * @return RedirectResponse|Response
      */
     public function listMobile(Request $request,EntityManagerInterface $em, PaginatorInterface $paginator)
     {
@@ -106,8 +107,8 @@ class SortieController extends AbstractController
 
         //créer instance sortie
         $sortie = new Sortie();
-        $sortie->setDatHeureDebut(new \DateTime("+7 days"));
-        $sortie->setDateLimiteInscription(new \DateTime());
+        $sortie->setDatHeureDebut(new DateTime("+7 days"));
+        $sortie->setDateLimiteInscription(new DateTime());
         $sortie->setDuree(90);
 
 
@@ -201,7 +202,7 @@ class SortieController extends AbstractController
         $user = $partirepo->find($this->getUser()->getId());
         $sortieRepo = $em->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
-        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user&&$sortie->getDateLimiteInscription()>(new \DateTime()))
+        if ($sortie->getSortieEtat()->getId() == 2 && count($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()&& $sortie->getOrganisateur()!=$user&&$sortie->getDateLimiteInscription()>(new DateTime()))
         {
             if (!$sortie->getParticipants()->contains($user)) {
                 $sortie->getParticipants()[] = $user;
@@ -210,7 +211,7 @@ class SortieController extends AbstractController
         $em->flush();
         $this->addFlash('success', 'Vous êtes maintenant inscrit à la sortie '.$sortie->getNom());
           } else {
-            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\avez pas les droits');
+            $this->addFlash('danger','L\'inscription est impossible, la sortie est cloturée ou vous n\'avez pas les droits');
         }
         
         return $this->redirectToRoute('home');
@@ -255,6 +256,8 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sortie/afficher/{id}",name="sortie_afficher",requirements={"id"="\d+"})
+     * @param $id
+     * @return RedirectResponse|Response
      */
     public function afficherUneSortie($id){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
@@ -444,7 +447,7 @@ class SortieController extends AbstractController
 
             //la sortie ne doit pas être commencée : now < dateDébut
             // et ne peut être modifiée que si son etat est ouvert
-            $now = new \DateTime('now');
+            $now = new DateTime('now');
             $etatSortie = $sortie->getSortieEtat()->getId();
             if ($now < $sortie->getDatHeureDebut() && $etatSortie == 2) {
 
