@@ -74,7 +74,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             throw new CustomUserMessageAuthenticationException('Identifiants inconnus! Veuillez réessayer');
         }
         if ($user->getActif()!=1) {
-        throw new CustomUserMessageAuthenticationException('Cet utilisateur est désactivé, veuillez contacter l\'administrateur reseau');
+        throw new CustomUserMessageAuthenticationException('Cet utilisateur est désactivé, veuillez contacter l\'administrateur réseau');
         }
 
         return $user;
