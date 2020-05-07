@@ -75,9 +75,6 @@ class Participant implements UserInterface, \Serializable
      */
     private $password;
 
-    /**
-     * @SecurityAssert\UserPassword(message="Mot de passe actuel incorrect.")
-     */
     private $oldPassword;
 
     /**
