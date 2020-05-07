@@ -98,38 +98,7 @@ Styles formulaires
     cursor: pointer;
 }
 
-/*
-Style pagination
- */
 
-.pagination > li > a
-{
-    background-color: white;
-    color: #F56565;
-}
-
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover
-{
-    color: #5a5a5a;
-    background-color: #eee;
-    border-color: #ddd;
-}
-
-.pagination > .active > a
-{
-    color: white;
-    background-color: #F56565 !Important;
-    border: solid 1px #F56565 !Important;
-}
-
-.pagination > .active > a:hover
-{
-    background-color: #F56565 !Important;
-    border: solid 1px #F56565;
-}
 .scrolltable{
     overflow-y: scroll;
     overflow-x:hidden;
@@ -154,36 +123,4 @@ Style affichage du profil
 #avatar {
     width: 150px;
     margin-bottom: 30px;
-}
-
-.open-btn {
-    display: flex;
-    justify-content: left;
-}
-/* Stylez et fixez le bouton sur la page */
-.open-button {
-    background-color: #1c87c9;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    opacity: 0.8;
-    position: fixed;
-}
-/* Positionnez la forme Popup */
-.login-popup {
-    position: relative;
-    text-align: center;
-    width: 100%;
-}
-/* Masquez la forme Popup */
-.form-popup {
-    display: none;
-    position: fixed;
-    left: 45%;
-    top:5%;
-    transform: translate(-45%,5%);
-    border: 2px solid #666;
-    z-index: 9;
 }

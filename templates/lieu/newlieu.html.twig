@@ -1,27 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter Lieu &middot; {{ parent() }}{% endblock %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}{{ context }} &middot; {{ parent() }}{% endblock %}
 
 {% block main %}
 
-    <h1>Ajouter&nbsp;un&nbsp;lieu</h1><hr>
+    <h1>{{ context }}</h1><hr>
 
 
                 {{ form_start(form) }}
                 {{ form_row(form.nom)}}
                 {{ form_row(form.rue) }}
                 {{ form_row(form.lieu_ville) }}
-                <div class="form-row">
-                    <div class="form-group col-6">
+
                     {{ form_row(form.latitude) }}
-                </div>
-    <div class="form-group col-6">
+
         {{ form_row(form.longitude) }}
-                </div>
-                </div>
+
+
                 <br>
-                <button type="submit" class="bouton">Ajouter</button>
-                <a href="{{ path('sortie_creer') }}"><button type="button" class="bouton">Annuler</button></a>
+                <button type="submit" class="bouton">Soumettre</button>
+                <button type="reset" class="bouton">Annuler</button>
                 {{ form_end(form) }}
 
 

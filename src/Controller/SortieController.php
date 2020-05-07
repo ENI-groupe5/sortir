@@ -12,6 +12,7 @@ use App\Form\FiltreSortieType;
 use App\Form\LieuType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -94,7 +95,7 @@ class SortieController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function creer(Request $request, EntityManagerInterface $em)
     {
@@ -150,7 +151,7 @@ class SortieController extends AbstractController
             $fp = fopen('results.json', 'w');
             fwrite($fp, json_encode($response));
             fclose($fp);
-        }   catch (\Exception $e){
+        }   catch (Exception $e){
             throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
         }
 
@@ -170,7 +171,7 @@ class SortieController extends AbstractController
                     //sauvegarder données
                     $em->persist($sortie);
                     $em->flush();
-                } catch (\Exception $e){
+                } catch (Exception $e){
                     $this->addFlash("danger","erreur! un problème est survenu lors de la création");
                     return $this->redirectToRoute('home');
                 }
@@ -190,7 +191,7 @@ class SortieController extends AbstractController
                     //sauvegarder données
                     $em->persist($sortie);
                     $em->flush();
-                }catch (\Exception $e){
+                }catch (Exception $e){
                     $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
                     return $this->redirectToRoute('home');
                 }
@@ -199,7 +200,7 @@ class SortieController extends AbstractController
                 //redirection accueil
                 return $this->redirectToRoute('home');
             } else {
-                throw new \Exception("problème lors de la soumission du formulaire",404);
+                throw new Exception("problème lors de la soumission du formulaire",404);
             }
 
         }
@@ -301,7 +302,7 @@ class SortieController extends AbstractController
      * @param EntityManagerInterface $em
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function modifierUneSortie($id,EntityManagerInterface $em,Request $request){
         // autoriser l'accès à l'affichage que pour les utilisateurs connectés
@@ -348,7 +349,7 @@ class SortieController extends AbstractController
                     $fp = fopen('results.json', 'w');
                     fwrite($fp, json_encode($response));
                     fclose($fp);
-                }   catch (\Exception $e){
+                }   catch (Exception $e){
                     throw $this->createNotFoundException("erreur! veuillez vous rapprocher du service informatique");
                 }
 
@@ -363,7 +364,7 @@ class SortieController extends AbstractController
                             //sauvegarder données
                             $em->persist($sortie);
                             $em->flush();
-                        } catch (\Exception $e){
+                        } catch (Exception $e){
                             $this->addFlash("danger","erreur! un problème est survenu lors de la modification");
                             return $this->redirectToRoute('home');
                         }
@@ -382,7 +383,7 @@ class SortieController extends AbstractController
                             //sauvegarder données
                             $em->persist($sortie);
                             $em->flush();
-                        } catch (\Exception $e){
+                        } catch (Exception $e){
                             $this->addFlash("danger","erreur! un problème est survenu lors de la publication");
                             return $this->redirectToRoute('home');
                         }
@@ -398,7 +399,7 @@ class SortieController extends AbstractController
                             //sauvegarder données
                             $em->remove($sortie);
                             $em->flush();
-                        } catch (\Exception $e){
+                        } catch (Exception $e){
                             $this->addFlash("danger","erreur! un problème est survenu lors de la suppression");
                             return $this->redirectToRoute('home');
                         }
@@ -410,7 +411,7 @@ class SortieController extends AbstractController
                     }
                     else {
                         // le formulaire n'est pas valide
-                        throw new \Exception("problème lors de la soumission du formulaire",404);
+                        throw new Exception("problème lors de la soumission du formulaire",404);
                     }
 
                 }
@@ -432,7 +433,7 @@ class SortieController extends AbstractController
      * @param EntityManagerInterface $em
      * @param Request $request
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function annuler($id, EntityManagerInterface $em, Request $request)
     {

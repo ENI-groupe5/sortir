@@ -94,8 +94,9 @@ class SortieRepository extends ServiceEntityRepository
         } else {
             $query = $query
                 ->andWhere('s.datHeureDebut >= :da')
-                ->setParameter('da',new \DateTime('-1 month'));
+                ->setParameter('da', new \DateTime('-1 month'));
         }
+            $query=$query->orderBy('e.id','ASC');
         return $query->getQuery();
     }
 
