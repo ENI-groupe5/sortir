@@ -55,6 +55,7 @@ nav a:hover{
     font-weight: bolder;
     text-decoration: none;
 }
+/*
 nav a:active{
     color: white;
     text-decoration: none;
@@ -67,6 +68,7 @@ nav a{
     color: #e9d2d2;
     text-decoration: none;
 }
+ */
 form{
     padding-bottom: 50px;
 }
@@ -99,6 +101,38 @@ Styles formulaires
 }
 
 
+/*
+Style pagination
+ */
+
+.pagination > li > a
+{
+    background-color: white;
+    color: #F56565;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #F56565 !Important;
+    border: solid 1px #F56565 !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #F56565 !Important;
+    border: solid 1px #F56565;
+}
 .scrolltable{
     overflow-y: scroll;
     overflow-x:hidden;

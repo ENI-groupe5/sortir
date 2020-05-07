@@ -17,7 +17,9 @@ class LieuxSearchType extends AbstractType
             [
                 'attr'=>  [
                     'class'=>'form-control'
-                ]
+                ],
+                'label'=>false,
+                'required'=>false
             ])
         ;
     }

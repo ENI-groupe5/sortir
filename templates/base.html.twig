@@ -17,12 +17,14 @@
     </head>
     <body>
     <!-- navbar personnalisée -->
-    <nav class="navbar navbar-expand-lg">
-        <a href="{{ path('home') }}"><img class="navbar-brand" alt="sortir.com" src="{{ asset('build/logoRedim.png') }}"></a>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+
+        <a href="{{ path('home') }}"><img alt="sortir.com" src="{{ asset('build/logoRedim.png') }}"></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -39,25 +41,18 @@
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') %}
-                <div class="d-none d-sm-block">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('ville_ajout') }}">Villes</a>
                 </li>
-                </div>
-                <div class="d-none d-sm-block">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('lieux_gerer') }}">Lieux</a>
-                </li></div>
-                <div class="d-none d-sm-block">
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_register') }}">Créer Utilisateur</a>
                 </li>
-                </div>
-                <div class="d-none d-sm-block">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('liste_participants') }}">Liste Utilisateurs</a>
                     </li>
-                </div>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <li class="nav-item">
@@ -66,13 +61,14 @@
                 {% endif %}
 
             </ul>
-            <div class="navbar-text">
-                {% if app.user %}
-                    <div>
+
+
+            {% if app.user %}
+            <span class="navbar-text">
                         Bonjour {{ app.user.username }} | <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                    </div>
-                {% endif %}
-            </div>
+            </span>
+            {% endif %}
+
         </div>
     </nav>
 

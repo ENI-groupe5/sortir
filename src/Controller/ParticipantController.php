@@ -97,11 +97,13 @@ class ParticipantController extends AbstractController
         if ($registerForm->isSubmitted()&&$registerForm->isValid())
         {
             $user->setUpdatedAt(new \DateTime());
-            dump($registerForm);
-            dump($registerForm->get("roles")->getData());
-            if (is_null($registerForm->get("roles")->getData())) {
-                $user->setRoles(['ROLE_USER']);
-            }
+            $roles = $registerForm->get("roles")->getData();
+            $user->setRoles($roles);
+            dump($roles);
+            /*
+            if (empty($roles)) {
+                $user->setRoles('ROLE_USER');
+            }*/
             $user->setActif(true);
             $hashed = $encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hashed);
