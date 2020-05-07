@@ -27,28 +27,24 @@ class ParticipantType extends AbstractType
             'asset_helper' => true,
         ]);
         $builder->add('username', TextType::class, [
-            "error_bubbling" => true,
             "trim" => true,
             "label" => "Pseudo",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('prenom', TextType::class, [
-            "error_bubbling" => true,
             "trim" => true,
             "label" => "Prénom",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('nom', TextType::class, [
-            "error_bubbling" => true,
             "trim" => true,
             "label" => "Nom",
             "required" => true,
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('telephone', TextType::class, [
-            "error_bubbling" => true,
             "trim" => true,
             "label" => "Téléphone",
             "required" => false,
@@ -56,7 +52,6 @@ class ParticipantType extends AbstractType
         ]);
 
         $builder->add('email', EmailType::class, [
-            "error_bubbling" => true,
             "trim" => true,
             "label" => "Email",
             "required" => true,
