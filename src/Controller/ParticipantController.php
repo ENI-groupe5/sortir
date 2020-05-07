@@ -53,7 +53,6 @@ class ParticipantController extends AbstractController
         $formulaire = $this->createForm(ParticipantType::class, $participant);
         $formulaire -> handleRequest($request);
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $hashed = $encoder->encodePassword($participant,$participant->getPassword());
             $participant->setPassword($hashed);
             $participant->setUpdatedAt(new \DateTime());
