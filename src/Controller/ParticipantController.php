@@ -199,7 +199,7 @@ class ParticipantController extends AbstractController
             $em->remove($participant);
             $em->flush();
         }
-        $this->addFlash("danger", "Le participant vient d'être supprimé.");
+        $this->addFlash("danger", "L'utilisateur ".$participant->getPrenom()." ".$participant->getNom(). " vient d'être supprimé.");
         return $this->redirectToRoute('liste_participants');
     }
 
