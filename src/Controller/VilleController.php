@@ -30,6 +30,7 @@ class VilleController extends AbstractController
      */
     public function ajouter(EntityManagerInterface $em, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $ville = new Ville();
         $form = $this->createForm(VilleType::class,$ville);
         $form->handleRequest($request);

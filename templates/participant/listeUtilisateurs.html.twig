@@ -4,20 +4,20 @@
 
 {% block main %}
     {% if is_granted('ROLE_ADMIN') %}
-    <h1 class="text-primary">Liste des utilisateurs</h1>
-    <br><br><br>
+    <h1>Liste des utilisateurs</h1><hr>
+
     <div id="participant" class="table-responsive-xl">
-        <table class="table table-hover">
+        <table class="table table table-hover">
             <thead>
             <tr>
-                <th scope="col">Pseudo</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Téléphone</th>
-                <th scope="col">Email</th>
-                <th scope="col">Site de rattachement</th>
-                <th scope="col">Rôle du participant</th>
-                <th scope="col">Action</th>
+                <th class="align-middle" scope="col">Pseudo</th>
+                <th class="align-middle" scope="col">Prénom</th>
+                <th class="align-middle" scope="col">Nom</th>
+                <th class="align-middle" scope="col">Téléphone</th>
+                <th class="align-middle" scope="col">Email</th>
+                <th class="align-middle"scope="col">Site de rattachement</th>
+                <th class="align-middle" scope="col">Rôle du participant</th>
+                <th class="align-middle" scope="col">Action</th>
             </tr>
             </thead>
             <tbody>

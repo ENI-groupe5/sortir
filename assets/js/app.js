@@ -65,7 +65,7 @@ function afficherLieu() {
         }
     }).fail()
     {
-        document.getElementById('labelville').innerText = 'Les donnees n\'ont pas pu être récupérées'
+
     };
 
 
