@@ -71,16 +71,14 @@
     </div>
 </div>
 
-    <div class="container-fluid"><div class="d-none d-sm-block">
+    <div class="container-fluid">
+        <div class="d-none d-sm-block">
     <table>
         <tr>
             {# sorting of properties based on query components #}
             <th>Trier par : {{ knp_pagination_sortable(sorties, 'Date Limite d\'inscription', 's.dateLimiteInscription') }}</th>
             <th{% if sorties.isSorted('s.datHeureDebut') %} class="sorted"{% endif %}>
                 &nbsp {{ knp_pagination_sortable(sorties, 'Date de sortie', 's.datHeureDebut') }}
-            </th>
-            <th{% if sorties.isSorted('o.username') %} class="sorted"{% endif %}>
-                &nbsp {{ knp_pagination_sortable(sorties,'Organisateur','o.username') }}
             </th>
         </tr>
     </table>
@@ -96,6 +94,9 @@
             {% endif %}
         </div>
     </div>
+
+
+
     <table class="table table-bordered table-hover table-responsive-md ">
         <thead>
         <tr>
@@ -166,7 +167,7 @@
 
             {% if sortie.sortieetat.id == 1 %}
 
-                <br><a href="{{ path('sortie_publier', {id:sortie.id}) }}">Publier</a>
+                <a href="{{ path('sortie_publier', {id:sortie.id}) }}">Publier</a><br>
 
             {% endif %}
           {% endif %}
@@ -215,11 +216,14 @@
 {% endfor %}
             </div>
         </tbody>
+
     </table>
         </div>
     <div class="pagination">
         {{ knp_pagination_render(sorties) }}
     </div>
+
+
     <br>
     <div align="center">
 <div class="d-none d-sm-block">

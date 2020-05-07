@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Lieu;
 use App\Entity\LieuxSearch;
+use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\LieuxSearchType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,6 +64,8 @@ class LieuController extends AbstractController
 
         return $this->render('lieu/newlieu.html.twig',[
             'form'=>$form->createView(),
+            "context"=>'Ajouter un lieu',
+            "context2"=>'Ajouter'
         ]);
 
     }
@@ -89,6 +92,8 @@ class LieuController extends AbstractController
 
         return $this->render('lieu/newlieu.html.twig',[
             'form'=>$form->createView(),
+            "context"=>'Ajouter un lieu',
+            "context2"=>'Ajouter'
         ]);
 
     }
@@ -143,6 +148,8 @@ class LieuController extends AbstractController
 
         return $this->render('lieu/newlieu.html.twig',[
             'form'=>$form->createView(),
+            "context"=>'Ajouter un lieu',
+            "context2"=>'Ajouter'
         ]);
     }
 
@@ -167,6 +174,8 @@ class LieuController extends AbstractController
             }
             return $this->render('lieu/newlieu.html.twig',[
                 'form'=>$form->createView(),
+                "context"=>'Modifier un lieu',
+                "context2"=>'Modifier'
             ]);
     }
 
@@ -180,6 +189,14 @@ class LieuController extends AbstractController
     {
         $lieuRepo = $em->getRepository(Lieu::class);
         $lieu = $lieuRepo->find($id);
+        $sortieRepo = $em->getRepository(Sortie::class);
+        $sorties = $sortieRepo->findBy(array('lieu'=>$lieu));
+        if ($sorties)
+        {
+            $this->addFlash('error','Ce lieu est actuellement prévu pour une sortie, suppression impossible');
+            return $this->redirectToRoute('lieux_gerer');
+        } else
+        {
         if ($lieu)
         {
             $em->remove($lieu);
@@ -189,6 +206,7 @@ class LieuController extends AbstractController
         } else {
             $this->addFlash('danger','erreur dans la suppression du lieu');
             return $this->redirectToRoute('lieux_gerer');
+        }
         }
     }
 
