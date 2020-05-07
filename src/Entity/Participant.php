@@ -36,7 +36,7 @@ class Participant implements UserInterface, \Serializable
      */
     private $nom;
     /**
-     * @Assert\NotBlank(message="le prénom est obligatorie")
+     * @Assert\NotBlank(message="le prénom est obligatoire")
      * @Assert\Length(min="1",max="50",minMessage="le prénom doit comporter minimum un caractère",maxMessage="le prénom doit comporter maximum 50 caractères")
      * @ORM\Column(type="string", length=50)
      */
