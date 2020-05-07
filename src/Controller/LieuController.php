@@ -122,7 +122,7 @@ class LieuController extends AbstractController
                 'list' => $list
             ]);
         } else {
-                $this->addFlash('error','Vous n\'avez pas les droits d\'acces à cette page');
+                $this->addFlash('danger','Vous n\'avez pas les droits d\'acces à cette page');
                 return $this->redirectToRoute('home');
         }
     }
@@ -193,7 +193,7 @@ class LieuController extends AbstractController
         $sorties = $sortieRepo->findBy(array('lieu'=>$lieu));
         if ($sorties)
         {
-            $this->addFlash('error','Ce lieu est actuellement prévu pour une sortie, suppression impossible');
+            $this->addFlash('danger','Ce lieu est actuellement prévu pour une sortie, suppression impossible');
             return $this->redirectToRoute('lieux_gerer');
         } else
         {
