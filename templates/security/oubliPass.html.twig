@@ -5,22 +5,28 @@
 {% block title %} Mot de passe oublié &middot; {{parent()}}{% endblock %}
 
 {% block main %}
-    <h1>Mot de passe oublié</h1>
-    <hr>
-    <div class="forgotten_pwd">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-5">
-                    {{ form_start(emailForm) }}
-                    {{ form_widget(emailForm) }}
-                    <div class="row d-flex justify-content-center">
-                        <input type="submit" name="envoyer" class="bouton mr-2" value="Envoyer">
-                        {{ form_end(emailForm) }}
-                        <a href="{{ path('home') }}"><input type="button" name="annuler" class="bouton" value="Annuler"></a>
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <p> Accès refusé !</p>
+        <a href="{{ path('home') }}">Retourner à l'accueil</a>
+    {% else %}
+        <h1>Mot de passe oublié</h1>
+        <hr>
+        <div class="forgotten_pwd">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-5">
+                        {{ form_start(emailForm) }}
+                        {{ form_widget(emailForm) }}
+                        <div class="row d-flex justify-content-center">
+                            <input type="submit" name="envoyer" class="bouton mr-2" value="Envoyer">
+                            {{ form_end(emailForm) }}
+                            <a href="{{ path('home') }}"><input type="button" name="annuler" class="bouton" value="Annuler"></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
