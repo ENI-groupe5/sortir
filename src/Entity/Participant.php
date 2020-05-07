@@ -196,10 +196,13 @@ class Participant implements UserInterface, \Serializable
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
+    /**
+     * @param string|null $password
+     * @return $this
+     */
+    public function setPassword(?string $password = null): self
     {
         $this->password = $password;
-
         return $this;
     }
 
