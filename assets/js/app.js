@@ -16,11 +16,11 @@ if(path.includes('sortie/creer')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
 }
 if(path.includes('sortie/creer')){
-    document.onload=remember;
+    document.onload=remember();
 }
 
 if(path.includes('sortie/creer')) {
-    document.onload = remplir;
+    document.onload = remplir();
 }
 if(path.includes('sortie/modifier')){
     document.getElementById('sortie_lieu').addEventListener("change",afficherLieu);
@@ -28,10 +28,9 @@ if(path.includes('sortie/modifier')){
 if(path.includes('lieu/add')){
     document.getElementById('lieu_lieu_ville').addEventListener("change",chercherCoor);
 }
-if(path.includes('lieu/add')){
-    document.getElementById('lieu_rue').addEventListener("blur",chercherCoor);
+if(path.includes('lieux/gerer/ajout')){
+    document.getElementById('lieu_lieu_ville').addEventListener("change",chercherCoor);
 }
-
 
 
 function afficherLieu() {
@@ -116,13 +115,12 @@ function afficherLieu() {
 function chercherCoor(){
     var lat = document.getElementById('lieu_latitude');
     var long = document.getElementById('lieu_longitude');
-    var street = document.getElementById('lieu_rue').value;
     var ville = document.getElementById('lieu_lieu_ville').options[document.getElementById('lieu_lieu_ville').selectedIndex].text;;
     if(ville != ""){
         $.ajax({
             url: "https://nominatim.openstreetmap.org/search", // URL de Nominatim
             type: 'get', // Requête de type GET
-            data: "city="+ville+"&street=" +street+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
+            data: "city="+ville+"&format=json&addressdetails=1&limit=1&polygon_svg=1" // Données envoyées (q -> adresse complète, format -> format attendu pour la réponse, limit -> nombre de réponses attendu, polygon_svg -> fournit les données de polygone de la réponse en svg)
         }).done(function (response) {
             if(response != ""){
                 lat.value = response[0]['lat'];
@@ -138,6 +136,7 @@ function remember(){
     document.getElementById("sortie_nom").addEventListener("blur", function()
     {
         sessionStorage.setItem('nom',document.getElementById("sortie_nom").value);
+        console.log(document.getElementById("sortie_nom").value)
     });
     document.getElementById("sortie_datHeureDebut").addEventListener("change", function()
     {
@@ -150,6 +149,7 @@ function remember(){
     document.getElementById("sortie_duree").addEventListener("blur",function()
     {
         sessionStorage.setItem('duree',document.getElementById("sortie_duree").value);
+        console.log(document.getElementById("sortie_duree").value)
     });
     document.getElementById("sortie_infosSortie").addEventListener("blur",function()
     {
@@ -159,10 +159,7 @@ function remember(){
     {
         sessionStorage.setItem('max',document.getElementById("sortie_nbInscriptionsMax").value);
     });
-    document.getElementById("sortie_lieu").addEventListener("change",function ()
-    {
-        sessionStorage.setItem('lieu',document.getElementById("sortie_lieu").value);
-    });
+
 
 }
 
@@ -191,10 +188,7 @@ function remplir(){
     {
         document.getElementById("sortie_nbInscriptionsMax").value = (sessionStorage.getItem('max'));
     }
-    if (sessionStorage.getItem('lieu'))
-    {
-        document.getElementById("sortie_lieu").value = (sessionStorage.getItem('lieu'));
-    }
+
 
 }
 

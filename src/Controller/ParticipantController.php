@@ -194,13 +194,18 @@ class ParticipantController extends AbstractController
      */
     public function supprimerParticipants(Request $request, Participant $participant, EntityManagerInterface $em)
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
         if ($this->isCsrfTokenValid('supprimerParticipants'.$participant->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($participant);
             $em->flush();
         }
         $this->addFlash("danger", "Le participant vient d'être supprimé.");
-        return $this->redirectToRoute('liste_participants');
+        return $this->redirectToRoute('liste_participants');}
+        else {
+            $this->addFlash('danger',"Vous n'avez pas accès à cette fonction");
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**

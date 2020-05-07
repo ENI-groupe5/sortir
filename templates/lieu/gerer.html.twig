@@ -42,6 +42,9 @@
         {% endfor %}
   </tbody>
 </table>
+    <div class="pagination">
+        {{ knp_pagination_render(list) }}
+    </div>
 <a href="{{ path('lieu_gerer_ajout') }}"><button type="button" class="bouton">Ajouter</button> </a>
 <br><br><br>
 

@@ -122,7 +122,7 @@ class LieuController extends AbstractController
                 'list' => $list
             ]);
         } else {
-                $this->addFlash('error','Vous n\'avez pas les droits d\'acces à cette page');
+                $this->addFlash('danger','Vous n\'avez pas les droits d\'acces à cette page');
                 return $this->redirectToRoute('home');
         }
     }
@@ -135,6 +135,8 @@ class LieuController extends AbstractController
      * @return RedirectResponse|Response
      */
     public function newajout(EntityManagerInterface $em,Request $request){
+        if ($this->isGranted('ROLE_ADMIN'))
+        {
         $lieu = new Lieu();
         $form = $this->createForm(LieuType::class,$lieu);
         $form->handleRequest($request);
@@ -151,6 +153,10 @@ class LieuController extends AbstractController
             "context"=>'Ajouter un lieu',
             "context2"=>'Ajouter'
         ]);
+        } else {
+            $this->addFlash('danger',"l'accès à cette page n'est pas autorisé");
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -162,6 +168,8 @@ class LieuController extends AbstractController
      */
     public function lieumodif(EntityManagerInterface $em,Request $request,$id)
     {
+        if ($this->isGranted('ROLE_ADMIN'))
+        {
         $lieuRepo = $em->getRepository(Lieu::class);
         $lieu = $lieuRepo->find($id);
         $form = $this->createForm(LieuType::class,$lieu);
@@ -177,6 +185,10 @@ class LieuController extends AbstractController
                 "context"=>'Modifier un lieu',
                 "context2"=>'Modifier'
             ]);
+        } else {
+            $this->addFlash('danger',"l'accès à cette page n'est pas autorisé");
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -187,13 +199,15 @@ class LieuController extends AbstractController
      */
     public function lieudelete(EntityManagerInterface $em,$id)
     {
+        if ($this->isGranted('ROLE_ADMIN'))
+        {
         $lieuRepo = $em->getRepository(Lieu::class);
         $lieu = $lieuRepo->find($id);
         $sortieRepo = $em->getRepository(Sortie::class);
         $sorties = $sortieRepo->findBy(array('lieu'=>$lieu));
         if ($sorties)
         {
-            $this->addFlash('error','Ce lieu est actuellement prévu pour une sortie, suppression impossible');
+            $this->addFlash('danger','Ce lieu est actuellement prévu pour une sortie, suppression impossible');
             return $this->redirectToRoute('lieux_gerer');
         } else
         {
@@ -207,6 +221,9 @@ class LieuController extends AbstractController
             $this->addFlash('danger','erreur dans la suppression du lieu');
             return $this->redirectToRoute('lieux_gerer');
         }
+        } } else {
+            $this->addFlash('danger',"l'accès à cette page n'est pas autorisé");
+            return $this->redirectToRoute('home');
         }
     }
 
