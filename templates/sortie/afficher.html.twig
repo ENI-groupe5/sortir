@@ -80,7 +80,7 @@
                             {% for participant in sortie.participants %}
                                 <tr>
                                     <td>{{ participant.username }}</td>
-                                    <td>{{ participant.nom }}</td>
+                                    <td>{{ participant.prenom|lower|capitalize }} {{ participant.nom|lower|capitalize }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
