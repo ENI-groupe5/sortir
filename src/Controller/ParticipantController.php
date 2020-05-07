@@ -9,6 +9,7 @@ use App\Form\RegisterFormType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Csv\Exception;
 use League\Csv\Reader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -74,6 +75,7 @@ class ParticipantController extends AbstractController
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function register(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
     {
@@ -207,6 +209,7 @@ class ParticipantController extends AbstractController
      * @Route("/user/modifactif/{id}", name="user_modifieractif")
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function modifactifparticipant($id, EntityManagerInterface $em)
     {
