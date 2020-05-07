@@ -66,11 +66,11 @@ class ParticipantType extends AbstractType
             'label' => 'Ancien mot de passe',
             'required' => false,
             'invalid_message' => 'Veuillez indiquer votre mot de passe actuel.',
-        ])
-                ->add('password', RepeatedType::class, [
+        ]);
+        $builder->add('password', RepeatedType::class, [
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe doivent être identiques.',
-            'required' => true,
+            'required' => false,
             'options' => ['attr' => ['class' => 'form-control form-control-lg']],
             'first_options'  => ['label' => 'Mot de passe'],
             'second_options' => ['label' => 'Confirmation'],
