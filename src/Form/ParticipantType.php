@@ -63,7 +63,7 @@ class ParticipantType extends AbstractType
             'attr' => array('class' => 'form-control form-control-lg'),
         ]);
         $builder->add('oldPassword', PasswordType::class, [
-            'label' => 'Ancien mot de passe',
+            'label' => 'Mot de passe actuel',
             'required' => false,
             'invalid_message' => 'Veuillez indiquer votre mot de passe actuel.',
         ]);
@@ -72,8 +72,8 @@ class ParticipantType extends AbstractType
             'invalid_message' => 'Les mots de passe doivent être identiques.',
             'required' => false,
             'options' => ['attr' => ['class' => 'form-control form-control-lg']],
-            'first_options'  => ['label' => 'Mot de passe'],
-            'second_options' => ['label' => 'Confirmation'],
+            'first_options'  => ['label' => 'Nouveau mot de passe'],
+            'second_options' => ['label' => 'Confirmation nouveau mot de passe'],
         ]);
         $builder->add('site',EntityType::class, [
             'required' => true,
