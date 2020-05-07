@@ -7,7 +7,8 @@
     <h1>Liste des utilisateurs</h1><hr>
 
     <div id="participant" class="table-responsive-xl">
-        <table class="table table table-hover">
+     {#   <table class="table table table-hover">  #}
+        <table class="table table-bordered table-hover table-responsive-md ">
             <thead>
             <tr>
                 <th class="align-middle" scope="col">Pseudo</th>
@@ -34,19 +35,21 @@
                         <td>{{ participant.email }}</td>
                         <td>{{ participant.site.nom }}</td>
                         <td>{{ participant.roles | json_encode }}</td>
-                    <td>
-                        {% if participant.roles == ["ROLE_USER"] %}
-                        <div class="d-inline-block">
-                            {{ include('participant/supprimerUtilisateurs.html.twig') }}
-                        </div>
-                        {% if participant.actif==1 %}
-                        <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Desactiver</button> </a>
-                        {% else %}
-                        <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Activer</button> </a>
-                        {% endif %}
-                        {% else %}
-                            {% endif %}
-                    </td>
+                        <td>
+                            <div class ="btn-group-vertical" role="group">
+                                {% if participant.roles == ["ROLE_USER"] %}
+                             {#   <div class="d-inline-block">#}
+                                    {{ include('participant/supprimerUtilisateurs.html.twig') }}
+                            {#    </div>  #}
+                                {% if participant.actif==1 %}
+                                <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Désactiver</button> </a>
+                                {% else %}
+                                <a href="{{ path('user_modifieractif',{id:participant.id}) }}"><button type="button" class="bouton">Activer</button> </a>
+                                {% endif %}
+                                {% else %}
+                                    {% endif %}
+                            </div>
+                        </td>
                 </tr>
             {% else %}
                 <tr>
